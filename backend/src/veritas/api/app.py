@@ -22,6 +22,7 @@ from fastapi import FastAPI, File, HTTPException, UploadFile
 
 from veritas.api.cache import ResultCache, content_hash
 from veritas.api.config import Settings, get_settings
+from veritas.api.explainer import GradCamExplainer
 from veritas.api.inference import AudioDetector, ImageDetector, verdict_from_probability
 from veritas.api.schemas import HealthResponse, Verdict
 
@@ -59,11 +60,13 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     image_detector = ImageDetector(settings.image_model, image_size=settings.image_size)
     audio_detector = AudioDetector(settings.audio_model, sample_rate=settings.audio_sample_rate)
     cache = ResultCache(settings.redis_url, ttl_seconds=settings.cache_ttl_seconds)
+    explainer = GradCamExplainer(settings.image_torch_dir, image_size=settings.image_size)
 
     app.state.settings = settings
     app.state.image_detector = image_detector
     app.state.audio_detector = audio_detector
     app.state.cache = cache
+    app.state.explainer = explainer
 
     @app.get("/health", response_model=HealthResponse)
     def health() -> HealthResponse:
@@ -71,11 +74,12 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             status="ok",
             image_model=image_detector.available,
             audio_model=audio_detector.available,
+            explainer=explainer.available,
             cache=cache.backend,
         )
 
-    @app.post("/verify", response_model=Verdict)
-    async def verify(file: UploadFile = File(...)) -> Verdict:
+    @app.post("/verify", response_model=Verdict, response_model_exclude_none=True)
+    async def verify(file: UploadFile = File(...), explain: bool = False) -> Verdict:
         data = await file.read()
         if not data:
             raise HTTPException(status_code=400, detail="empty upload")
@@ -88,13 +92,15 @@ def create_app(settings: Settings | None = None) -> FastAPI:
 
         digest = content_hash(data)
         cached = cache.get(digest)
-        if cached is not None:
+        if cached is not None and not (explain and modality == "image" and not cached.get("overlay")):
             cached["cached"] = True
             return Verdict(**cached)
 
         start = time.perf_counter()
         if modality == "image":
             result = _verify_image(image_detector, data, digest, settings)
+            if explain:
+                _attach_heatmap(explainer, data, result)
         elif modality == "audio":
             result = _verify_audio(audio_detector, data, digest, settings)
         else:
@@ -117,6 +123,19 @@ def create_app(settings: Settings | None = None) -> FastAPI:
 def _require(detector, modality: str):
     if not detector.available:
         raise HTTPException(status_code=503, detail=f"{modality} model not available; export it first")
+
+
+def _attach_heatmap(explainer: GradCamExplainer, data: bytes, result: dict) -> None:
+    """Best-effort Grad-CAM overlay; never fails the verdict if explanation errors."""
+    if not explainer.available:
+        return
+    try:
+        explanation = explainer.explain(data, class_idx=1)
+    except Exception:  # interpretability is optional — don't break /verify
+        explanation = None
+    if explanation:
+        result["heatmap"] = explanation["heatmap"]
+        result["overlay"] = explanation["overlay"]
 
 
 def _verify_image(detector: ImageDetector, data: bytes, digest: str, settings: Settings) -> dict:

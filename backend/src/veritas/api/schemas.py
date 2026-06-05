@@ -19,6 +19,10 @@ class Verdict(BaseModel):
     latency_ms: float = Field(description="Server-measured inference latency in milliseconds.")
     cached: bool = Field(default=False, description="Whether the result was served from cache.")
     content_sha256: str
+    # Image only: Grad-CAM interpretability overlays as PNG data URLs (present
+    # when explanation is requested and an explainer is configured).
+    heatmap: str | None = None
+    overlay: str | None = None
     # Video only: per-frame breakdown + how the frames were aggregated.
     frames_analyzed: int | None = None
     frames: list[FrameVerdict] | None = None
@@ -28,6 +32,7 @@ class HealthResponse(BaseModel):
     status: str
     image_model: bool
     audio_model: bool
+    explainer: bool
     cache: str
 
 

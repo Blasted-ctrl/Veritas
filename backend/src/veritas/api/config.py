@@ -14,6 +14,10 @@ class Settings(BaseSettings):
     image_model: str = str(PATHS.models / "image" / "model.onnx")
     audio_model: str = str(PATHS.models / "audio" / "model.onnx")
 
+    # Optional saved torch ViT directory used for Grad-CAM heatmaps (needs the
+    # ``ml`` extra). When unset/absent, /verify still works but without heatmaps.
+    image_torch_dir: str = str(PATHS.models / "image")
+
     image_size: int = 224
     audio_sample_rate: int = 16000
     fake_threshold: float = 0.5

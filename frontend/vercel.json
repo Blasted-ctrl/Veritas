@@ -1,0 +1,9 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "nextjs",
+  "buildCommand": "next build",
+  "installCommand": "npm install",
+  "env": {
+    "NEXT_PUBLIC_API_URL": "@veritas_api_url"
+  }
+}

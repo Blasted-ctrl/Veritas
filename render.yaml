@@ -1,0 +1,46 @@
+# Render Blueprint — one-click deploy of the full Veritas stack.
+# https://render.com/docs/blueprint-spec
+services:
+  - type: redis
+    name: veritas-redis
+    plan: free
+    ipAllowList: []
+    maxmemoryPolicy: allkeys-lru
+
+  - type: web
+    name: veritas-api
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    healthCheckPath: /health
+    envVars:
+      - key: REDIS_URL
+        fromService: { type: redis, name: veritas-redis, property: connectionString }
+      - key: CELERY_BROKER_URL
+        fromService: { type: redis, name: veritas-redis, property: connectionString }
+      - key: CELERY_RESULT_BACKEND
+        fromService: { type: redis, name: veritas-redis, property: connectionString }
+
+  - type: worker
+    name: veritas-worker
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    dockerCommand: celery -A veritas.tasks.app worker --loglevel=info
+    envVars:
+      - key: CELERY_TASK_ALWAYS_EAGER
+        value: "0"
+      - key: CELERY_BROKER_URL
+        fromService: { type: redis, name: veritas-redis, property: connectionString }
+      - key: CELERY_RESULT_BACKEND
+        fromService: { type: redis, name: veritas-redis, property: connectionString }
+
+  - type: web
+    name: veritas-frontend
+    runtime: docker
+    dockerfilePath: ./frontend/Dockerfile
+    dockerContext: ./frontend
+    envVars:
+      # Set to the deployed API URL (Render exposes it once veritas-api is live).
+      - key: NEXT_PUBLIC_API_URL
+        sync: false

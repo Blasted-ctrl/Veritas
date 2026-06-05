@@ -6,10 +6,10 @@ fine-tunes a Vision Transformer (images) and Wav2Vec2 (audio), exports both to
 ONNX, and serves them through a FastAPI inference API with Redis caching and
 Celery-based video frame fan-out.
 
-> **Build status:** Phase 4 complete — identity-safe data prep, fine-tuned ViT
-> + Wav2Vec2 detectors, and an ONNX inference API with Redis caching and
-> Celery video fan-out. Phases 5-6 (frontend, hardening) are in progress; see
-> [Roadmap](#roadmap).
+> **Build status:** Phase 5 complete — identity-safe data prep, fine-tuned ViT
+> + Wav2Vec2 detectors, an ONNX inference API (Redis cache + Celery video
+> fan-out), and a Next.js upload UI with a Grad-CAM interpretability overlay.
+> Phase 6 (hardening + live demo) is in progress; see [Roadmap](#roadmap).
 
 ---
 
@@ -307,6 +307,43 @@ sequenceDiagram
 
 ---
 
+## Frontend (Phase 5): upload UI + Grad-CAM overlay
+
+A Next.js + TypeScript single-page app (`frontend/`):
+
+* **Drag-and-drop** (or click) upload for image / audio / video, with an upload
+  progress bar.
+* **Verdict display** — real/manipulated with animated **confidence bars** and
+  the fake-probability, model, measured latency and cache status.
+* **Grad-CAM overlay** — for images, toggle between the original and the heatmap
+  showing which regions drove the verdict.
+* **Video** — a per-frame fake-probability bar chart from the Celery aggregation.
+* A live **health banner** reflects which models/heatmaps the API has loaded.
+
+Run the whole stack locally:
+
+```bash
+docker compose up          # redis + api + worker + frontend
+# UI:  http://localhost:3000      API: http://localhost:8000
+```
+
+Or develop the frontend against a running API:
+
+```bash
+cd frontend
+npm install
+NEXT_PUBLIC_API_URL=http://localhost:8000 npm run dev
+```
+
+**Deployment** — `frontend/` deploys to Vercel (`vercel.json`); the full stack
+(Redis + API + worker + frontend) deploys to Render via the `render.yaml`
+blueprint. Set `NEXT_PUBLIC_API_URL` to the deployed API URL.
+
+> **Live demo:** _to be added_ — deploy via Vercel/Render (configs included) and
+> drop the URL here.
+
+---
+
 ## Repository layout
 
 ```
@@ -339,7 +376,7 @@ veritas/
 - [x] **Phase 2** — Fine-tune ViT image detector → `metrics.json`.
 - [x] **Phase 3** — Fine-tune Wav2Vec2 audio detector → `metrics.json`.
 - [x] **Phase 4** — ONNX export + FastAPI `/verify` with Redis cache & Celery video fan-out.
-- [ ] **Phase 5** — Next.js upload UI + Grad-CAM overlay; deploy.
+- [x] **Phase 5** — Next.js upload UI + Grad-CAM overlay; deploy config (Vercel + Render).
 - [ ] **Phase 6** — Hardening, real metrics, screenshots, demo link.
 
 All reported metrics will come from `metrics.json` produced by real evaluation
