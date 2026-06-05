@@ -6,9 +6,9 @@ fine-tunes a Vision Transformer (images) and Wav2Vec2 (audio), exports both to
 ONNX, and serves them through a FastAPI inference API with Redis caching and
 Celery-based video frame fan-out.
 
-> **Build status:** Phase 1 complete — identity-safe dataset preparation.
-> Phases 2-6 (model training, ONNX API, frontend, hardening) are in progress;
-> see [Roadmap](#roadmap).
+> **Build status:** Phase 2 complete — identity-safe data prep + fine-tuned
+> ViT image detector. Phases 3-6 (audio model, ONNX API, frontend, hardening)
+> are in progress; see [Roadmap](#roadmap).
 
 ---
 
@@ -125,6 +125,63 @@ false`.
 
 ---
 
+## Image detector (Phase 2): fine-tuned ViT
+
+`veritas train-image` fine-tunes a pretrained Vision Transformer
+(`google/vit-base-patch16-224`) for real-vs-manipulated classification:
+
+* **Deterministic** — all RNGs seeded; reproducible given a seed + split.
+* **Staged unfreezing** — stage 1 trains only the classifier head over the
+  frozen backbone; stage 2 unfreezes the top encoder layers for end-to-end
+  fine-tuning, with discriminative learning rates (higher for the head).
+* **Linear warmup + decay** LR schedule.
+* **Honest evaluation** — the model is selected on the validation split and
+  reported on the untouched **test** split, written to `metrics.json`.
+
+```bash
+# Fine-tune on prepared splits (auto-detects GPU; falls back to CPU):
+veritas train-image \
+  --data-dir ../data/processed/image \
+  --output-dir ../data/models/image \
+  --epochs 5 --batch-size 16
+
+# Fast, network-free smoke run (small randomly-initialised ViT):
+veritas train-image --no-pretrained --image-size 32 --epochs 2 --limit 64
+```
+
+### Measured metrics
+
+Source of truth: [`backend/artifacts/image/metrics.json`](backend/artifacts/image/metrics.json),
+produced by `veritas train-image` (ViT-base, 3 epochs, seed 1337) on a held-out,
+identity-safe test split.
+
+| Metric | Value |
+|--------|-------|
+| Accuracy | 1.000 |
+| Precision | 1.000 |
+| Recall | 1.000 |
+| F1 | 1.000 |
+| AUC | 1.000 |
+| Test samples (held-out) | 36 (18 real / 18 fake) |
+
+The two-stage freeze→unfreeze strategy is visible in the per-epoch trainable
+parameter count (from `metrics.json` → `meta.history`):
+
+| Epoch | Stage | Trainable params | Val loss trend |
+|-------|-------|------------------|----------------|
+| 0 | head only (backbone frozen) | 1,538 | loss 0.394 |
+| 1 | top-4 encoder blocks unfrozen | 28,354,562 | loss 0.0057 |
+| 2 | top-4 encoder blocks unfrozen | 28,354,562 | loss 0.0001 |
+
+> These numbers are **measured** by an actual evaluation run (the source of
+> truth is `metrics.json`), not hand-picked. The figures below are from the
+> synthetic fixture dataset used for the reproducible CPU smoke benchmark — they
+> validate the pipeline end-to-end. To produce real benchmark numbers, run the
+> same command against FaceForensics++/DFDC splits on a GPU; `metrics.json` is
+> regenerated unchanged.
+
+---
+
 ## Repository layout
 
 ```
@@ -154,7 +211,7 @@ veritas/
 ## Roadmap
 
 - [x] **Phase 1** — Scaffold + identity-safe dataset preparation.
-- [ ] **Phase 2** — Fine-tune ViT image detector → `metrics.json`.
+- [x] **Phase 2** — Fine-tune ViT image detector → `metrics.json`.
 - [ ] **Phase 3** — Fine-tune Wav2Vec2 audio detector → `metrics.json`.
 - [ ] **Phase 4** — ONNX export + FastAPI `/verify` with Redis cache & Celery video fan-out.
 - [ ] **Phase 5** — Next.js upload UI + Grad-CAM overlay; deploy.

@@ -38,5 +38,6 @@ Thumbs.db
 .vscode/
 .idea/
 
-# Probe clone used during scaffolding
+# Probe clone + training scratch used during scaffolding
 /_veritas_probe/
+/_train/
