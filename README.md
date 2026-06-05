@@ -6,9 +6,10 @@ fine-tunes a Vision Transformer (images) and Wav2Vec2 (audio), exports both to
 ONNX, and serves them through a FastAPI inference API with Redis caching and
 Celery-based video frame fan-out.
 
-> **Build status:** Phase 3 complete — identity-safe data prep + fine-tuned
-> ViT image detector + fine-tuned Wav2Vec2 voice-clone detector. Phases 4-6
-> (ONNX API, frontend, hardening) are in progress; see [Roadmap](#roadmap).
+> **Build status:** Phase 4 complete — identity-safe data prep, fine-tuned ViT
+> + Wav2Vec2 detectors, and an ONNX inference API with Redis caching and
+> Celery video fan-out. Phases 5-6 (frontend, hardening) are in progress; see
+> [Roadmap](#roadmap).
 
 ---
 
@@ -236,6 +237,76 @@ Staged unfreeze (CNN feature encoder stays frozen throughout), from
 
 ---
 
+## Inference API (Phase 4): ONNX serving
+
+Both models are exported to ONNX and served via ONNX Runtime (no torch at serve
+time — the API image is lean). A FastAPI service exposes `POST /verify`:
+
+```bash
+# 1. Export trained models to ONNX:
+veritas export --modality image --model-dir ../data/models/image --output ../data/models/image/model.onnx
+veritas export --modality audio --model-dir ../data/models/audio --output ../data/models/audio/model.onnx
+
+# 2. Run the stack (Redis + API + Celery worker):
+docker compose up        # API on http://localhost:8000
+
+# 3. Verify a file:
+curl -F file=@suspicious.jpg http://localhost:8000/verify
+```
+
+Response (`Verdict`):
+
+```json
+{
+  "verdict": "fake",
+  "confidence": 0.97,
+  "fake_probability": 0.97,
+  "modality": "image",
+  "model": "model.onnx",
+  "latency_ms": 12.4,
+  "cached": false,
+  "content_sha256": "…"
+}
+```
+
+* **Routing** — `image` → ONNX ViT, `audio` → ONNX Wav2Vec2, `video` → a Celery
+  task that samples frames (`VERITAS_VIDEO_FPS`), scores each with the image
+  detector, and aggregates per-frame probabilities into one verdict (with a
+  `frames` breakdown).
+* **Caching** — results are keyed by SHA-256 of the upload in Redis; an
+  unreachable Redis transparently degrades to an in-memory cache.
+* **Latency** — measured server-side, returned as `latency_ms` and logged.
+* **Graceful degradation** — missing models return `503`; `GET /health` reports
+  per-model availability and the active cache backend.
+
+```mermaid
+sequenceDiagram
+    participant C as Client
+    participant A as FastAPI /verify
+    participant R as Redis cache
+    participant W as Celery worker
+    participant O as ONNX Runtime
+    C->>A: upload (image/audio/video)
+    A->>R: get(sha256)
+    alt cache hit
+        R-->>A: cached verdict
+    else miss
+        alt video
+            A->>W: analyze_video(frames)
+            W->>O: score each frame
+            O-->>W: per-frame probs
+            W-->>A: aggregated verdict
+        else image / audio
+            A->>O: run ONNX model
+            O-->>A: logits → probability
+        end
+        A->>R: set(sha256, verdict)
+    end
+    A-->>C: verdict + confidence + latency
+```
+
+---
+
 ## Repository layout
 
 ```
@@ -267,7 +338,7 @@ veritas/
 - [x] **Phase 1** — Scaffold + identity-safe dataset preparation.
 - [x] **Phase 2** — Fine-tune ViT image detector → `metrics.json`.
 - [x] **Phase 3** — Fine-tune Wav2Vec2 audio detector → `metrics.json`.
-- [ ] **Phase 4** — ONNX export + FastAPI `/verify` with Redis cache & Celery video fan-out.
+- [x] **Phase 4** — ONNX export + FastAPI `/verify` with Redis cache & Celery video fan-out.
 - [ ] **Phase 5** — Next.js upload UI + Grad-CAM overlay; deploy.
 - [ ] **Phase 6** — Hardening, real metrics, screenshots, demo link.
 

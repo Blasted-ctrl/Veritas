@@ -81,20 +81,21 @@ def _run_prepare_data(args: argparse.Namespace) -> int:
 
 
 def _register_ml_commands(subparsers: argparse._SubParsersAction) -> None:
-    """Register Phase 2/3 training commands if the ML stack is importable.
+    """Register optional ML commands (train-image/-audio, export) when present.
 
     Resolved dynamically so the core CLI works even when the optional ``ml``
     dependency group (torch/transformers) is not installed.
     """
     import importlib
 
-    try:
-        training = importlib.import_module("veritas.training")
-    except Exception:  # pragma: no cover - optional dependency not installed
-        return
-    register = getattr(training, "register_cli", None)
-    if register is not None:  # available once Phases 2/3 land
-        register(subparsers)
+    for module_name in ("veritas.training", "veritas.export"):
+        try:
+            module = importlib.import_module(module_name)
+        except Exception:  # pragma: no cover - optional dependency not installed
+            continue
+        register = getattr(module, "register_cli", None)
+        if register is not None:
+            register(subparsers)
 
 
 def build_parser() -> argparse.ArgumentParser:
