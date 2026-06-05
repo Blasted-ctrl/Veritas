@@ -180,3 +180,26 @@ def test_missing_model_returns_503(tmp_path):
     c = TestClient(create_app(bad))
     r = c.post("/verify", files={"file": ("x.png", _png_bytes(tmp_path), "image/png")})
     assert r.status_code == 503
+
+
+def test_oversize_upload_rejected(settings, tmp_path):
+    small = settings.model_copy(update={"max_upload_bytes": 10})
+    c = TestClient(create_app(small))
+    r = c.post("/verify", files={"file": ("x.png", _png_bytes(tmp_path), "image/png")})
+    assert r.status_code == 413
+
+
+def test_undecodable_audio_returns_422(client):
+    r = client.post("/verify", files={"file": ("bad.wav", b"not really audio", "audio/wav")})
+    assert r.status_code == 422
+
+
+def test_modality_routing():
+    from veritas.api.app import _modality_for
+
+    assert _modality_for("clip.gif", "image/gif") == "video"  # extension wins
+    assert _modality_for("x.png", "image/png") == "image"
+    assert _modality_for("x.wav", "audio/wav") == "audio"
+    assert _modality_for("movie.mp4", "video/mp4") == "video"
+    assert _modality_for("blob", "image/jpeg") == "image"  # content-type fallback
+    assert _modality_for("notes.txt", "text/plain") is None
