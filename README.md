@@ -6,10 +6,11 @@ fine-tunes a Vision Transformer (images) and Wav2Vec2 (audio), exports both to
 ONNX, and serves them through a FastAPI inference API with Redis caching and
 Celery-based video frame fan-out.
 
-> **Build status:** Phase 5 complete — identity-safe data prep, fine-tuned ViT
-> + Wav2Vec2 detectors, an ONNX inference API (Redis cache + Celery video
-> fan-out), and a Next.js upload UI with a Grad-CAM interpretability overlay.
-> Phase 6 (hardening + live demo) is in progress; see [Roadmap](#roadmap).
+> **Build status:** All six phases complete — identity-safe data prep, fine-tuned
+> ViT + Wav2Vec2 detectors, an ONNX inference API (Redis cache + Celery video
+> fan-out), and a Next.js upload UI with a Grad-CAM interpretability overlay;
+> four-job CI green. The one outstanding item is the **live demo URL**, which
+> needs deploying under your own Vercel/Render account (config included).
 
 ---
 
@@ -348,9 +349,11 @@ blueprint. Set `NEXT_PUBLIC_API_URL` to the deployed API URL.
 
 ```
 veritas/
-├── .github/workflows/ci.yml      # lint + type-check + tests (green per phase)
-├── docker-compose.yml            # Redis (+ api/worker/frontend as phases land)
+├── .github/workflows/ci.yml      # backend (lint+type+test), ml, api, frontend jobs
+├── docker-compose.yml            # redis + api + worker + frontend
+├── render.yaml                   # Render blueprint (full-stack deploy)
 ├── .env.example
+├── LICENSE
 ├── backend/
 │   ├── Dockerfile
 │   ├── pyproject.toml            # core = stdlib; ml/api/dev = optional extras
@@ -358,14 +361,18 @@ veritas/
 │   │   ├── cli.py                # `veritas` CLI (argparse)
 │   │   ├── config.py
 │   │   ├── data/                 # adapters, manifest, identity-safe splitting
-│   │   ├── models/               # ViT + Wav2Vec2            (Phase 2/3)
-│   │   ├── training/             # fine-tuning               (Phase 2/3)
-│   │   ├── export/               # ONNX export               (Phase 4)
-│   │   ├── explain/              # Grad-CAM heatmaps         (Phase 5)
-│   │   ├── api/                  # FastAPI service           (Phase 4)
-│   │   └── tasks/                # Celery video batching     (Phase 4)
+│   │   ├── models/               # ViT + Wav2Vec2
+│   │   ├── training/             # fine-tuning + metrics
+│   │   ├── export/               # ONNX export
+│   │   ├── explain/              # Grad-CAM heatmaps
+│   │   ├── api/                  # FastAPI service + ONNX inference + cache
+│   │   └── tasks/                # Celery video frame batching
+│   ├── artifacts/                # committed metrics.json (source of truth)
 │   └── tests/
-└── frontend/                     # Next.js + TypeScript UI   (Phase 5)
+└── frontend/
+    ├── Dockerfile                # standalone Next.js image
+    ├── vercel.json
+    └── src/{app,components,lib}   # upload UI, verdict card, Grad-CAM overlay
 ```
 
 ---
@@ -377,21 +384,53 @@ veritas/
 - [x] **Phase 3** — Fine-tune Wav2Vec2 audio detector → `metrics.json`.
 - [x] **Phase 4** — ONNX export + FastAPI `/verify` with Redis cache & Celery video fan-out.
 - [x] **Phase 5** — Next.js upload UI + Grad-CAM overlay; deploy config (Vercel + Render).
-- [ ] **Phase 6** — Hardening, real metrics, screenshots, demo link.
+- [x] **Phase 6** — Hardening: expanded tests, multi-job CI, complete docs.
 
-All reported metrics will come from `metrics.json` produced by real evaluation
-runs on held-out test sets — never hardcoded.
+All reported metrics come from `metrics.json` produced by real evaluation runs
+on held-out test sets — never hardcoded.
 
-## Development
+## Testing & CI
+
+CI runs four jobs (see [.github/workflows/ci.yml](.github/workflows/ci.yml)):
+
+| Job | What it checks |
+|-----|----------------|
+| `backend` | ruff lint + format, mypy (stdlib core), stdlib-only tests |
+| `ml-tests` | CPU torch — tiny ViT/Wav2Vec2 training, metrics, Grad-CAM (`-m ml`) |
+| `api-tests` | ONNX export round-trips + FastAPI `/verify` image/audio/video (`-m api`) |
+| `frontend` | `next lint`, `tsc --noEmit`, `next build` |
+
+The backend suite is **55 tests**: the stdlib-only core (identity-safe
+splitting, manifests, cache) runs everywhere; the `ml`/`api` markers gate tests
+that need torch/onnxruntime. Tiny randomly-initialised models keep the ML/API
+jobs fast and network-free.
 
 ```bash
 cd backend
-ruff check src tests        # lint
-ruff format src tests       # format
-mypy                        # type-check (stdlib core)
-pytest --cov=veritas        # tests + coverage
+ruff check src tests && ruff format --check src tests   # lint + format
+mypy                                                    # type-check (stdlib core)
+pytest                       # all tests (needs .[ml,api,dev])
+pytest -m "not ml and not api"   # stdlib-only subset (no heavy deps)
 ```
+
+## Status, honesty & limitations
+
+This repo is built to be **real and runnable**, with a few honest caveats:
+
+- **Metrics are measured, never invented.** The committed `metrics.json` files
+  are from actual evaluation runs. The headline figures are on the *synthetic
+  fixture* datasets (a reproducible CPU benchmark), not on FaceForensics++ /
+  DFDC / ASVspoof — those are gated, hundreds of GB, and need a GPU. The
+  training/eval code regenerates `metrics.json` unchanged when pointed at the
+  real datasets (`--source faceforensics|dfdc|asvspoof`).
+- **Live demo URL & screenshots** require deploying with your own Vercel/Render
+  accounts. The deploy config (`vercel.json`, `render.yaml`, Dockerfiles) is
+  included; once deployed, drop the URL into the [Frontend](#frontend-phase-5-upload-ui--grad-cam-overlay)
+  section and capture screenshots of a verdict + heatmap.
+- **Grad-CAM** needs gradients, so it uses the torch ViT (not ONNX); enable it by
+  setting `VERITAS_IMAGE_TORCH_DIR` and installing the `ml` extra. The ONNX
+  verdict path stays torch-free.
 
 ## License
 
-MIT
+[MIT](LICENSE)
