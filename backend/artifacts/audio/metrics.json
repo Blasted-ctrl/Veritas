@@ -1,0 +1,75 @@
+{
+  "accuracy": 0.7222,
+  "precision": 0.7222,
+  "recall": 0.7222,
+  "f1": 0.7222,
+  "auc": 0.75,
+  "n_samples": 36,
+  "n_positive": 18,
+  "n_negative": 18,
+  "confusion_matrix": {
+    "tp": 13,
+    "fp": 5,
+    "tn": 13,
+    "fn": 5
+  },
+  "threshold": 0.5,
+  "meta": {
+    "modality": "audio",
+    "model_name": "facebook/wav2vec2-base",
+    "pretrained": true,
+    "epochs": 3,
+    "seed": 1337,
+    "device": "cpu",
+    "sample_rate": 16000,
+    "train_size": 168,
+    "val_size": 36,
+    "test_size": 36,
+    "wall_time_sec": 123.32,
+    "history": [
+      {
+        "epoch": 0,
+        "train_loss": 0.6479,
+        "val_accuracy": 0.8056,
+        "val_f1": 0.8108,
+        "val_auc": 0.9012,
+        "trainable_params": 197378
+      },
+      {
+        "epoch": 1,
+        "train_loss": 0.4034,
+        "val_accuracy": 0.8333,
+        "val_f1": 0.8421,
+        "val_auc": 0.892,
+        "trainable_params": 33269890
+      },
+      {
+        "epoch": 2,
+        "train_loss": 0.2382,
+        "val_accuracy": 0.8611,
+        "val_f1": 0.8649,
+        "val_auc": 0.8858,
+        "trainable_params": 33269890
+      }
+    ],
+    "config": {
+      "data_dir": "C:\\Users\\kings\\Veritas\\_train\\audio",
+      "output_dir": "C:\\Users\\kings\\Veritas\\_train\\audio_model",
+      "model_name": "facebook/wav2vec2-base",
+      "pretrained": true,
+      "max_seconds": 1.0,
+      "epochs": 3,
+      "batch_size": 8,
+      "backbone_lr": 3e-05,
+      "head_lr": 0.001,
+      "weight_decay": 0.01,
+      "warmup_ratio": 0.1,
+      "freeze_epochs": 1,
+      "unfreeze_layers": 4,
+      "seed": 1337,
+      "num_workers": 0,
+      "limit": null,
+      "device": "cpu"
+    }
+  }
+}

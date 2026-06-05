@@ -1,13 +1,10 @@
-"""Fine-tune a ViT image manipulation detector.
+"""Fine-tune a Wav2Vec2 synthetic-voice detector.
 
-Strategy:
-  * deterministic seeding (data, weights init, dataloader shuffling);
-  * stage 1 — freeze the pretrained backbone, train only the head;
-  * stage 2 — unfreeze the top encoder layers and fine-tune end-to-end;
-  * discriminative learning rates (higher for the head, lower for the backbone)
-    with linear warmup + decay;
-  * model selection on the validation split; final, honest evaluation on the
-    held-out test split written to ``metrics.json``.
+Mirrors the image trainer: deterministic seeding, a staged freeze->unfreeze
+strategy (the CNN feature encoder stays frozen throughout; the head trains
+first, then the top transformer blocks), linear warmup/decay, validation-based
+model selection and an honest held-out test evaluation written to
+``metrics.json``.
 """
 
 from __future__ import annotations
@@ -16,29 +13,29 @@ import time
 from dataclasses import asdict, dataclass
 from pathlib import Path
 
-from veritas.models.image_model import (
+from veritas.models.audio_model import (
     DEFAULT_MODEL,
-    ImageModelConfig,
-    build_vit,
+    AudioModelConfig,
+    build_wav2vec2,
     freeze_backbone,
     trainable_parameter_count,
     unfreeze_top_encoder_layers,
 )
-from veritas.training.image_data import ImageManifestDataset, collate
+from veritas.training.audio_data import AudioManifestDataset, collate
 from veritas.training.metrics import ClassificationMetrics, compute_metrics, write_metrics
 from veritas.training.seed import seed_everything, seed_worker
 
 
 @dataclass
-class TrainImageConfig:
+class TrainAudioConfig:
     data_dir: Path
     output_dir: Path
     model_name: str = DEFAULT_MODEL
     pretrained: bool = True
-    image_size: int = 224
+    max_seconds: float = 4.0
     epochs: int = 5
-    batch_size: int = 16
-    backbone_lr: float = 5e-5
+    batch_size: int = 8
+    backbone_lr: float = 3e-5
     head_lr: float = 1e-3
     weight_decay: float = 0.01
     warmup_ratio: float = 0.1
@@ -75,10 +72,11 @@ def _make_loader(dataset, *, batch_size, shuffle, seed, num_workers):
     )
 
 
-def _param_groups(model, cfg: TrainImageConfig):
+def _param_groups(model, cfg: TrainAudioConfig):
     head, backbone = [], []
     for name, param in model.named_parameters():
-        (head if name.startswith("classifier") else backbone).append(param)
+        is_head = name.startswith("projector") or name.startswith("classifier")
+        (head if is_head else backbone).append(param)
     return [
         {"params": head, "lr": cfg.head_lr},
         {"params": backbone, "lr": cfg.backbone_lr},
@@ -94,8 +92,10 @@ def evaluate(model, loader, device) -> tuple[list[int], list[float]]:
     probs: list[float] = []
     with torch.no_grad():
         for batch in loader:
-            pixel_values = batch["pixel_values"].to(device)
-            logits = model(pixel_values=pixel_values).logits
+            logits = model(
+                input_values=batch["input_values"].to(device),
+                attention_mask=batch["attention_mask"].to(device),
+            ).logits
             p = torch.softmax(logits, dim=-1)[:, 1]
             probs.extend(p.detach().cpu().tolist())
             labels.extend(batch["labels"].tolist())
@@ -109,10 +109,13 @@ def _train_one_epoch(model, loader, optimizer, scheduler, device) -> float:
     total_loss = 0.0
     n = 0
     for batch in loader:
-        pixel_values = batch["pixel_values"].to(device)
         targets = batch["labels"].to(device)
         optimizer.zero_grad(set_to_none=True)
-        out = model(pixel_values=pixel_values, labels=targets)
+        out = model(
+            input_values=batch["input_values"].to(device),
+            attention_mask=batch["attention_mask"].to(device),
+            labels=targets,
+        )
         out.loss.backward()
         torch.nn.utils.clip_grad_norm_((p for p in model.parameters() if p.requires_grad), max_norm=1.0)
         optimizer.step()
@@ -122,7 +125,7 @@ def _train_one_epoch(model, loader, optimizer, scheduler, device) -> float:
     return total_loss / max(1, n)
 
 
-def train_image(cfg: TrainImageConfig) -> ClassificationMetrics:
+def train_audio(cfg: TrainAudioConfig) -> ClassificationMetrics:
     """Run the full fine-tune + evaluation pipeline; returns test metrics."""
     import torch
     from transformers import get_linear_schedule_with_warmup
@@ -133,9 +136,10 @@ def train_image(cfg: TrainImageConfig) -> ClassificationMetrics:
     out_dir = Path(cfg.output_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    train_ds = ImageManifestDataset(data_dir / "train.csv", image_size=cfg.image_size, limit=cfg.limit)
-    val_ds = ImageManifestDataset(data_dir / "val.csv", image_size=cfg.image_size, limit=cfg.limit)
-    test_ds = ImageManifestDataset(data_dir / "test.csv", image_size=cfg.image_size, limit=cfg.limit)
+    def ds(name):
+        return AudioManifestDataset(data_dir / name, max_seconds=cfg.max_seconds, limit=cfg.limit)
+
+    train_ds, val_ds, test_ds = ds("train.csv"), ds("val.csv"), ds("test.csv")
 
     train_loader = _make_loader(
         train_ds, batch_size=cfg.batch_size, shuffle=True, seed=cfg.seed, num_workers=cfg.num_workers
@@ -147,16 +151,11 @@ def train_image(cfg: TrainImageConfig) -> ClassificationMetrics:
         test_ds, batch_size=cfg.batch_size, shuffle=False, seed=cfg.seed, num_workers=cfg.num_workers
     )
 
-    model = build_vit(
-        ImageModelConfig(
-            pretrained_name=cfg.model_name,
-            pretrained=cfg.pretrained,
-            image_size=cfg.image_size,
-        )
-    ).to(device)
+    model = build_wav2vec2(AudioModelConfig(pretrained_name=cfg.model_name, pretrained=cfg.pretrained)).to(
+        device
+    )
 
-    # Stage 1: head only.
-    freeze_backbone(model)
+    freeze_backbone(model)  # stage 1: head only
 
     optimizer = torch.optim.AdamW(_param_groups(model, cfg), weight_decay=cfg.weight_decay)
     total_steps = max(1, len(train_loader) * cfg.epochs)
@@ -166,13 +165,12 @@ def train_image(cfg: TrainImageConfig) -> ClassificationMetrics:
         num_training_steps=total_steps,
     )
 
-    best_auc = -1.0
+    best_score = -1.0
     best_state = None
     history = []
     start = time.time()
 
     for epoch in range(cfg.epochs):
-        # Stage 2: unfreeze the top encoder layers once the head has adapted.
         if epoch == cfg.freeze_epochs and cfg.unfreeze_layers > 0:
             unfreeze_top_encoder_layers(model, cfg.unfreeze_layers)
 
@@ -180,7 +178,6 @@ def train_image(cfg: TrainImageConfig) -> ClassificationMetrics:
         val_labels, val_probs = evaluate(model, val_loader, device)
         val_metrics = compute_metrics(val_labels, val_probs)
         trainable, total = trainable_parameter_count(model)
-        # Select on AUC when defined, else on F1 (tiny/degenerate val sets).
         score = val_metrics.auc if val_metrics.auc is not None else val_metrics.f1
         history.append(
             {
@@ -197,14 +194,13 @@ def train_image(cfg: TrainImageConfig) -> ClassificationMetrics:
             f"val_acc={val_metrics.accuracy} val_f1={val_metrics.f1} val_auc={val_metrics.auc} "
             f"trainable={trainable}/{total}"
         )
-        if score is not None and score > best_auc:
-            best_auc = score
+        if score is not None and score > best_score:
+            best_score = score
             best_state = {k: v.detach().cpu().clone() for k, v in model.state_dict().items()}
 
     if best_state is not None:
         model.load_state_dict(best_state)
 
-    # Final, honest evaluation on the held-out test split.
     test_labels, test_probs = evaluate(model, test_loader, device)
     test_metrics = compute_metrics(test_labels, test_probs)
 
@@ -214,13 +210,13 @@ def train_image(cfg: TrainImageConfig) -> ClassificationMetrics:
         test_metrics,
         out_dir / "metrics.json",
         extra={
-            "modality": "image",
-            "model_name": cfg.model_name if cfg.pretrained else "vit-tiny-random",
+            "modality": "audio",
+            "model_name": cfg.model_name if cfg.pretrained else "wav2vec2-tiny-random",
             "pretrained": cfg.pretrained,
             "epochs": cfg.epochs,
             "seed": cfg.seed,
             "device": str(device),
-            "image_size": cfg.image_size,
+            "sample_rate": 16000,
             "train_size": len(train_ds),
             "val_size": len(val_ds),
             "test_size": len(test_ds),
@@ -241,4 +237,4 @@ def train_image(cfg: TrainImageConfig) -> ClassificationMetrics:
     return test_metrics
 
 
-__all__ = ["TrainImageConfig", "train_image", "evaluate"]
+__all__ = ["TrainAudioConfig", "train_audio", "evaluate"]

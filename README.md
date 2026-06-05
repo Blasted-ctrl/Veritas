@@ -6,9 +6,9 @@ fine-tunes a Vision Transformer (images) and Wav2Vec2 (audio), exports both to
 ONNX, and serves them through a FastAPI inference API with Redis caching and
 Celery-based video frame fan-out.
 
-> **Build status:** Phase 2 complete — identity-safe data prep + fine-tuned
-> ViT image detector. Phases 3-6 (audio model, ONNX API, frontend, hardening)
-> are in progress; see [Roadmap](#roadmap).
+> **Build status:** Phase 3 complete — identity-safe data prep + fine-tuned
+> ViT image detector + fine-tuned Wav2Vec2 voice-clone detector. Phases 4-6
+> (ONNX API, frontend, hardening) are in progress; see [Roadmap](#roadmap).
 
 ---
 
@@ -182,6 +182,60 @@ parameter count (from `metrics.json` → `meta.history`):
 
 ---
 
+## Audio detector (Phase 3): fine-tuned Wav2Vec2
+
+`veritas train-audio` fine-tunes a pretrained Wav2Vec2 (`facebook/wav2vec2-base`)
+for bona-fide-vs-synthetic voice classification:
+
+* **Preprocessing** — audio is loaded, mixed to mono, resampled to 16 kHz
+  (`torchaudio`) and per-utterance normalized.
+* **Staged unfreezing** — the convolutional feature encoder stays frozen
+  throughout (standard Wav2Vec2 practice); stage 1 trains the projector +
+  classifier head, stage 2 unfreezes the top transformer blocks.
+* **Linear warmup + decay**, validation-based selection, honest **test**-split
+  evaluation → `metrics.json`.
+
+```bash
+veritas train-audio \
+  --data-dir ../data/processed/audio \
+  --output-dir ../data/models/audio \
+  --epochs 5 --batch-size 8
+
+# Fast, network-free smoke run (small randomly-initialised Wav2Vec2):
+veritas train-audio --no-pretrained --epochs 2 --max-seconds 1.0 --limit 64
+```
+
+### Measured metrics
+
+Source of truth: [`backend/artifacts/audio/metrics.json`](backend/artifacts/audio/metrics.json),
+produced by `veritas train-audio` (Wav2Vec2-base, 3 epochs, seed 1337) on a
+held-out, identity-safe test split.
+
+| Metric | Value |
+|--------|-------|
+| Accuracy | 0.722 |
+| Precision | 0.722 |
+| Recall | 0.722 |
+| F1 | 0.722 |
+| AUC | 0.750 |
+| Test samples (held-out) | 36 (18 real / 18 fake) |
+| Confusion matrix | TP 13 · FP 5 · TN 13 · FN 5 |
+
+Staged unfreeze (CNN feature encoder stays frozen throughout), from
+`metrics.json` → `meta.history`:
+
+| Epoch | Stage | Trainable params | Val AUC |
+|-------|-------|------------------|---------|
+| 0 | head only (projector + classifier) | 197,378 | 0.901 |
+| 1 | top-4 transformer blocks unfrozen | 33,269,890 | 0.892 |
+| 2 | top-4 transformer blocks unfrozen | 33,269,890 | 0.886 |
+
+> Measured on the synthetic-voice fixture test split (reproducible CPU
+> benchmark). Point `--source asvspoof --input-dir ...` at ASVspoof on a GPU for
+> real benchmark numbers; `metrics.json` regenerates unchanged.
+
+---
+
 ## Repository layout
 
 ```
@@ -212,7 +266,7 @@ veritas/
 
 - [x] **Phase 1** — Scaffold + identity-safe dataset preparation.
 - [x] **Phase 2** — Fine-tune ViT image detector → `metrics.json`.
-- [ ] **Phase 3** — Fine-tune Wav2Vec2 audio detector → `metrics.json`.
+- [x] **Phase 3** — Fine-tune Wav2Vec2 audio detector → `metrics.json`.
 - [ ] **Phase 4** — ONNX export + FastAPI `/verify` with Redis cache & Celery video fan-out.
 - [ ] **Phase 5** — Next.js upload UI + Grad-CAM overlay; deploy.
 - [ ] **Phase 6** — Hardening, real metrics, screenshots, demo link.

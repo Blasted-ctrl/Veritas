@@ -80,14 +80,63 @@ def _run_train_image(args: argparse.Namespace) -> int:
 
 
 # --------------------------------------------------------------------------- #
-# train-audio (Phase 3 — registered now, handler lands in Phase 3)
+# train-audio (Phase 3)
 # --------------------------------------------------------------------------- #
 def _add_train_audio(subparsers: argparse._SubParsersAction) -> None:
-    try:
-        from veritas.training.train_audio import add_train_audio_parser
-    except Exception:  # pragma: no cover - Phase 3 not yet present
-        return
-    add_train_audio_parser(subparsers)
+    p = subparsers.add_parser(
+        "train-audio",
+        help="Fine-tune a Wav2Vec2 real/synthetic voice detector.",
+        description="Fine-tune Wav2Vec2 and write a fine-tuned model + metrics.json.",
+    )
+    p.add_argument("--data-dir", default=None, help="Dir with train/val/test.csv (default: processed/audio).")
+    p.add_argument(
+        "--output-dir", default=None, help="Where to save model + metrics (default: models/audio)."
+    )
+    p.add_argument("--model-name", default="facebook/wav2vec2-base")
+    p.add_argument(
+        "--no-pretrained",
+        dest="pretrained",
+        action="store_false",
+        help="Train a small randomly-initialised Wav2Vec2 (no download; for smoke runs).",
+    )
+    p.add_argument("--max-seconds", type=float, default=4.0)
+    p.add_argument("--epochs", type=int, default=5)
+    p.add_argument("--batch-size", type=int, default=8)
+    p.add_argument("--backbone-lr", type=float, default=3e-5)
+    p.add_argument("--head-lr", type=float, default=1e-3)
+    p.add_argument("--freeze-epochs", type=int, default=1)
+    p.add_argument("--unfreeze-layers", type=int, default=4)
+    p.add_argument("--seed", type=int, default=DEFAULT_SEED)
+    p.add_argument("--num-workers", type=int, default=0)
+    p.add_argument("--limit", type=int, default=None, help="Cap samples per split (quick runs).")
+    p.add_argument("--device", default=None, help="cpu / cuda (default: auto).")
+    p.set_defaults(func=_run_train_audio, pretrained=True)
+
+
+def _run_train_audio(args: argparse.Namespace) -> int:
+    from veritas.training.train_audio import TrainAudioConfig, train_audio
+
+    data_dir = Path(args.data_dir) if args.data_dir else PATHS.modality_processed("audio")
+    output_dir = Path(args.output_dir) if args.output_dir else PATHS.models / "audio"
+    cfg = TrainAudioConfig(
+        data_dir=data_dir,
+        output_dir=output_dir,
+        model_name=args.model_name,
+        pretrained=args.pretrained,
+        max_seconds=args.max_seconds,
+        epochs=args.epochs,
+        batch_size=args.batch_size,
+        backbone_lr=args.backbone_lr,
+        head_lr=args.head_lr,
+        freeze_epochs=args.freeze_epochs,
+        unfreeze_layers=args.unfreeze_layers,
+        seed=args.seed,
+        num_workers=args.num_workers,
+        limit=args.limit,
+        device=args.device,
+    )
+    train_audio(cfg)
+    return 0
 
 
 __all__ = ["register_cli"]
