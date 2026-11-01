@@ -1,0 +1,20 @@
+{
+  "generated_lakehouse": {
+    "file": "generated-lakehouse.png",
+    "origin": "OpenAI image generation",
+    "ai_generated": true,
+    "description": "Generated specifically for this detector demonstration. A prediction is not evidence of its origin."
+  },
+  "earthrise": {
+    "file": "earthrise.jpg",
+    "origin": "NASA / William Anders, Apollo 8, 1968",
+    "source": "https://science.nasa.gov/resource/image-earthrise/",
+    "asset": "https://assets.science.nasa.gov/content/dam/science/esd/climate/2023/12/Earthrise-August2013_1000x1000-1.jpg",
+    "ai_generated": false
+  },
+  "generated_video": {
+    "file": "generated-demo.mp4",
+    "source": "generated-lakehouse.png",
+    "description": "Four-second still-image demonstration clip, four frames per second, encoded with FFmpeg. Not independently generated video footage."
+  }
+}

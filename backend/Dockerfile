@@ -3,7 +3,9 @@ FROM python:3.11-slim AS base
 
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
-    PIP_NO_CACHE_DIR=1
+    PIP_NO_CACHE_DIR=1 \
+    VERITAS_DATA_ROOT=/app/data \
+    IMAGEIO_FFMPEG_EXE=/usr/bin/ffmpeg
 
 # ffmpeg/libsndfile are needed for video frame extraction and audio decoding
 # (Phases 4-5). Kept in the base image so the same image serves all roles.
@@ -22,7 +24,10 @@ RUN pip install --upgrade pip && pip install ".[api]"
 
 # Non-root runtime user.
 RUN useradd --create-home --uid 1000 veritas
+RUN mkdir -p /app/data && chown veritas:veritas /app/data
 USER veritas
+ARG DOWNLOAD_PRETRAINED_MODEL=0
+RUN if [ "$DOWNLOAD_PRETRAINED_MODEL" = "1" ]; then veritas download-model; fi
 
 EXPOSE 8000
 

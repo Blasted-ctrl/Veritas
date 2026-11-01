@@ -1,0 +1,5 @@
+{
+  "prompt": "Use case: photorealistic-natural. Asset type: clearly labeled AI-generated sample image for a public image-detector website, Veritas. Create one photographic-looking landscape image, 3:2 aspect ratio, showing a small modernist concrete house nestled among dense dark green pines at the edge of a clear alpine lake, pale gray mist behind mountains, a single warm window reflected in the water. Natural overcast morning light, quiet atmosphere, believable wood and concrete textures, subtle film-like detail, sophisticated editorial travel photography. The building and reflection provide a clear central subject that still reads well in a thumbnail. No people, no text, no logo, no watermark, no UI and no labels inside the image. This will be presented explicitly as generated media, never as a real photograph.",
+  "generator": "OpenAI image generation",
+  "generated": true
+}

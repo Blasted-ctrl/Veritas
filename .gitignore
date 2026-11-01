@@ -42,3 +42,8 @@ Thumbs.db
 # Probe clone + training scratch used during scaffolding
 /_veritas_probe/
 /_train/
+
+# Local design decisions and capture scratch; retain the design contract.
+.impeccable/*
+!.impeccable/design.json
+!.impeccable/surfaces/

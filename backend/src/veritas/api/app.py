@@ -176,7 +176,10 @@ def _verify_image(detector: ImageDetector, data: bytes, digest: str, settings: S
     try:
         fake_prob = detector.fake_probability(data)
     except Exception as exc:
-        raise HTTPException(status_code=422, detail=f"could not decode image: {exc}") from exc
+        logger.info("Image analysis failed: %s", exc)
+        raise HTTPException(
+            status_code=422, detail="Could not decode this image. Choose a readable image file."
+        ) from exc
     verdict, confidence = verdict_from_probability(fake_prob, settings.fake_threshold)
     return {
         "verdict": verdict,
@@ -195,7 +198,10 @@ def _verify_audio(detector: AudioDetector, data: bytes, digest: str, settings: S
     try:
         fake_prob = detector.fake_probability(data)
     except Exception as exc:
-        raise HTTPException(status_code=422, detail=f"could not decode audio: {exc}") from exc
+        logger.info("Audio analysis failed: %s", exc)
+        raise HTTPException(
+            status_code=422, detail="Could not decode this audio. Choose a readable audio file."
+        ) from exc
     verdict, confidence = verdict_from_probability(fake_prob, settings.fake_threshold)
     return {
         "verdict": verdict,

@@ -1,0 +1,42 @@
+name: Production containers
+on:
+  push:
+    branches: [main]
+    paths:
+      - backend/**
+      - frontend/**
+      - docker-compose.yml
+      - .github/workflows/containers.yml
+  pull_request:
+    paths:
+      - backend/**
+      - frontend/**
+      - docker-compose.yml
+      - .github/workflows/containers.yml
+  workflow_dispatch:
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      NEXT_PUBLIC_API_URL: http://127.0.0.1:8000
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate configuration and build production images
+        run: |
+          docker compose config --quiet
+          docker compose build
+      - name: Install checksum-verified model as the runtime user
+        run: docker compose run --rm --no-deps api veritas download-model
+      - name: Start the production stack
+        run: docker compose up -d
+      - name: Verify model readiness, image inference, and MP4 inference
+        run: |
+          python scripts/container_smoke.py
+          docker compose exec -T frontend sh -c 'grep -R -l "http://127.0.0.1:8000" .next/static'
+      - name: Container logs
+        if: always()
+        run: docker compose logs --no-color
+      - name: Stop the isolated stack
+        if: always()
+        run: docker compose down -v

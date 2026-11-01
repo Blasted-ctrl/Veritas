@@ -1,77 +1,137 @@
+import { IconAlertTriangle, IconCircleCheck } from "@tabler/icons-react";
 import type { Verdict } from "@/lib/types";
-import { ConfidenceBar } from "./ConfidenceBar";
-import { HeatmapView } from "./HeatmapView";
 
-interface Props {
-  verdict: Verdict;
-  previewUrl?: string;
-}
-
-export function VerdictCard({ verdict, previewUrl }: Props) {
-  const isFake = verdict.verdict === "fake";
+export function VerdictCard({ result }: { result: Verdict }) {
+  const fake = result.verdict === "fake";
+  const score = result.fake_probability * 100;
   return (
-    <div className="space-y-5 rounded-2xl border border-white/10 bg-panel/70 p-6 shadow-xl">
-      <div className="flex items-center justify-between">
-        <div>
-          <p className="text-xs uppercase tracking-widest text-slate-400">Verdict</p>
-          <p className={`text-3xl font-bold ${isFake ? "text-fake" : "text-real"}`}>
-            {isFake ? "Likely manipulated" : "Likely authentic"}
-          </p>
-        </div>
-        <span
-          className={`rounded-full px-3 py-1 text-sm font-semibold ${
-            isFake ? "bg-fake/15 text-fake" : "bg-real/15 text-real"
-          }`}
-        >
-          {verdict.verdict.toUpperCase()}
+    <div className="assessment-result">
+      <div className={"prediction " + (fake ? "generated" : "natural")}>
+        {fake ? <IconAlertTriangle size={25} /> : <IconCircleCheck size={25} />}
+        <h3>
+          {fake
+            ? "Likely AI-generated"
+            : result.modality === "audio"
+              ? "Likely human-made"
+              : "Likely camera-made"}
+        </h3>
+      </div>
+      <p className="result-context">
+        {result.modality === "video"
+          ? "Based on sampled image frames."
+          : "The model’s prediction for this file."}{" "}
+        This does not establish authenticity.
+      </p>
+      <div className="score-heading">
+        <span>AI-generated score</span>
+        <strong>
+          {score.toFixed(1)}
+          <small>%</small>
+        </strong>
+      </div>
+      <div
+        className="score-track"
+        role="meter"
+        aria-label="AI-generated model score"
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-valuenow={Number(score.toFixed(1))}
+      >
+        <span style={{ width: score + "%" }} />
+        <i style={{ left: result.decision_threshold * 100 + "%" }} />
+      </div>
+      <div className="score-scale">
+        <span>
+          {result.modality === "audio"
+            ? "Human-made patterns"
+            : "Camera-made patterns"}
         </span>
+        <span>AI-made patterns</span>
       </div>
-
-      <div className="space-y-3">
-        <ConfidenceBar label="Confidence" value={verdict.confidence} tone={isFake ? "fake" : "real"} />
-        <ConfidenceBar label="Fake probability" value={verdict.fake_probability} tone="neutral" />
-      </div>
-
-      {verdict.modality === "image" && previewUrl && (
-        <HeatmapView original={previewUrl} overlay={verdict.overlay} />
-      )}
-
-      {verdict.modality === "video" && verdict.frames && (
-        <div>
-          <p className="mb-2 text-sm text-slate-300">
-            {verdict.frames_analyzed} frames analysed — per-frame fake probability
-          </p>
-          <div className="flex h-16 items-end gap-1">
-            {verdict.frames.map((f) => (
-              <div
-                key={f.index}
-                title={`frame ${f.index}: ${(f.fake_probability * 100).toFixed(0)}%`}
-                className="flex-1 rounded-t bg-gradient-to-t from-sky-500/40 to-fake/80"
-                style={{ height: `${Math.max(4, f.fake_probability * 100)}%` }}
+      <p className="score-note">
+        Class score, not a calibrated probability. Decision threshold:{" "}
+        {(result.decision_threshold * 100).toFixed(0)}%.
+      </p>
+      {result.frames && (
+        <div className="frames">
+          <div className="frames-heading">
+            <strong>{result.frames_analyzed} frames analyzed</strong>
+            <span>Average score above</span>
+          </div>
+          <div className="frame-bars" aria-hidden="true">
+            {result.frames.map((frame) => (
+              <span
+                key={frame.index}
+                style={{
+                  height: Math.max(3, frame.fake_probability * 100) + "%",
+                }}
               />
             ))}
           </div>
+          <details>
+            <summary>View individual frame scores</summary>
+            <table>
+              <caption>Frames in sampling order</caption>
+              <thead>
+                <tr>
+                  <th>Sample</th>
+                  <th>AI-generated score</th>
+                </tr>
+              </thead>
+              <tbody>
+                {result.frames.map((frame) => (
+                  <tr key={frame.index}>
+                    <td>{frame.index + 1}</td>
+                    <td>{(frame.fake_probability * 100).toFixed(1)}%</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </details>
+          <p className="score-note">
+            Sampled frames only. Audio and motion are not analyzed.
+          </p>
         </div>
       )}
-
-      <dl className="grid grid-cols-2 gap-3 text-sm text-slate-300 sm:grid-cols-4">
-        <Meta label="Modality" value={verdict.modality} />
-        <Meta label="Model" value={verdict.model} />
-        <Meta label="Latency" value={`${verdict.latency_ms.toFixed(0)} ms`} />
-        <Meta label="Cache" value={verdict.cached ? "hit" : "miss"} />
-      </dl>
-      <p className="truncate font-mono text-[11px] text-slate-500" title={verdict.content_sha256}>
-        sha256: {verdict.content_sha256}
-      </p>
-    </div>
-  );
-}
-
-function Meta({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="rounded-lg bg-black/20 px-3 py-2">
-      <dt className="text-[11px] uppercase tracking-wide text-slate-500">{label}</dt>
-      <dd className="truncate font-medium text-slate-200">{value}</dd>
+      <details className="result-metadata">
+        <summary>Model &amp; analysis details</summary>
+        <dl>
+          <dt>Model</dt>
+          <dd>{result.model_info.id}</dd>
+          <dt>Source</dt>
+          <dd>
+            {result.model_info.source_type}
+            {result.model_info.source_url && (
+              <>
+                {" "}
+                ·{" "}
+                <a
+                  href={result.model_info.source_url}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Model card
+                </a>
+              </>
+            )}
+          </dd>
+          <dt>License</dt>
+          <dd>{result.model_info.license ?? "Not specified"}</dd>
+          <dt>Processing</dt>
+          <dd>
+            {(result.latency_ms / 1000).toFixed(2)} seconds
+            {result.cached ? " · cached result" : ""}
+          </dd>
+          <dt>Model SHA-256</dt>
+          <dd>
+            <code>{result.model_info.artifact_sha256}</code>
+          </dd>
+          <dt>File SHA-256</dt>
+          <dd>
+            <code>{result.content_sha256}</code>
+          </dd>
+        </dl>
+      </details>
     </div>
   );
 }

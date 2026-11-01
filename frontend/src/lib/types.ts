@@ -11,6 +11,15 @@ export interface Verdict {
   fake_probability: number;
   modality: Modality;
   model: string;
+  model_info: {
+    id: string;
+    source_type: string;
+    source_url?: string | null;
+    revision?: string | null;
+    license?: string | null;
+    artifact_sha256: string;
+  };
+  decision_threshold: number;
   latency_ms: number;
   cached: boolean;
   content_sha256: string;
@@ -26,4 +35,7 @@ export interface Health {
   audio_model: boolean;
   explainer: boolean;
   cache: string;
+  max_upload_bytes: number;
+  video_fps: number;
+  max_video_frames: number;
 }
