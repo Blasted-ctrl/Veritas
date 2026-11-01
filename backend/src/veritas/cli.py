@@ -103,8 +103,23 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--version", action="version", version=f"veritas {__version__}")
     subparsers = parser.add_subparsers(dest="command", required=True)
     _add_prepare_data(subparsers)
+    download = subparsers.add_parser("download-model", help="Install the pinned pretrained image detector.")
+    download.add_argument("--output", default=str(PATHS.models / "image" / "model.onnx"))
+    download.add_argument("--overwrite", action="store_true", help="Replace a different existing model.")
+    download.set_defaults(func=_run_download_model)
     _register_ml_commands(subparsers)
     return parser
+
+
+def _run_download_model(args: argparse.Namespace) -> int:
+    from veritas.models.pretrained import download_model
+
+    path = download_model(args.output, overwrite=args.overwrite)
+    print(f"Installed verified pretrained image detector -> {path}")
+    print(
+        "Restart the API to load it. This model is trained on CIFAKE; scores are not proof of authenticity."
+    )
+    return 0
 
 
 def main(argv: list[str] | None = None) -> int:

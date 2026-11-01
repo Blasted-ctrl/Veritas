@@ -10,12 +10,15 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from veritas.models.metadata import torch_state_sha256
+
 
 class GradCamExplainer:
     def __init__(self, model_dir: str, *, image_size: int = 224):
         self.model_dir = Path(model_dir)
         self.image_size = image_size
         self._model = None
+        self._state_hash = None
 
     @property
     def available(self) -> bool:
@@ -35,12 +38,36 @@ class GradCamExplainer:
             self._model = ViTForImageClassification.from_pretrained(str(self.model_dir)).eval()
         return self._model
 
-    def explain(self, image_bytes: bytes, *, class_idx: int = 1) -> dict | None:
+    def matches(self, preprocessing: dict) -> bool:
+        expected = preprocessing.get("torch_state_sha256")
+        if not expected or not self.available:
+            return False
+        try:
+            if self._state_hash is None:
+                self._state_hash = torch_state_sha256(self._load())
+            return self._state_hash == expected
+        except Exception:
+            return False
+
+    def explain(
+        self, image_bytes: bytes, *, class_idx: int = 1, preprocessing: dict | None = None
+    ) -> dict | None:
         if not self.available:
             return None
         from veritas.explain.gradcam import explain_image
 
-        return explain_image(self._load(), image_bytes, image_size=self.image_size, class_idx=class_idx)
+        model = self._load()
+        if preprocessing is not None:
+            expected = preprocessing.get("torch_state_sha256")
+            if not expected:
+                return None
+            if self._state_hash is None:
+                self._state_hash = torch_state_sha256(model)
+            if self._state_hash != expected:
+                return None
+        return explain_image(
+            model, image_bytes, image_size=self.image_size, class_idx=class_idx, preprocessing=preprocessing
+        )
 
 
 __all__ = ["GradCamExplainer"]

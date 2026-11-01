@@ -107,14 +107,21 @@ def _png_data_url(png: bytes) -> str:
     return "data:image/png;base64," + base64.b64encode(png).decode("ascii")
 
 
-def explain_image(model, image_bytes: bytes, *, image_size: int = 224, class_idx: int = 1) -> dict:
+def explain_image(
+    model, image_bytes: bytes, *, image_size: int = 224, class_idx: int = 1, preprocessing: dict | None = None
+) -> dict:
     """Full Grad-CAM for one image: returns base64 heatmap + overlay data URLs."""
     import torch
     from PIL import Image
 
-    transform = make_image_transform(image_size)
-    with Image.open(io.BytesIO(image_bytes)) as im:
-        pixel_values = transform(im.convert("RGB")).unsqueeze(0)
+    if preprocessing is not None:
+        from veritas.api.inference import preprocess_image
+
+        pixel_values = torch.from_numpy(preprocess_image(image_bytes, preprocessing))
+    else:
+        transform = make_image_transform(image_size)
+        with Image.open(io.BytesIO(image_bytes)) as im:
+            pixel_values = transform(im.convert("RGB")).unsqueeze(0)
 
     cam = ViTGradCAM(model)
     with torch.enable_grad():

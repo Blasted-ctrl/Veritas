@@ -8,7 +8,15 @@ served graph has a clean ``input -> logits`` signature, with a dynamic batch
 
 from __future__ import annotations
 
+import json
 from pathlib import Path
+
+from veritas.models.metadata import (
+    default_image_metadata,
+    file_sha256,
+    metadata_path,
+    torch_state_sha256,
+)
 
 DEFAULT_OPSET = 17
 
@@ -62,6 +70,10 @@ def export_image_onnx(
         do_constant_folding=True,
         dynamo=False,  # legacy TorchScript exporter: stable dynamic_axes support
     )
+    metadata = default_image_metadata(image_size)
+    metadata["artifact_sha256"] = file_sha256(out)
+    metadata["torch_state_sha256"] = torch_state_sha256(model)
+    metadata_path(out).write_text(json.dumps(metadata, indent=2) + "\n", encoding="utf-8")
     return out
 
 

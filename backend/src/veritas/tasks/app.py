@@ -38,29 +38,16 @@ def analyze_video(
     threshold: float = 0.5,
 ) -> dict:
     """Score a video by aggregating per-frame fake-probabilities."""
-    from veritas.api.inference import ImageDetector, verdict_from_probability
-    from veritas.tasks.video import extract_frame_pngs
+    from veritas.api.inference import ImageDetector
+    from veritas.tasks.video import analyze_frames
 
-    frames = extract_frame_pngs(video_path, fps=fps, max_frames=max_frames)
-    detector = ImageDetector(model_path, image_size=image_size)
-
-    per_frame = []
-    for idx, png in enumerate(frames):
-        per_frame.append({"index": idx, "fake_probability": detector.fake_probability(png)})
-
-    if per_frame:
-        mean_fake = sum(f["fake_probability"] for f in per_frame) / len(per_frame)
-    else:
-        mean_fake = 0.0
-    verdict, confidence = verdict_from_probability(mean_fake, threshold)
-
-    return {
-        "fake_probability": mean_fake,
-        "verdict": verdict,
-        "confidence": confidence,
-        "frames_analyzed": len(per_frame),
-        "frames": per_frame,
-    }
+    return analyze_frames(
+        video_path,
+        ImageDetector(model_path, image_size=image_size),
+        fps=fps,
+        max_frames=max_frames,
+        threshold=threshold,
+    )
 
 
 __all__ = ["app", "analyze_video"]
