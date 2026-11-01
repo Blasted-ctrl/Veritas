@@ -1,0 +1,8 @@
+{
+  "origin": "Browser screenshot of http://127.0.0.1:3000",
+  "captured_date": "2026-11-01",
+  "description": "Live Veritas browser capture. Generated lakehouse PNG analyzed by the checksum-pinned ONNX detector; AI-generated class score98.8%. The UI and score are real, not generated.",
+  "model_revision": "e3cfe99f2841930a040a6281682c10c989965603",
+  "model_sha256": "44cb205f596f2530686bf4895e3678f08f9483c926b6bdc0e02998d5b54978a2",
+  "source_assets": "frontend/public/samples/credits.json"
+}

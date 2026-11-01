@@ -29,3 +29,7 @@ Video scores average a bounded sample of image-frame scores. They do not analyze
 The original image/audio training and export tools remain. Image exports save processor metadata, the ONNX artifact hash, and the Torch state hash. A custom model without a sidecar uses the historical training normalization and bilinear resize, and responses identify it as custom.
 
 Optional Grad-CAM requires a configured Torch checkpoint matching the state hash recorded by the image export. No matching explanation checkpoint ships with the downloadable detector, so the default site does not offer a heatmap. A heatmap would not prove manipulation.
+
+## Conversion verification
+
+The recorded [Torch/ONNX parity check](verification/pretrained-parity.json) verifies the declared processor and compares raw logits and class scores on both included images. Numerical agreement does not establish real-world detection accuracy.

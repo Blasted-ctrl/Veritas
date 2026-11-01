@@ -1,0 +1,584 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-01T23:33:44.650783+00:00",
+  "title": "Design System: Veritas",
+  "extensions": {
+    "colorMeta": {
+      "bg": {
+        "role": "neutral",
+        "displayName": "Cool green ground",
+        "tonalRamp": [
+          "oklch(0.150 0.0026 132.42)",
+          "oklch(0.260 0.0044 132.42)",
+          "oklch(0.380 0.0062 132.42)",
+          "oklch(0.490 0.0073 132.42)",
+          "oklch(0.610 0.0073 132.42)",
+          "oklch(0.720 0.0062 132.42)",
+          "oklch(0.840 0.0044 132.42)",
+          "oklch(0.950 0.0018 132.42)"
+        ]
+      },
+      "surface": {
+        "role": "neutral",
+        "displayName": "Study surface",
+        "tonalRamp": [
+          "oklch(0.150 0.0014 121.56)",
+          "oklch(0.260 0.0024 121.56)",
+          "oklch(0.380 0.0035 121.56)",
+          "oklch(0.490 0.0041 121.56)",
+          "oklch(0.610 0.0041 121.56)",
+          "oklch(0.720 0.0035 121.56)",
+          "oklch(0.840 0.0024 121.56)",
+          "oklch(0.950 0.0010 121.56)"
+        ]
+      },
+      "surface-2": {
+        "role": "neutral",
+        "displayName": "Tonal inset",
+        "tonalRamp": [
+          "oklch(0.150 0.0048 134.90)",
+          "oklch(0.260 0.0082 134.90)",
+          "oklch(0.380 0.0116 134.90)",
+          "oklch(0.490 0.0136 134.90)",
+          "oklch(0.610 0.0136 134.90)",
+          "oklch(0.720 0.0116 134.90)",
+          "oklch(0.840 0.0082 134.90)",
+          "oklch(0.950 0.0034 134.90)"
+        ]
+      },
+      "line": {
+        "role": "neutral",
+        "displayName": "Fine green rule",
+        "tonalRamp": [
+          "oklch(0.150 0.0059 142.55)",
+          "oklch(0.260 0.0101 142.55)",
+          "oklch(0.380 0.0143 142.55)",
+          "oklch(0.490 0.0168 142.55)",
+          "oklch(0.610 0.0168 142.55)",
+          "oklch(0.720 0.0143 142.55)",
+          "oklch(0.840 0.0101 142.55)",
+          "oklch(0.950 0.0042 142.55)"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Deep green ink",
+        "tonalRamp": [
+          "oklch(0.150 0.0125 175.56)",
+          "oklch(0.260 0.0214 175.56)",
+          "oklch(0.380 0.0302 175.56)",
+          "oklch(0.490 0.0356 175.56)",
+          "oklch(0.610 0.0356 175.56)",
+          "oklch(0.720 0.0302 175.56)",
+          "oklch(0.840 0.0214 175.56)",
+          "oklch(0.950 0.0089 175.56)"
+        ]
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "Muted reading ink",
+        "tonalRamp": [
+          "oklch(0.150 0.0085 165.25)",
+          "oklch(0.260 0.0146 165.25)",
+          "oklch(0.380 0.0207 165.25)",
+          "oklch(0.490 0.0243 165.25)",
+          "oklch(0.610 0.0243 165.25)",
+          "oklch(0.720 0.0207 165.25)",
+          "oklch(0.840 0.0146 165.25)",
+          "oklch(0.950 0.0061 165.25)"
+        ]
+      },
+      "quiet": {
+        "role": "neutral",
+        "displayName": "Quiet annotation ink",
+        "tonalRamp": [
+          "oklch(0.150 0.0090 155.37)",
+          "oklch(0.260 0.0155 155.37)",
+          "oklch(0.380 0.0220 155.37)",
+          "oklch(0.490 0.0258 155.37)",
+          "oklch(0.610 0.0258 155.37)",
+          "oklch(0.720 0.0220 155.37)",
+          "oklch(0.840 0.0155 155.37)",
+          "oklch(0.950 0.0065 155.37)"
+        ]
+      },
+      "accent": {
+        "role": "primary",
+        "displayName": "Botanical accent",
+        "tonalRamp": [
+          "oklch(0.150 0.0244 150.72)",
+          "oklch(0.260 0.0418 150.72)",
+          "oklch(0.380 0.0592 150.72)",
+          "oklch(0.490 0.0697 150.72)",
+          "oklch(0.610 0.0697 150.72)",
+          "oklch(0.720 0.0592 150.72)",
+          "oklch(0.840 0.0418 150.72)",
+          "oklch(0.950 0.0174 150.72)"
+        ]
+      },
+      "accent-ink": {
+        "role": "primary",
+        "displayName": "Action foreground",
+        "tonalRamp": [
+          "oklch(0.150 0.0014 121.56)",
+          "oklch(0.260 0.0024 121.56)",
+          "oklch(0.380 0.0035 121.56)",
+          "oklch(0.490 0.0041 121.56)",
+          "oklch(0.610 0.0041 121.56)",
+          "oklch(0.720 0.0035 121.56)",
+          "oklch(0.840 0.0024 121.56)",
+          "oklch(0.950 0.0010 121.56)"
+        ]
+      },
+      "accent-soft": {
+        "role": "primary",
+        "displayName": "Soft botanical ground",
+        "tonalRamp": [
+          "oklch(0.150 0.0084 127.59)",
+          "oklch(0.260 0.0145 127.59)",
+          "oklch(0.380 0.0205 127.59)",
+          "oklch(0.490 0.0241 127.59)",
+          "oklch(0.610 0.0241 127.59)",
+          "oklch(0.720 0.0205 127.59)",
+          "oklch(0.840 0.0145 127.59)",
+          "oklch(0.950 0.0060 127.59)"
+        ]
+      },
+      "warning": {
+        "role": "secondary",
+        "displayName": "Amber caution",
+        "tonalRamp": [
+          "oklch(0.150 0.0315 72.04)",
+          "oklch(0.260 0.0540 72.04)",
+          "oklch(0.380 0.0765 72.04)",
+          "oklch(0.490 0.0900 72.04)",
+          "oklch(0.610 0.0900 72.04)",
+          "oklch(0.720 0.0765 72.04)",
+          "oklch(0.840 0.0540 72.04)",
+          "oklch(0.950 0.0225 72.04)"
+        ]
+      },
+      "warning-bg": {
+        "role": "secondary",
+        "displayName": "Caution ground",
+        "tonalRamp": [
+          "oklch(0.150 0.0110 84.59)",
+          "oklch(0.260 0.0189 84.59)",
+          "oklch(0.380 0.0268 84.59)",
+          "oklch(0.490 0.0315 84.59)",
+          "oklch(0.610 0.0315 84.59)",
+          "oklch(0.720 0.0268 84.59)",
+          "oklch(0.840 0.0189 84.59)",
+          "oklch(0.950 0.0079 84.59)"
+        ]
+      },
+      "error": {
+        "role": "secondary",
+        "displayName": "Clay error",
+        "tonalRamp": [
+          "oklch(0.150 0.0315 28.29)",
+          "oklch(0.260 0.0540 28.29)",
+          "oklch(0.380 0.0765 28.29)",
+          "oklch(0.490 0.0900 28.29)",
+          "oklch(0.610 0.0900 28.29)",
+          "oklch(0.720 0.0765 28.29)",
+          "oklch(0.840 0.0540 28.29)",
+          "oklch(0.950 0.0225 28.29)"
+        ]
+      },
+      "error-bg": {
+        "role": "secondary",
+        "displayName": "Error ground",
+        "tonalRamp": [
+          "oklch(0.150 0.0068 33.37)",
+          "oklch(0.260 0.0117 33.37)",
+          "oklch(0.380 0.0165 33.37)",
+          "oklch(0.490 0.0194 33.37)",
+          "oklch(0.610 0.0194 33.37)",
+          "oklch(0.720 0.0165 33.37)",
+          "oklch(0.840 0.0117 33.37)",
+          "oklch(0.950 0.0049 33.37)"
+        ]
+      },
+      "focus": {
+        "role": "primary",
+        "displayName": "Keyboard focus",
+        "tonalRamp": [
+          "oklch(0.150 0.0244 150.72)",
+          "oklch(0.260 0.0418 150.72)",
+          "oklch(0.380 0.0592 150.72)",
+          "oklch(0.490 0.0697 150.72)",
+          "oklch(0.610 0.0697 150.72)",
+          "oklch(0.720 0.0592 150.72)",
+          "oklch(0.840 0.0418 150.72)",
+          "oklch(0.950 0.0174 150.72)"
+        ]
+      },
+      "dark-bg": {
+        "role": "neutral",
+        "displayName": "Dark: Cool green ground",
+        "tonalRamp": [
+          "oklch(0.150 0.0079 166.02)",
+          "oklch(0.260 0.0135 166.02)",
+          "oklch(0.380 0.0192 166.02)",
+          "oklch(0.490 0.0226 166.02)",
+          "oklch(0.610 0.0226 166.02)",
+          "oklch(0.720 0.0192 166.02)",
+          "oklch(0.840 0.0135 166.02)",
+          "oklch(0.950 0.0056 166.02)"
+        ]
+      },
+      "dark-surface": {
+        "role": "neutral",
+        "displayName": "Dark: Study surface",
+        "tonalRamp": [
+          "oklch(0.150 0.0112 158.23)",
+          "oklch(0.260 0.0192 158.23)",
+          "oklch(0.380 0.0273 158.23)",
+          "oklch(0.490 0.0321 158.23)",
+          "oklch(0.610 0.0321 158.23)",
+          "oklch(0.720 0.0273 158.23)",
+          "oklch(0.840 0.0192 158.23)",
+          "oklch(0.950 0.0080 158.23)"
+        ]
+      },
+      "dark-surface-2": {
+        "role": "neutral",
+        "displayName": "Dark: Tonal inset",
+        "tonalRamp": [
+          "oklch(0.150 0.0125 175.56)",
+          "oklch(0.260 0.0214 175.56)",
+          "oklch(0.380 0.0302 175.56)",
+          "oklch(0.490 0.0356 175.56)",
+          "oklch(0.610 0.0356 175.56)",
+          "oklch(0.720 0.0302 175.56)",
+          "oklch(0.840 0.0214 175.56)",
+          "oklch(0.950 0.0089 175.56)"
+        ]
+      },
+      "dark-line": {
+        "role": "neutral",
+        "displayName": "Dark: Fine green rule",
+        "tonalRamp": [
+          "oklch(0.150 0.0144 159.62)",
+          "oklch(0.260 0.0247 159.62)",
+          "oklch(0.380 0.0350 159.62)",
+          "oklch(0.490 0.0412 159.62)",
+          "oklch(0.610 0.0412 159.62)",
+          "oklch(0.720 0.0350 159.62)",
+          "oklch(0.840 0.0247 159.62)",
+          "oklch(0.950 0.0103 159.62)"
+        ]
+      },
+      "dark-ink": {
+        "role": "neutral",
+        "displayName": "Dark: Deep green ink",
+        "tonalRamp": [
+          "oklch(0.150 0.0014 121.56)",
+          "oklch(0.260 0.0024 121.56)",
+          "oklch(0.380 0.0035 121.56)",
+          "oklch(0.490 0.0041 121.56)",
+          "oklch(0.610 0.0041 121.56)",
+          "oklch(0.720 0.0035 121.56)",
+          "oklch(0.840 0.0024 121.56)",
+          "oklch(0.950 0.0010 121.56)"
+        ]
+      },
+      "dark-muted": {
+        "role": "neutral",
+        "displayName": "Dark: Muted reading ink",
+        "tonalRamp": [
+          "oklch(0.150 0.0059 142.55)",
+          "oklch(0.260 0.0101 142.55)",
+          "oklch(0.380 0.0143 142.55)",
+          "oklch(0.490 0.0168 142.55)",
+          "oklch(0.610 0.0168 142.55)",
+          "oklch(0.720 0.0143 142.55)",
+          "oklch(0.840 0.0101 142.55)",
+          "oklch(0.950 0.0042 142.55)"
+        ]
+      },
+      "dark-quiet": {
+        "role": "neutral",
+        "displayName": "Dark: Quiet annotation ink",
+        "tonalRamp": [
+          "oklch(0.150 0.0101 150.29)",
+          "oklch(0.260 0.0174 150.29)",
+          "oklch(0.380 0.0246 150.29)",
+          "oklch(0.490 0.0290 150.29)",
+          "oklch(0.610 0.0290 150.29)",
+          "oklch(0.720 0.0246 150.29)",
+          "oklch(0.840 0.0174 150.29)",
+          "oklch(0.950 0.0072 150.29)"
+        ]
+      },
+      "dark-accent": {
+        "role": "primary",
+        "displayName": "Dark: Botanical accent",
+        "tonalRamp": [
+          "oklch(0.150 0.0222 130.64)",
+          "oklch(0.260 0.0381 130.64)",
+          "oklch(0.380 0.0540 130.64)",
+          "oklch(0.490 0.0635 130.64)",
+          "oklch(0.610 0.0635 130.64)",
+          "oklch(0.720 0.0540 130.64)",
+          "oklch(0.840 0.0381 130.64)",
+          "oklch(0.950 0.0159 130.64)"
+        ]
+      },
+      "dark-accent-ink": {
+        "role": "primary",
+        "displayName": "Dark: Action foreground",
+        "tonalRamp": [
+          "oklch(0.150 0.0138 149.52)",
+          "oklch(0.260 0.0237 149.52)",
+          "oklch(0.380 0.0335 149.52)",
+          "oklch(0.490 0.0394 149.52)",
+          "oklch(0.610 0.0394 149.52)",
+          "oklch(0.720 0.0335 149.52)",
+          "oklch(0.840 0.0237 149.52)",
+          "oklch(0.950 0.0099 149.52)"
+        ]
+      },
+      "dark-accent-soft": {
+        "role": "primary",
+        "displayName": "Dark: Soft botanical ground",
+        "tonalRamp": [
+          "oklch(0.150 0.0138 149.52)",
+          "oklch(0.260 0.0237 149.52)",
+          "oklch(0.380 0.0335 149.52)",
+          "oklch(0.490 0.0394 149.52)",
+          "oklch(0.610 0.0394 149.52)",
+          "oklch(0.720 0.0335 149.52)",
+          "oklch(0.840 0.0237 149.52)",
+          "oklch(0.950 0.0099 149.52)"
+        ]
+      },
+      "dark-warning": {
+        "role": "secondary",
+        "displayName": "Dark: Amber caution",
+        "tonalRamp": [
+          "oklch(0.150 0.0293 79.40)",
+          "oklch(0.260 0.0502 79.40)",
+          "oklch(0.380 0.0711 79.40)",
+          "oklch(0.490 0.0836 79.40)",
+          "oklch(0.610 0.0836 79.40)",
+          "oklch(0.720 0.0711 79.40)",
+          "oklch(0.840 0.0502 79.40)",
+          "oklch(0.950 0.0209 79.40)"
+        ]
+      },
+      "dark-warning-bg": {
+        "role": "secondary",
+        "displayName": "Dark: Caution ground",
+        "tonalRamp": [
+          "oklch(0.150 0.0122 80.62)",
+          "oklch(0.260 0.0209 80.62)",
+          "oklch(0.380 0.0296 80.62)",
+          "oklch(0.490 0.0348 80.62)",
+          "oklch(0.610 0.0348 80.62)",
+          "oklch(0.720 0.0296 80.62)",
+          "oklch(0.840 0.0209 80.62)",
+          "oklch(0.950 0.0087 80.62)"
+        ]
+      },
+      "dark-error": {
+        "role": "secondary",
+        "displayName": "Dark: Clay error",
+        "tonalRamp": [
+          "oklch(0.150 0.0240 31.02)",
+          "oklch(0.260 0.0412 31.02)",
+          "oklch(0.380 0.0583 31.02)",
+          "oklch(0.490 0.0686 31.02)",
+          "oklch(0.610 0.0686 31.02)",
+          "oklch(0.720 0.0583 31.02)",
+          "oklch(0.840 0.0412 31.02)",
+          "oklch(0.950 0.0172 31.02)"
+        ]
+      },
+      "dark-error-bg": {
+        "role": "secondary",
+        "displayName": "Dark: Error ground",
+        "tonalRamp": [
+          "oklch(0.150 0.0158 38.57)",
+          "oklch(0.260 0.0271 38.57)",
+          "oklch(0.380 0.0384 38.57)",
+          "oklch(0.490 0.0452 38.57)",
+          "oklch(0.610 0.0452 38.57)",
+          "oklch(0.720 0.0384 38.57)",
+          "oklch(0.840 0.0271 38.57)",
+          "oklch(0.950 0.0113 38.57)"
+        ]
+      },
+      "dark-focus": {
+        "role": "primary",
+        "displayName": "Dark: Keyboard focus",
+        "tonalRamp": [
+          "oklch(0.150 0.0222 130.64)",
+          "oklch(0.260 0.0381 130.64)",
+          "oklch(0.380 0.0540 130.64)",
+          "oklch(0.490 0.0635 130.64)",
+          "oklch(0.610 0.0635 130.64)",
+          "oklch(0.720 0.0540 130.64)",
+          "oklch(0.840 0.0381 130.64)",
+          "oklch(0.950 0.0159 130.64)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Initial introduction heading."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Section headings and prominent numerical values."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Analysis panel heading."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Default reading text."
+      },
+      "button": {
+        "displayName": "Button",
+        "purpose": "Primary and secondary controls."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Supporting labels and metadata."
+      },
+      "code": {
+        "displayName": "Code",
+        "purpose": "Model and file hashes."
+      }
+    },
+    "shadows": [],
+    "motion": [
+      {
+        "name": "button-state",
+        "value": "background-color 120ms ease-out, color 120ms ease-out, transform 120ms ease-out",
+        "purpose": "Short state transitions; enabled buttons press downward by 1px."
+      },
+      {
+        "name": "result-arrival",
+        "value": "result-arrives 180ms ease-out",
+        "purpose": "Single arrival from opacity 0.7 and translateY(4px) to opacity 1 and translateY(0). Reduced motion disables it."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "mobile-max",
+        "value": "720px"
+      },
+      {
+        "name": "compact-max",
+        "value": "1000px"
+      },
+      {
+        "name": "wide-min",
+        "value": "1450px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Choose a file",
+      "kind": "button",
+      "description": "Production action button; theme properties inherit from the host.",
+      "html": "<button class=\"ds-button-primary\">Choose a file</button>",
+      "css": ".ds-button-primary{font-family:Hanken,Arial,sans-serif;display:inline-flex;align-items:center;justify-content:center;gap:24px;min-height:46px;padding:10px 22px;font-size:14px;font-weight:600;line-height:1.6;border:1px solid transparent;border-radius:8px;cursor:pointer;transition:background-color 120ms ease-out,color 120ms ease-out,transform 120ms ease-out;background:var(--accent,#416b4b);color:var(--accent-ink,#fafbf8);}.ds-button-primary:hover:not(:disabled){filter:brightness(.92);}.ds-button-primary:focus-visible{outline:3px solid var(--focus,#416b4b);outline-offset:4px;}.ds-button-primary:active:not(:disabled){transform:translateY(1px)}.ds-button-primary:disabled{opacity:.5;cursor:not-allowed}@media(prefers-reduced-motion:reduce){.ds-button-primary{animation:none!important;transition:none!important}}",
+      "refersTo": "button-primary"
+    },
+    {
+      "name": "Analyze again",
+      "kind": "button",
+      "description": "Production action button; theme properties inherit from the host.",
+      "html": "<button class=\"ds-button-secondary\">Analyze again</button>",
+      "css": ".ds-button-secondary{font-family:Hanken,Arial,sans-serif;display:inline-flex;align-items:center;justify-content:center;gap:24px;min-height:46px;padding:10px 22px;font-size:14px;font-weight:600;line-height:1.6;border:1px solid transparent;border-radius:8px;cursor:pointer;transition:background-color 120ms ease-out,color 120ms ease-out,transform 120ms ease-out;background:var(--surface-2,#e2e8df);color:var(--ink,#203b34);border-color:var(--line,#c9d2c8);}.ds-button-secondary:hover:not(:disabled){}.ds-button-secondary:focus-visible{outline:3px solid var(--focus,#416b4b);outline-offset:4px;}.ds-button-secondary:active:not(:disabled){transform:translateY(1px)}.ds-button-secondary:disabled{opacity:.5;cursor:not-allowed}@media(prefers-reduced-motion:reduce){.ds-button-secondary{animation:none!important;transition:none!important}}",
+      "refersTo": "button-secondary"
+    },
+    {
+      "name": "Text action",
+      "kind": "button",
+      "description": "Underlined recovery or file replacement action.",
+      "html": "<button class=\"ds-text-action\">Choose another file</button>",
+      "css": ".ds-text-action{font-family:Hanken,Arial,sans-serif;background:none;border:0;padding:0;color:var(--accent,#416b4b);font-size:13px;line-height:1.6;text-decoration:underline;text-underline-offset:4px;cursor:pointer;transition:transform 120ms ease-out}.ds-text-action:focus-visible{outline:3px solid var(--focus,#416b4b);outline-offset:4px;}.ds-text-action:active{transform:translateY(1px)}@media(prefers-reduced-motion:reduce){.ds-text-action{animation:none!important;transition:none!important}}",
+      "refersTo": "button-text"
+    },
+    {
+      "name": "Icon action",
+      "kind": "button",
+      "description": "Plain icon control with tonal hover ground.",
+      "html": "<button class=\"ds-icon-action\" aria-label=\"Remove file\"><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"m18 6-12 12M6 6l12 12\"/></svg></button>",
+      "css": ".ds-icon-action{font-family:Hanken,Arial,sans-serif;display:grid;place-items:center;width:36px;height:36px;border:0;border-radius:8px;background:transparent;color:var(--ink,#203b34);cursor:pointer;transition:background-color 120ms ease-out,transform 120ms ease-out}.ds-icon-action:hover{background:var(--surface-2,#e2e8df)}.ds-icon-action:focus-visible{outline:3px solid var(--focus,#416b4b);outline-offset:4px;}.ds-icon-action:active{transform:translateY(1px)}@media(prefers-reduced-motion:reduce){.ds-icon-action{animation:none!important;transition:none!important}}",
+      "refersTo": "button-icon"
+    },
+    {
+      "name": "Navigation links",
+      "kind": "nav",
+      "description": "Quiet header links with underline interaction.",
+      "html": "<nav class=\"ds-nav\" aria-label=\"Example navigation\"><a href=\"#how-it-works\">How it works</a><a href=\"https://github.com/Blasted-ctrl/Veritas\">GitHub <svg width=\"15\" height=\"15\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M7 17 17 7M7 7h10v10\"/></svg></a></nav>",
+      "css": ".ds-nav{font-family:Hanken,Arial,sans-serif;display:flex;gap:32px;font-size:14px;line-height:1.6;color:var(--ink,#203b34)}.ds-nav a{display:flex;align-items:center;gap:4px;color:inherit;text-decoration:none;text-underline-offset:4px}.ds-nav a:hover{text-decoration:underline}.ds-nav a:focus-visible{outline:3px solid var(--focus,#416b4b);outline-offset:4px;}@media(max-width:720px){.ds-nav{gap:16px}.ds-nav a:not(:last-child){display:none}.ds-nav a:last-child{font-size:12px}}@media(prefers-reduced-motion:reduce){.ds-nav{animation:none!important;transition:none!important}}"
+    },
+    {
+      "name": "Analysis panel",
+      "kind": "card",
+      "description": "Flat clipped surface for upload or the adjacent source and assessment.",
+      "html": "<section class=\"ds-panel\"><header><h2>Inspect your media</h2><span>Model ready</span></header><p>Choose a file to begin.</p></section>",
+      "css": ".ds-panel{font-family:Hanken,Arial,sans-serif;background:var(--surface,#fafbf8);color:var(--ink,#203b34);border:1px solid var(--line,#c9d2c8);border-radius:16px;overflow:hidden}.ds-panel header{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:24px 28px}.ds-panel h2{margin:0;font-size:19px;font-weight:600;line-height:1.2;letter-spacing:-.015em}.ds-panel span{font-size:12px;color:var(--quiet,#5c6c61)}.ds-panel p{margin:0;padding:0 28px 24px;font-size:14px;color:var(--muted,#52635b)}@media(prefers-reduced-motion:reduce){.ds-panel{animation:none!important;transition:none!important}}",
+      "refersTo": "analysis-panel"
+    },
+    {
+      "name": "Upload target",
+      "kind": "input",
+      "description": "Static prompt with the real native file input; drag handling belongs to the application.",
+      "html": "<div class=\"ds-upload\"><svg width=\"28\" height=\"28\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M4 17v4h16v-4M7 9l5-5 5 5M12 4v12\"/></svg><h3>Drop your file here</h3><p>Or choose one from your device</p><label class=\"ds-file-button\">Choose a file<input type=\"file\" aria-label=\"Choose a file\" /></label></div>",
+      "css": ".ds-upload{font-family:Hanken,Arial,sans-serif;padding:30px 16px 23px;border:1px dashed var(--quiet,#5c6c61);border-radius:12px;text-align:center;color:var(--ink,#203b34);background:var(--surface,#fafbf8)}.ds-upload>svg{color:var(--accent,#416b4b)}.ds-upload h3{font-size:20px;font-weight:600;letter-spacing:-.02em;margin:18px 0 0}.ds-upload p{font-size:14px;color:var(--muted,#52635b);margin:7px 0 20px}.ds-file-button{font-family:Hanken,Arial,sans-serif;display:inline-flex;align-items:center;justify-content:center;gap:24px;min-height:46px;padding:10px 22px;font-size:14px;font-weight:600;line-height:1.6;border:1px solid transparent;border-radius:8px;cursor:pointer;transition:background-color 120ms ease-out,color 120ms ease-out,transform 120ms ease-out;position:relative;background:var(--accent,#416b4b);color:var(--accent-ink,#fafbf8)}.ds-file-button input{position:absolute;inset:0;width:100%;opacity:0;cursor:pointer}.ds-file-button:hover{filter:brightness(.92)}.ds-file-button:focus-within{outline:3px solid var(--focus,#416b4b);outline-offset:4px;}.ds-file-button:active{transform:translateY(1px)}@media(prefers-reduced-motion:reduce){.ds-file-button,.ds-upload{animation:none!important;transition:none!important}}",
+      "refersTo": "upload-area"
+    },
+    {
+      "name": "Assessment score",
+      "kind": "custom",
+      "description": "Illustrative class score; this preview is not a detector result.",
+      "html": "<section class=\"ds-assessment\"><h3>Likely AI-generated</h3><p>The model’s prediction for this file. This does not establish authenticity.</p><div class=\"ds-score-label\"><span>AI-generated score</span><strong>72.0<small>%</small></strong></div><div class=\"ds-score-track\" role=\"meter\" aria-label=\"Illustrative AI-generated model score\" aria-valuemin=\"0\" aria-valuemax=\"100\" aria-valuenow=\"72\"><span></span><i></i></div><p class=\"ds-score-note\">Illustrative class score, not a calibrated probability. Decision threshold: 50%.</p></section>",
+      "css": ".ds-assessment{font-family:Hanken,Arial,sans-serif;padding:28px;background:var(--surface,#fafbf8);color:var(--ink,#203b34)}.ds-assessment h3{margin:0;font-size:26px;line-height:1.2;font-weight:600;letter-spacing:-.025em}.ds-assessment p{font-size:13px;color:var(--muted,#52635b);line-height:1.6;margin:12px 0 0;max-width:45ch}.ds-score-label{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:26px;font-size:14px}.ds-score-label strong{font-size:30px;line-height:1.2;font-weight:600;letter-spacing:-.025em;font-variant-numeric:tabular-nums}.ds-score-label small{font-size:17px;margin-left:2px}.ds-score-track{height:8px;border-radius:4px;background:var(--surface-2,#e2e8df);margin-top:12px;position:relative}.ds-score-track>span{display:block;background:var(--accent,#416b4b);height:100%;border-radius:4px;width:72%}.ds-score-track i{position:absolute;top:-4px;height:16px;width:1px;left:50%;background:var(--quiet,#5c6c61)}.ds-assessment .ds-score-note{font-size:11px;color:var(--quiet,#5c6c61)}@media(prefers-reduced-motion:reduce){.ds-assessment,.ds-score-label,.ds-score-note,.ds-score-track{animation:none!important;transition:none!important}}"
+    }
+  ],
+  "narrative": {
+    "northStar": "Conservation study",
+    "overview": "Conservation study gives Veritas a calm, precise visual identity: cool green grounds, deep ink, open grotesk lettering, and flat panels. Hierarchy comes from type, spacing, fine rules, and restrained changes in tone. Real media and readable evidence carry the visual interest.\n\nThis document records the production website in `frontend/src/app/globals.css`, `page.tsx`, `layout.tsx`, and `components/VerdictCard.tsx`. The separate illustrative Hue kit at `design/veritas-design` is a reference artifact; its examples do not override the website tokens recorded here.",
+    "keyCharacteristics": [
+      "Cool green tonal surfaces in light and dark themes.",
+      "Hanken Grotesk with compact headings and plain sentence-case controls.",
+      "Flat panels, thin separators, and Tabler outline icons.",
+      "Evidence, class scores, and their limits remain readable together."
+    ],
+    "rules": [
+      {
+        "name": "The Semantic Theme Rule",
+        "body": "Use the semantic CSS properties for both themes; warning, error, and focus retain their roles when the palette changes.",
+        "section": "colors"
+      },
+      {
+        "name": "The Flat Surface Rule",
+        "body": "Separate surfaces with tone and fine borders. The production interface uses no box shadows.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do use the production semantic properties so light and dark themes retain the same hierarchy.",
+      "Do keep real media visually prominent and place the model assessment beside it on desktop, then below it on mobile.",
+      "Do present a class score with its threshold, model identity, and visible limits.",
+      "Do use Tabler outline icons with the production stroke weight and preserve visible keyboard focus."
+    ],
+    "donts": [
+      "Don't substitute the illustrative Hue kit's example styles for production CSS.",
+      "Don't turn a model score into an authenticity seal or a calibrated probability claim.",
+      "Don't introduce decorative shadows or motion that changes the quiet, flat surface language.",
+      "Don't hide unavailable analysis behind a positive-looking result."
+    ]
+  }
+}

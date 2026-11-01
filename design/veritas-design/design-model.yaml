@@ -1,0 +1,319 @@
+name: Veritas
+philosophy: >-
+  Keep the media visible and the assessment readable. The calm ink-and-paper vocabulary of photographic
+  conservation records makes room for evidence without pretending a model prediction is a fact.
+primary_mode: light
+brand_domain: image and video inspection
+brand_type: ui-rich
+mono_for_code: true
+mono_for_metrics: false
+primitives:
+  colors:
+    neutral:
+      50: '#fafbf8'
+      100: '#eef1ec'
+      200: '#e2e8df'
+      300: '#c9d2c8'
+      400: '#9cafa0'
+      450: '#a6b8a9'
+      500: '#5c6c61'
+      600: '#52635b'
+      700: '#2c4839'
+      750: '#385344'
+      800: '#203b34'
+      900: '#1d3025'
+      950: '#15231d'
+    brand:
+      50: '#e5eddc'
+      100: '#d8e5cb'
+      200: '#b9d0a5'
+      300: '#95b282'
+      400: '#6e915c'
+      500: '#416b4b'
+      600: '#355b3e'
+      700: '#294b33'
+      800: '#223e2b'
+      900: '#1b3223'
+      950: '#182c1c'
+    red:
+      50: '#f6e5e1'
+      400: '#edb4a9'
+      500: '#943f36'
+      900: '#452920'
+    green:
+      50: '#eaf3ea'
+      500: '#4b8a65'
+      900: '#1a3022'
+    amber:
+      50: '#f3e8d2'
+      400: '#e7c48b'
+      500: '#855917'
+      900: '#3b301d'
+  spacing:
+    - 0
+    - 2
+    - 4
+    - 8
+    - 10
+    - 12
+    - 16
+    - 20
+    - 22
+    - 24
+    - 28
+    - 32
+    - 36
+    - 40
+    - 48
+    - 56
+    - 64
+    - 72
+    - 80
+    - 96
+  radii:
+    - 4
+    - 8
+    - 12
+    - 16
+    - 999
+tokens:
+  colors:
+    light:
+      background: '{neutral.100}'
+      surface1: '{neutral.50}'
+      surface2: '{neutral.200}'
+      surface3: '{neutral.300}'
+      border: '{neutral.300}'
+      border_visible: '{neutral.500}'
+      text1: '{neutral.800}'
+      text2: '{neutral.600}'
+      text3: '{neutral.500}'
+      text4: '{neutral.500}'
+      accent: '{brand.500}'
+      accent_subtle: '{brand.50}'
+      accent_ink: '{neutral.50}'
+    dark:
+      background: '{neutral.950}'
+      surface1: '{neutral.900}'
+      surface2: '{neutral.800}'
+      surface3: '{neutral.700}'
+      border: '{neutral.750}'
+      border_visible: '{neutral.400}'
+      text1: '{neutral.50}'
+      text2: '{neutral.300}'
+      text3: '{neutral.450}'
+      text4: '{neutral.450}'
+      accent: '{brand.200}'
+      accent_subtle: '{brand.950}'
+      accent_ink: '{brand.950}'
+    success: '{green.500}'
+    warning: '{amber.500}'
+    error: '{red.500}'
+    success_bg:
+      light: '{green.50}'
+      dark: '{green.900}'
+    warning_bg:
+      light: '{amber.50}'
+      dark: '{amber.900}'
+    error_bg:
+      light: '{red.50}'
+      dark: '{red.900}'
+  spacing:
+    2xs: 2
+    xs: 4
+    sm: 8
+    md: 16
+    lg: 24
+    xl: 32
+    2xl: 48
+    3xl: 64
+    4xl: 96
+  radii:
+    element: 4
+    control: 8
+    thumbnail: 12
+    component: 16
+    container: 16
+    pill: 999
+  typography:
+    display:
+      family: Hanken Grotesk
+      size: 64px
+      weight: 600
+      line_height: 1.04
+      letter_spacing: -0.035em
+    body:
+      family: Hanken Grotesk
+      size: 16px
+      weight: 400
+      line_height: 1.6
+      letter_spacing: 0em
+    mono:
+      family: ui-monospace
+      size: 12px
+      weight: 400
+      line_height: 1.5
+      letter_spacing: 0em
+    scale:
+      display:
+        size: 64px
+        line_height: 1.04
+        letter_spacing: -0.035em
+        weight: 600
+      heading:
+        size: 32px
+        line_height: 1.2
+        letter_spacing: -0.025em
+        weight: 600
+      subheading:
+        size: 22px
+        line_height: 1.3
+        letter_spacing: -0.015em
+        weight: 600
+      body:
+        size: 16px
+        line_height: 1.6
+        letter_spacing: 0em
+        weight: 400
+      body-sm:
+        size: 14px
+        line_height: 1.6
+        letter_spacing: 0em
+        weight: 400
+      caption:
+        size: 12px
+        line_height: 1.5
+        letter_spacing: 0em
+        weight: 400
+      label:
+        size: 14px
+        line_height: 1.4
+        letter_spacing: 0em
+        weight: 600
+  elevation:
+    strategy: flat
+    shadow: none
+  motion:
+    personality: mechanical
+    easing: ease-out
+    duration_fast: 120ms
+    duration_normal: 180ms
+  hero_stage:
+    preset: flat-blank
+    observed_style:
+      description: >-
+        The user selected a cool green-tinted blank field with deep green text and a separate upload panel.
+        The uploaded media is the only visual subject.
+      where_used:
+        - upload page
+    background:
+      medium: absent
+      color_mode: brand-tinted-neutral
+      saturation: muted
+      light_source: ambient
+      falloff: soft
+      vignette: 'off'
+      texture: clean
+      motion: static
+      intensity: subtle
+      safe_zone: full-bleed
+      color_palette:
+        - '#eef1ec'
+        - '#203b34'
+        - '#416b4b'
+    hero:
+      subject: none
+    relation:
+      type: flat
+      bleed: 0
+    disclaimer: >-
+      This is an original product design, not a reproduction of a third-party brand. Samples have their own
+      provenance.
+  iconography:
+    observed_style:
+      description: >-
+        The incumbent has one simple outline upload glyph, approximately 1.5px stroke with rounded terminals;
+        no established proprietary icon system.
+      stroke_weight: regular
+      corner_treatment: soft
+      fill_style: outline
+      form_language: geometric
+      visual_density: minimal
+    fallback_kit:
+      name: Tabler
+      weight: outline-1.5px
+      match_score: high
+      match_reasoning: >-
+        Tabler matches the light, geometric outline and soft terminals. Its media and inspection glyphs cover
+        this tool more directly than a warmer Phosphor set.
+      cdn: https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.50.0/dist/tabler-icons.min.css
+      icon_class_prefix: ti ti-
+    disclaimer: >-
+      Tabler is the selected open icon kit for the new interface; it is not claimed to be the source of the
+      original glyph.
+    preview_sizes:
+      - 16
+      - 24
+      - 32
+components:
+  button_primary:
+    source: derived
+    background: '{accent}'
+    color: '{accent_ink}'
+    padding: 10px 22px
+    radius: '{radii.control}'
+    height: 46px
+    font_weight: 600
+    font_size: 14px
+  button_secondary:
+    source: derived
+    background: '{surface2}'
+    color: '{text1}'
+    padding: 10px 22px
+    radius: '{radii.control}'
+    height: 46px
+    font_weight: 600
+    font_size: 14px
+  card:
+    source: observed
+    background: '{neutral.50}'
+    radius: '{radii.component}'
+    padding: 28px
+    shadow: none
+  input:
+    source: derived
+    background: '{neutral.50}'
+    radius: '{radii.control}'
+    height: 46px
+    padding: 12px 16px
+  tag:
+    source: derived
+    radius: '{radii.pill}'
+    height: 28px
+    padding: 4px 12px
+app_screen:
+  archetype: list-detail
+  frame: browser
+  frame_params:
+    url: localhost:3000
+    title: Veritas media inspection
+  content_seed: >-
+    Media inspection with a selected file, sampled frame evidence, model attribution and clearly labeled
+    illustrative recent items.
+  required_tokens_checklist:
+    - all semantic colors
+    - all typography scale tokens
+    - all spacing tokens used in components
+layout:
+  page_max: 1280
+  page_padding: 56
+  sidebar: 240
+  content_max: 960
+  breakpoint: 720
+  gap: 24
+states:
+  focus_width: 3
+  focus_offset: 4
+  disabled_opacity: 0.5
+  pressed_y: 1
+  hover_brightness: 0.92

@@ -153,3 +153,9 @@ Retain the existing frontend/backend boundary and model-training tools. Add a re
 ## Planning decisions and remaining limits
 
 The user selected Plan mode and approved a downloadable pretrained detector while keeping training tools. Direct pushes to main are authorized. Exact model revision, visual world and hosting capacity are not yet proven or locked; the implementation must resolve and validate them before claiming the site is complete. No code, detector accuracy, public deployment or final website screenshot is certified by this plan alone.
+
+## Completion record
+
+Implemented on main. The default detector is downloadable, pinned, and checksum verified; processor and raw-model parity passed against its Torch reference. Browser image and MP4 analysis, provenance, cancellation, recovery, sampled-frame evidence, and both responsive themes are working. README contains real inference captures and explains the observed NASA false positive. Original training/export tools remain.
+
+CI at 68440a1 passed core, ML, API/ONNX, frontend, and production-container gates. The independent Impeccable finish review returned ship, and the documenter wrote DESIGN.md and .impeccable/design.json. The Hue design skill and four previews are included and validated. See docs/verification/README.md for exact evidence and limits. No public hosting deployment or real-world accuracy benchmark is claimed.
