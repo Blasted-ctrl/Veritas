@@ -12,7 +12,7 @@ from collections import Counter
 from concurrent.futures import ThreadPoolExecutor
 from email.utils import parsedate_to_datetime
 from pathlib import Path
-from threading import Lock
+from threading import BoundedSemaphore, Lock
 from urllib.error import HTTPError
 from urllib.parse import parse_qs, urlencode, urlparse
 from urllib.request import Request, urlopen
@@ -104,6 +104,42 @@ def viewer_rows(document, split):
     return rows
 
 
+class ViewerLinks:
+    def __init__(self):
+        self.pages = {}
+        self.locks = {}
+        self.guard = Lock()
+        self.requests = BoundedSemaphore(3)
+
+    def source(self, row):
+        key = (row["upstream_split"], row["row_idx"] // 100 * 100)
+        with self.guard:
+            lock = self.locks.setdefault(key, Lock())
+        with lock:
+            page = self.pages.get(key, [])
+            fresh = next((item for item in page if item["row_id"] == row["row_id"]), None)
+            expiry = (
+                parse_qs(urlparse(fresh["image"]["src"]).query).get("Expires", ["0"])[0] if fresh else "0"
+            )
+            if float(expiry) < time.time() + 300:
+                url = "https://datasets-server.huggingface.co/rows?" + urlencode(
+                    {
+                        "dataset": REPOSITORY,
+                        "config": "core",
+                        "split": key[0],
+                        "offset": key[1],
+                        "length": 100,
+                    }
+                )
+                with self.requests:
+                    pace_metadata()
+                    self.pages[key] = viewer_rows(json.loads(download(url)), key[0])
+            fresh = next(item for item in self.pages[key] if item["row_id"] == row["row_id"])
+            if fresh["image_sha256"] != row["image_sha256"] or prompt_group(fresh) != prompt_group(row):
+                raise ValueError("Refreshed source identity changed")
+            return fresh["image"]["src"]
+
+
 def check_revision():
     info = json.loads(download("https://huggingface.co/api/datasets/" + REPOSITORY))
     if info["sha"] != REVISION:
@@ -164,28 +200,7 @@ def prepare(output, pools):
         for split, rows in pools.items()
     }
     heldout_models = set()
-    refreshed_pages = {}
-    refresh_lock = Lock()
-
-    def fresh_source(row):
-        key = (row["upstream_split"], row["row_idx"] // 100 * 100)
-        with refresh_lock:
-            if key not in refreshed_pages:
-                pace_metadata()
-                url = "https://datasets-server.huggingface.co/rows?" + urlencode(
-                    {
-                        "dataset": REPOSITORY,
-                        "config": "core",
-                        "split": key[0],
-                        "offset": key[1],
-                        "length": 100,
-                    }
-                )
-                refreshed_pages[key] = viewer_rows(json.loads(download(url)), key[0])
-            fresh = next(item for item in refreshed_pages[key] if item["row_id"] == row["row_id"])
-            if fresh["image_sha256"] != row["image_sha256"] or prompt_group(fresh) != prompt_group(row):
-                raise ValueError("Refreshed source identity changed")
-            return fresh["image"]["src"]
+    fresh_source = ViewerLinks().source
 
     roles = [
         ("test", "test", {"docci": 256, "imagenet": 256}, 512, 128),

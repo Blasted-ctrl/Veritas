@@ -84,3 +84,67 @@ def test_service_outage_gets_sustained_backoff_without_changing_selected_rows(op
     assert openfake.download(url) == b"recovered"
     assert len(calls) == 6
     assert sum(sleeps) >= 150
+
+
+def link_row(module, index, expiry):
+    return {
+        "row_id": f"row-{index}",
+        "row_idx": index,
+        "upstream_split": "train",
+        "model": "example",
+        "prompt": f"prompt-{index}",
+        "image_sha256": f"{index + 1:064x}",
+        "image": {
+            "src": f"https://datasets-server.huggingface.co/cached-assets/ComplexDataLab/OpenFake/--/{module.REVISION}/--/core/train/{index}/image/image.jpg?Expires={expiry}"
+        },
+    }
+
+
+def test_one_slow_page_does_not_block_an_unrelated_page(openfake, monkeypatch):
+    import json
+    from concurrent.futures import ThreadPoolExecutor
+    from threading import Event
+    from urllib.parse import parse_qs, urlparse
+
+    started, release = Event(), Event()
+    monkeypatch.setattr(openfake, "pace_metadata", lambda: None)
+
+    def download(url):
+        index = int(parse_qs(urlparse(url).query)["offset"][0])
+        if index == 0:
+            started.set()
+            assert release.wait(5)
+        row = link_row(openfake, index, 9999999999)
+        return json.dumps({"rows": [{"row": row}]}).encode()
+
+    monkeypatch.setattr(openfake, "download", download)
+    links = openfake.ViewerLinks()
+    with ThreadPoolExecutor(max_workers=2) as pool:
+        first = pool.submit(links.source, link_row(openfake, 0, 0))
+        try:
+            assert started.wait(2)
+            second = pool.submit(links.source, link_row(openfake, 100, 0))
+            assert "train/100/" in second.result(timeout=2)
+        finally:
+            release.set()
+        assert "train/0/" in first.result(timeout=2)
+
+
+def test_expired_cached_links_are_refreshed_again(openfake, monkeypatch):
+    import json
+
+    now, calls = [1000], []
+    monkeypatch.setattr(openfake.time, "time", lambda: now[0])
+    monkeypatch.setattr(openfake, "pace_metadata", lambda: None)
+
+    def download(url):
+        calls.append(url)
+        return json.dumps({"rows": [{"row": link_row(openfake, 0, now[0] + 3600)}]}).encode()
+
+    monkeypatch.setattr(openfake, "download", download)
+    links = openfake.ViewerLinks()
+    row = link_row(openfake, 0, 0)
+    original = links.source(row)
+    assert links.source(row) == original and len(calls) == 1
+    now[0] += 3601
+    assert links.source(row) != original and len(calls) == 2
