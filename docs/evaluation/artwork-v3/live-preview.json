@@ -1,0 +1,24 @@
+{
+  "url": "http://127.0.0.1:3000",
+  "served_at": "2026-11-02T11:40:35.462Z",
+  "operating_policy": "Conservative threshold selected before final test; raw score is not a calibrated probability",
+  "broly_response": {
+    "verdict": "real",
+    "confidence": 0.4028781056404114,
+    "fake_probability": 0.5971218943595886,
+    "modality": "image",
+    "model": "model.onnx",
+    "latency_ms": 199.72,
+    "cached": false,
+    "model_info": {
+      "id": "Veritas EfficientNet-B0",
+      "source_type": "custom",
+      "source_url": "https://github.com/Blasted-ctrl/Veritas/blob/main/docs/cnn-training.md",
+      "artifact_sha256": "9bbf46eed19ff157779bd56fee3d98eaf488f9ccfcb039b260ded569c9701a4f"
+    },
+    "decision_threshold": 0.8770313858985902,
+    "content_sha256": "400d0d9e1d5f01d2d3a33a8aadc1858d3748787c079247625cfdd16b53703241"
+  },
+  "raw_0_5_broly_prediction": "fake",
+  "note": "Known non-AI diagnostic remains a false positive at0.5; serving uses the separately selected0.8770313858985902 cutoff. Original artwork is not redistributed."
+}

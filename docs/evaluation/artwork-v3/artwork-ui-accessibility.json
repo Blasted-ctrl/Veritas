@@ -1,0 +1,26 @@
+[
+  {
+    "width": 1280,
+    "theme": "light",
+    "violations": [],
+    "overflow": false
+  },
+  {
+    "width": 1280,
+    "theme": "dark",
+    "violations": [],
+    "overflow": false
+  },
+  {
+    "width": 390,
+    "theme": "light",
+    "violations": [],
+    "overflow": false
+  },
+  {
+    "width": 390,
+    "theme": "dark",
+    "violations": [],
+    "overflow": false
+  }
+]

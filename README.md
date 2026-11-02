@@ -6,17 +6,17 @@ Veritas was built to make AI detection easy to use and its results easier to que
 
 ## See it working
 
-The website has image and video modes, drag-and-drop uploads, and examples you can try. These screenshots show the running site and real responses from the downloadable detector.
+The website has image and video modes, drag-and-drop uploads, and examples you can try. These screenshots show real responses from the locally trained artwork CNN. The Docker quickstart below downloads a separate default model; [the CNN results](docs/evaluation/artwork-v3/README.md) explain the demo checkpoint and its limits.
 
 ![Veritas image upload page](docs/screenshots/site-overview.jpg)
 
 ![Generated image analyzed in Veritas](docs/screenshots/image-analysis.jpg)
 
-The labeled AI-generated landscape scored about 98.8% for the AI-generated class.
+The labeled AI-generated landscape scored about 99.2% for the AI-generated class.
 
 ![Video analysis with individual sampled-frame scores](docs/screenshots/video-analysis.jpg)
 
-A four-second MP4 made from that image was sampled into four frames, with an average score around 98.7%. [Sample files and credits](frontend/public/samples/credits.json) are included so you can try the same inputs.
+A four-second MP4 made from that image was sampled into four frames, with an average score around 99.0%. [Sample files and credits](frontend/public/samples/credits.json) are included so you can try the same inputs.
 
 ## Run it locally
 
@@ -34,7 +34,7 @@ Prefer Python and Node directly? See [native setup and development](docs/develop
 
 ## Read the result carefully
 
-The percentage is a model class score, not proof or a calibrated probability of authenticity. The default CIFAKE-trained model can miss new generators and misclassify genuine photographs. In our demo, NASA’s real Earthrise photo incorrectly scored about **89.5% AI-generated**. Human-made anime, drawings and digital paintings are non-AI too; this photo-focused detector can falsely flag them. Check the source even when a score is high.
+The percentage is a model class score, not proof or a calibrated probability of authenticity. The default CIFAKE-trained model can miss new generators and misclassify genuine photographs. In an earlier check with that default model, NASA’s real Earthrise photo incorrectly scored about **89.5% AI-generated**. Human-made anime, drawings and digital paintings are non-AI too; this photo-focused detector can falsely flag them. Check the source even when a score is high.
 
 Videos are assessed through sampled image frames, up to 32 at one frame per second by default. Audio and motion are not analyzed. Optional audio training and inference require your own audio model.
 
@@ -46,9 +46,11 @@ See [the detector, its source, and its limits](docs/model.md) for the pinned rev
 - **API:** FastAPI and CPU ONNX Runtime. Temporary video uploads are removed after analysis. Scores are cached with model and processing settings included in the key; Redis is optional.
 - **Training tools:** group-separated dataset preparation, PyTorch EfficientNet-B0/ConvNeXt CNN and ViT image training, Wav2Vec2 audio training, held-out evaluation, ONNX export, and optional matching-ViT Grad-CAM.
 
-The broader CNN experiment trained on 4,096 images. On a separate generator/source holdout, accuracy improved from 47.7% to 73.3% and real-image false alarms fell from 69.7% to 14.5% at threshold 0.5. **The 95% target was not reached.** A conservative threshold lowers false alarms further but misses most AI images.
+The artwork CNN experiment adds human illustrations and paintings alongside AI artwork. On 256 held-out artwork images at the same 0.5 cutoff, human-art false alarms fell from 68.0% with the website detector to 10.9%, while AI-art recall was 87.5%. On the full 512-image test at 0.5, CNN accuracy was **80.1%; the 95% target was not reached**. A conservative cutoff reduces false alarms further but misses more AI images, and the photo regression cohort exposes remaining errors.
 
-[Train the PyTorch CNN](docs/cnn-training.md) · [Full held-out results and limits](docs/evaluation/diverse-v2/README.md)
+The trained research checkpoint stays outside Git. The first-run downloadable model remains the older ViT.
+
+[Train the PyTorch CNN](docs/cnn-training.md) · [Artwork results and limits](docs/evaluation/artwork-v3/README.md) · [Earlier diverse-data experiment](docs/evaluation/diverse-v2/README.md)
 
 [Development and verification](docs/development.md) · [API and deployment](docs/deployment.md) · [Product page design](docs/design/product-redesign.md)
 

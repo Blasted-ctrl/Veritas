@@ -1,8 +1,9 @@
 {
   "origin": "Browser screenshot of http://127.0.0.1:3000",
-  "captured_at": "2026-11-02T10:29:01.758Z",
-  "description": "Real video inference in the redesigned Veritas interface; no mocked API or fabricated scores.",
-  "model_revision": "e3cfe99f2841930a040a6281682c10c989965603",
-  "model_sha256": "44cb205f596f2530686bf4895e3678f08f9483c926b6bdc0e02998d5b54978a2",
-  "source_assets": "frontend/public/samples/credits.json"
+  "captured_at": "2026-11-02T11:38:55.396Z",
+  "description": "Real video inference in the Veritas interface using the artwork CNN; no mocked API or fabricated scores.",
+  "model_sha256": "9bbf46eed19ff157779bd56fee3d98eaf488f9ccfcb039b260ded569c9701a4f",
+  "source_assets": "frontend/public/samples/credits.json",
+  "model_id": "Veritas EfficientNet-B0",
+  "decision_threshold": 0.8770313858985902
 }

@@ -1,0 +1,72 @@
+{
+  "training": {
+    "exit_code": 0,
+    "seconds": 530.0419337749481
+  },
+  "held_out_test": {
+    "exit_code": 0,
+    "seconds": 1583.9047038555145
+  },
+  "calibration": {
+    "exit_code": 0,
+    "seconds": 1450.403615951538
+  },
+  "targeted_tests": {
+    "affected": {
+      "exit_code": 0,
+      "seconds": 154.92525553703308
+    },
+    "source_final": {
+      "exit_code": 0,
+      "seconds": 20.057873010635376
+    },
+    "evaluation_guards": {
+      "exit_code": 0,
+      "seconds": 18.599260568618774
+    }
+  },
+  "browser_contract": {
+    "exit_code": 0,
+    "seconds": 55.14091992378235,
+    "passed": 15,
+    "failed": 0,
+    "fixtures": "Contract checks use explicitly mocked responses, not accuracy measurements."
+  },
+  "real_http": {
+    "exit_code": 0,
+    "seconds": 627.7576794624329,
+    "passed": 8,
+    "failed": 0,
+    "isolated_port": 8014,
+    "released": true
+  },
+  "real_broly_browser": {
+    "exit_code": 0,
+    "seconds": 5.184198617935181
+  },
+  "real_image_video_demo": {
+    "exit_code": 0,
+    "seconds": 6.493115425109863
+  },
+  "frontend": {
+    "lint": "passed",
+    "typecheck": "passed",
+    "production_build": "passed"
+  },
+  "review": {
+    "correctness": "No P1/P2 findings after fixes; independently recomputed rawscore counts and thresholds",
+    "peer": "No P1/P2 findings; minor published-weights wording corrected"
+  },
+  "pretest_lock_commit": "aeb8b783c024608da4d9f2471665f353e0cf7e20",
+  "pretest_code_ci": {
+    "id": 41433603129,
+    "conclusion": "success"
+  },
+  "model_graph_sha256": "9bbf46eed19ff157779bd56fee3d98eaf488f9ccfcb039b260ded569c9701a4f",
+  "limits": [
+    "Runner timings may include bounded waits and cache generation.",
+    "HTTP and browser contract passes do not establish accuracy.",
+    "Broly still fails at0.5; live policy uses the separately selected87.7031% cutoff.",
+    "Overall accuracy80.08% at0.5 and69.73% atlivecutoff;95%targetunmet."
+  ]
+}

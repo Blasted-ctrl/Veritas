@@ -497,8 +497,11 @@ test("artwork receives honest origin wording without a style-based exemption", a
   page,
 }) => {
   let score = 0.926;
+  let threshold = 0.5;
   await page.route("**/verify*", (route) => {
     const result = verdict(score);
+    result.decision_threshold = threshold;
+    result.verdict = score >= threshold ? "fake" : "real";
     result.model_info.id = "onnx-community/ai-image-detection-ONNX";
     return respond(route, result);
   });
@@ -524,4 +527,24 @@ test("artwork receives honest origin wording without a style-based exemption", a
   await expect(
     page.getByText("Camera-made patterns", { exact: true }),
   ).toHaveCount(0);
+  score = 0.597;
+  threshold = 0.877;
+  await page
+    .getByRole("button", { name: "Analyze again", exact: true })
+    .click();
+  await expect(
+    page.getByRole("heading", { name: "Likely non-AI" }),
+  ).toBeVisible();
+  await expect(page.getByRole("meter")).toHaveAttribute(
+    "aria-valuenow",
+    "59.7",
+  );
+  await expect(page.getByText(/Decision threshold: 87.7%/)).toBeVisible();
+  threshold = 0.5;
+  await page
+    .getByRole("button", { name: "Analyze again", exact: true })
+    .click();
+  await expect(
+    page.getByRole("heading", { name: "Likely AI-generated" }),
+  ).toBeVisible();
 });

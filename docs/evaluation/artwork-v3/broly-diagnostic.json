@@ -1,0 +1,47 @@
+{
+  "input_sha256": "400d0d9e1d5f01d2d3a33a8aadc1858d3748787c079247625cfdd16b53703241",
+  "label": 0,
+  "label_basis": "user-reported human-made animation",
+  "use": "post-test diagnostic only; never fitted, selected or calibrated on this image",
+  "scored_at": "2026-11-02T11:29:20.603008+00:00",
+  "models": {
+    "default_vit": {
+      "fake_score": 0.9262329936027527,
+      "fixed_0.5_prediction": 1,
+      "calibrated_threshold": 0.9918770790100099,
+      "calibrated_prediction": 0,
+      "model_info": {
+        "id": "onnx-community/ai-image-detection-ONNX",
+        "source_type": "pretrained",
+        "source_url": "https://huggingface.co/onnx-community/ai-image-detection-ONNX",
+        "revision": "e3cfe99f2841930a040a6281682c10c989965603",
+        "license": "Apache-2.0",
+        "artifact_sha256": "44cb205f596f2530686bf4895e3678f08f9483c926b6bdc0e02998d5b54978a2"
+      }
+    },
+    "previous_cnn": {
+      "fake_score": 0.9980241060256958,
+      "fixed_0.5_prediction": 1,
+      "calibrated_threshold": 0.9624517560005189,
+      "calibrated_prediction": 1,
+      "model_info": {
+        "id": "Veritas EfficientNet-B0",
+        "source_type": "custom",
+        "source_url": "https://github.com/Blasted-ctrl/Veritas/blob/main/docs/cnn-training.md",
+        "artifact_sha256": "7753d5935b09ec64bd26170cb4f1489c7cd3fe084cbb3c0fed657fa1f3012760"
+      }
+    },
+    "artwork_cnn": {
+      "fake_score": 0.5971218943595886,
+      "fixed_0.5_prediction": 1,
+      "calibrated_threshold": 0.8770313858985902,
+      "calibrated_prediction": 0,
+      "model_info": {
+        "id": "Veritas EfficientNet-B0",
+        "source_type": "custom",
+        "source_url": "https://github.com/Blasted-ctrl/Veritas/blob/main/docs/cnn-training.md",
+        "artifact_sha256": "9bbf46eed19ff157779bd56fee3d98eaf488f9ccfcb039b260ded569c9701a4f"
+      }
+    }
+  }
+}

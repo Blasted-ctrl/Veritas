@@ -1,0 +1,29 @@
+{
+  "files": {
+    "README.md": "55cceb4de6c12dfdde9006b08b88e048adeb2a0e62d0199d89f57a7a0ea267fb",
+    "api-smoke.json": "2b38e4a70fd92ad22b83432c71cc29dd5e4a2d95d3a381e9495ca6f14260ae05",
+    "artwork-ui-accessibility.json": "42cc1bdcda453abd96b416afd874115cf2f520ea0ca3700d6e9092e162c2904c",
+    "broly-diagnostic.json": "0b2b50d1176b20755e6f708b9da278e6aa1439b6781745b16ab38e93656074fc",
+    "cnn-ui-accessibility.json": "42cc1bdcda453abd96b416afd874115cf2f520ea0ca3700d6e9092e162c2904c",
+    "cohort.json": "69017d8c4f604a5c410a021b2b9c5b6a053aee10b374c9cb6850ae6647a5ea30",
+    "data-audit.json": "3351d5758460ca73a03c001f8637bab7e44a0cd189f7dba8e772f0fa76103938",
+    "dataset-index.csv": "4d89f8b4f62ba58355c32c52c63747eea6fb6688eabc8b722e0623ac28b3a2ec",
+    "export-verification.json": "66ec360f973a952051d8614ae6f33a4594f7d4bfd205e67b254d05c2c49089ee",
+    "live-preview.json": "6ced1f203052c75b920874e1f4beb1c5d569b03538bcdf560e8c5f17d5d7439e",
+    "protocol.json": "3fae3c36a176a07b229eefa12ae468c9f7a287da7e400eaadc39d99d57698ede",
+    "results.json": "a6fd98b79580f59f97f1b3b18ce62d90fa7fe1465f3988937f77022135250503",
+    "scores-calibration.csv": "a5ed4ab856f11e5bfb9689ae0c074009b5a8e9a7f24b61e47d6ec9f82011f161",
+    "scores-test.csv": "a2d7189b92b91d556c9a48b3d9a4e9ff483778a6a17ea248e98cd674d2e14152",
+    "source.json": "34f2d702b7c3656dd6f8e92bfd39219efe8cbe30aa4804b66d59ef902729bd64",
+    "summary.json": "75fd8a2c6311da4ae10c83deded5b21fa23f4cded348e6cf5a279fca4ca61550",
+    "test-started.json": "ff7f0606e786c9ec2b6d070e45b8eac6de1ddb705edd1f16dbb4c15711fb4457",
+    "threshold-publication.json": "c4df0bf7e0827866f388a6298c52145df9de79ed70c4833b8bfa40372f35adeb",
+    "thresholds.json": "4af2312959fa49875e795229300d79a08798dec99dbf519b7e4599e7c7f27934",
+    "training-metrics.json": "b83aacaaedfa72f72c5014e75a9756af59ef3b15c9ae6ce10fc96fbd08b3d458",
+    "training-selection.json": "9e5fa5f37d5158389d6b925e7798eb165e9980719709153d365e44f8978bff5b",
+    "verification.json": "9298ee0a8f1c855386ed7c3032d00dfbfab5dd320b0414311a7d0c60ceea40e1"
+  },
+  "runtime_models_directory": "D:\\CodexWork\\veritas-runtime\\artwork-v3\\models\\selected",
+  "weights_redistributed": false,
+  "source_weights_reason": "Model/data artifacts stay outside Git; parent OpenFake research restrictions and original artist rights apply."
+}

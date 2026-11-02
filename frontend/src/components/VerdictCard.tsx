@@ -46,6 +46,7 @@ export function VerdictCard({ result }: { result: Verdict }) {
         <span>Higher AI signal</span>
       </div>
       <p className="score-note">
+        Decision threshold: {(result.decision_threshold * 100).toFixed(1)}%.{" "}
         Model score, not a measured chance that this file is fake.
       </p>
       {result.model_info.id === "onnx-community/ai-image-detection-ONNX" && (
