@@ -27,7 +27,9 @@ else:
     raise RuntimeError("The production image detector did not become ready")
 
 with urlopen("http://127.0.0.1:3000", timeout=30) as response:
-    assert b"Check what" in response.read()
+    page = response.read()
+    assert b'id="analyze"' in page
+    assert b'id="media-file"' in page and b'type="file"' in page
 
 for filename, content_type, modality in [
     ("generated-lakehouse.png", "image/png", "image"),

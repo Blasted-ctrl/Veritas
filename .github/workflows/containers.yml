@@ -6,12 +6,14 @@ on:
       - backend/**
       - frontend/**
       - docker-compose.yml
+      - scripts/container_smoke.py
       - .github/workflows/containers.yml
   pull_request:
     paths:
       - backend/**
       - frontend/**
       - docker-compose.yml
+      - scripts/container_smoke.py
       - .github/workflows/containers.yml
   workflow_dispatch:
 jobs:

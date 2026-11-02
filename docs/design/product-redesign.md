@@ -15,3 +15,5 @@ At 320 and 768 pixels the upload comes before examples and results stack below t
 The production build and ESLint pass. Fourteen browser tests cover explicit upload, drag and drop, oversize rejection, cancellation, stale responses, sample selection, service recovery, timeouts, reduced motion, long filenames and both themes at 320, 768, 1024 and 1440 pixels. Axe reports no WCAG 2 A/AA or 2.1 AA violations on the upload and result screens in either theme. Keyboard analysis moves focus to the result heading.
 
 The [demo responses](demo-responses.json) record real image, MP4 and GIF inference. The README screenshots come from that same live API without request interception. The video fixture is an AI-generated still encoded as a short clip; it verifies sampled-frame analysis and does not demonstrate motion detection. Independent correctness reviews found no remaining issues after the example-button accessible names were fixed.
+
+[Verification details and Lighthouse measurements](verification.json) include the local machine-load limits.
