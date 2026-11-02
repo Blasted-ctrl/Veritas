@@ -1,57 +1,105 @@
+<div align="center">
+
 # Veritas
 
-Check images and video frames for signs of AI generation.
+### Check what you're seeing.
 
-Veritas was built to make AI detection easy to use and its results easier to question. Choose an image or video, preview it, then run the analysis. You get a prediction and an AI score, with the model details available when you need them.
+An open source website for checking images and video frames for signs of AI generation.
+
+[![CI](https://github.com/Blasted-ctrl/Veritas/actions/workflows/ci.yml/badge.svg)](https://github.com/Blasted-ctrl/Veritas/actions/workflows/ci.yml)
+[![Code license: MIT](https://img.shields.io/badge/code-MIT-256647)](LICENSE)
+
+[Watch the demo](docs/demo/veritas-demo.mp4) · [Run locally](#run-it-locally) · [Deploy online](docs/deployment.md) · [Model results](docs/evaluation/artwork-v3/README.md)
+
+</div>
+
+[![Watch a real Veritas image and video analysis demo](docs/demo/preview.gif)](https://github.com/Blasted-ctrl/Veritas/raw/refs/heads/main/docs/demo/veritas-demo.mp4)
+
+<p align="center">A preview from the real site. Click to watch the full 45-second demo.</p>
+
+**Upload a file. See the prediction. Check the evidence.** Veritas gives you a media preview, an AI class score, the decision cutoff, and the identity of the model behind the result. Videos include scores for each sampled frame.
+
+## Why Veritas exists
+
+AI-generated media can be difficult to recognize. Detection tools make mistakes too, particularly on unfamiliar generators, compressed files, and human-made artwork. Veritas puts the prediction and its limits in the same place, so you can investigate a file without treating a score as proof.
+
+Human-drawn anime, paintings, and digital illustrations are non-AI. Their style alone does not tell you how they were made. That distinction drives our latest CNN training experiment.
 
 ## See it working
 
-The website has image and video modes, drag-and-drop uploads, and examples you can try. These screenshots show real responses from the locally trained artwork CNN. The Docker quickstart below downloads a separate default model; [the CNN results](docs/evaluation/artwork-v3/README.md) explain the demo checkpoint and its limits.
+The captioned demo follows three real uploads: NASA's Earthrise photograph, a labeled AI-generated image, and a four-second clip made from that image. It uses the locally trained artwork CNN. Nothing in the recording intercepts or fabricates model responses.
 
-![Veritas image upload page](docs/screenshots/site-overview.jpg)
+[Watch the MP4](docs/demo/veritas-demo.mp4) · [Recording details and sample credits](docs/demo/README.md)
 
-![Generated image analyzed in Veritas](docs/screenshots/image-analysis.jpg)
+![Veritas analyzing an AI-generated image](docs/screenshots/image-analysis.jpg)
 
-The labeled AI-generated landscape scored about 99.2% for the AI-generated class.
+<details>
+<summary>More screenshots: upload page and video results</summary>
 
-![Video analysis with individual sampled-frame scores](docs/screenshots/video-analysis.jpg)
+![Veritas upload page](docs/screenshots/site-overview.jpg)
 
-A four-second MP4 made from that image was sampled into four frames, with an average score around 99.0%. [Sample files and credits](frontend/public/samples/credits.json) are included so you can try the same inputs.
+![Video results with individual sampled-frame scores](docs/screenshots/video-analysis.jpg)
+
+</details>
 
 ## Run it locally
 
-Install Docker with Compose, then run:
+Install [Docker with Compose](https://docs.docker.com/compose/install/), then run:
 
-    git clone https://github.com/Blasted-ctrl/Veritas.git
-    cd Veritas
-    docker compose build
-    docker compose run --rm --no-deps api veritas download-model
-    docker compose up
+```sh
+git clone https://github.com/Blasted-ctrl/Veritas.git
+cd Veritas
+docker compose build
+docker compose run --rm --no-deps api veritas download-model
+docker compose up
+```
 
-Open [localhost:3000](http://localhost:3000). Choose an image or video, check the preview, then select **Analyze file**. The first model download is about 328 MiB. Weights stay in a Docker volume and are verified by checksum. No API key is needed.
+Open **[localhost:3000](http://localhost:3000)**, choose an image or video, and select **Analyze file**. The first model download is about 328 MiB, is verified by checksum, and stays in a Docker volume. No API key is needed.
 
-Prefer Python and Node directly? See [native setup and development](docs/development.md).
+**The quickstart downloads the default CIFAKE-trained ViT, not the CNN shown in the demo.** The research CNN is a separate checkpoint with additional training-data restrictions. [Deploy either model](docs/deployment.md#choose-the-model) or [use Python and Node directly](docs/development.md).
 
-## Read the result carefully
+## What you get
 
-The percentage is a model class score, not proof or a calibrated probability of authenticity. The default CIFAKE-trained model can miss new generators and misclassify genuine photographs. In an earlier check with that default model, NASA’s real Earthrise photo incorrectly scored about **89.5% AI-generated**. Human-made anime, drawings and digital paintings are non-AI too; this photo-focused detector can falsely flag them. Check the source even when a score is high.
+|                          |                                                                                                    |
+| :----------------------- | :------------------------------------------------------------------------------------------------- |
+| Image analysis           | File preview, AI score, decision cutoff, model details                                             |
+| Video analysis           | Sampled-frame scores and their average; up to 32 frames by default                                 |
+| A usable website         | Drag and drop, example files, upload progress, cancellation, light and dark themes, mobile layouts |
+| Your own backend         | FastAPI and CPU ONNX Runtime; Redis is optional                                                    |
+| Training you can inspect | PyTorch CNN/ViT training, separated data splits, evaluation reports, ONNX export                   |
 
-Videos are assessed through sampled image frames, up to 32 at one frame per second by default. Audio and motion are not analyzed. Optional audio training and inference require your own audio model.
+Uploaded media is not retained by the API after processing. Scores, hashes, and optional explanation images can be cached; videos use temporary files that are removed after analysis. [Hosting and data handling](docs/deployment.md#data-and-hosting).
 
-See [the detector, its source, and its limits](docs/model.md) for the pinned revision, license, preprocessing, and custom-model support.
+## How much should you trust it?
 
-## What’s inside
+**A percentage is a model class score, not a calibrated probability or proof of origin.** Check the original source and other evidence before drawing a conclusion. Videos are assessed through sampled still frames; the website does not analyze motion or audio.
 
-- **Website:** responsive Next.js interface, previews, light/dark themes, upload progress, cancellation, frame scores, and model attribution.
-- **API:** FastAPI and CPU ONNX Runtime. Temporary video uploads are removed after analysis. Scores are cached with model and processing settings included in the key; Redis is optional.
-- **Training tools:** group-separated dataset preparation, PyTorch EfficientNet-B0/ConvNeXt CNN and ViT image training, Wav2Vec2 audio training, held-out evaluation, ONNX export, and optional matching-ViT Grad-CAM.
+Our artwork CNN was trained on human illustrations and paintings alongside AI artwork. On the same 256 held-out artwork images at a 0.5 decision cutoff:
 
-The artwork CNN experiment adds human illustrations and paintings alongside AI artwork. On 256 held-out artwork images at the same 0.5 cutoff, human-art false alarms fell from 68.0% with the website detector to 10.9%, while AI-art recall was 87.5%. On the full 512-image test at 0.5, CNN accuracy was **80.1%; the 95% target was not reached**. A conservative cutoff reduces false alarms further but misses more AI images, and the photo regression cohort exposes remaining errors.
+| Measure                                 | Downloadable default ViT | Artwork CNN |
+| :-------------------------------------- | -----------------------: | ----------: |
+| Human artwork incorrectly flagged as AI |                    68.0% |       10.9% |
+| AI artwork detected                     |                    88.3% |       87.5% |
 
-The trained research checkpoint stays outside Git. The first-run downloadable model remains the older ViT.
+Across the full 512-image test, the CNN reached **80.1% accuracy at 0.5**. The 95% goal has not been reached. Its conservative demo cutoff of 87.7% reduces false alarms but misses more AI: overall test accuracy is 69.7%, with 46.1% AI recall. Photography also regressed against the previous CNN.
 
-[Train the PyTorch CNN](docs/cnn-training.md) · [Artwork results and limits](docs/evaluation/artwork-v3/README.md) · [Earlier diverse-data experiment](docs/evaluation/diverse-v2/README.md)
+The default detector can falsely flag genuine photographs and human-made artwork. In an earlier check it scored NASA's real Earthrise photo about 89.5% AI-generated. The CNN scores the same sample about 9.7%. These individual examples are demonstrations, not a benchmark.
 
-[Development and verification](docs/development.md) · [API and deployment](docs/deployment.md) · [Product page design](docs/design/product-redesign.md)
+[Read the full artwork evaluation](docs/evaluation/artwork-v3/README.md) · [Model source and limitations](docs/model.md)
 
-MIT for the project code. The default pretrained model uses Apache-2.0; sample and font credits are included alongside their files.
+## Put it online
+
+[The deployment guide](docs/deployment.md) walks through **Render** and a **Linux server with Docker and automatic HTTPS**. It covers domain setup, frontend/API URLs, installing the research CNN, health checks, updates, and rollback. Hosting requires your own account or server.
+
+## Develop and train
+
+The frontend uses Next.js and React. The Python API runs exported ONNX models; training uses PyTorch.
+
+- [Development, setup, and verification](docs/development.md)
+- [Train and export the CNN](docs/cnn-training.md)
+- [Artwork experiment](docs/evaluation/artwork-v3/README.md) and [earlier diverse-data experiment](docs/evaluation/diverse-v2/README.md)
+- [API endpoints and deployment](docs/deployment.md#api-reference)
+
+## License and credits
+
+Project code is [MIT](LICENSE). The downloadable default model is Apache-2.0. The artwork CNN inherits research/noncommercial training-data restrictions; the code license does not grant rights to every model or dataset. [Sample media credits](frontend/public/samples/credits.json) and [font license](frontend/public/fonts/OFL.txt) are included.

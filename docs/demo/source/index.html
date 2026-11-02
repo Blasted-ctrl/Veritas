@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=1920,height=1080" />
+    <title>Veritas · Real product demo</title>
+    <script src="assets/gsap.min.js"></script>
+    <style>
+      @font-face {
+        font-family: Hanken;
+        src: url(assets/hanken-regular.ttf);
+        font-weight: 400;
+      }
+      @font-face {
+        font-family: Hanken;
+        src: url(assets/hanken-semibold.ttf);
+        font-weight: 600;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: #f3f6f4;
+        color: #18372c;
+        font-family: Hanken, sans-serif;
+      }
+      #root {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+      }
+      .brand {
+        position: absolute;
+        left: 64px;
+        top: 36px;
+        font-size: 38px;
+        font-weight: 600;
+        letter-spacing: -1px;
+      }
+      .edition {
+        position: absolute;
+        right: 64px;
+        top: 44px;
+        font-size: 28px;
+        color: #53645b;
+      }
+      .rail {
+        position: absolute;
+        left: 64px;
+        top: 132px;
+        width: 440px;
+        height: 810px;
+      }
+      .eyebrow {
+        font-size: 28px;
+        color: #256647;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        margin: 0 0 28px;
+      }
+      h1,
+      h2 {
+        font-weight: 600;
+        font-size: 66px;
+        line-height: 1.04;
+        letter-spacing: -2.3px;
+        margin: 0 0 32px;
+      }
+      p {
+        font-size: 30px;
+        line-height: 1.4;
+        margin: 0 0 28px;
+      }
+      .small {
+        font-size: 28px;
+        color: #53645b;
+        line-height: 1.45;
+      }
+      .media {
+        position: absolute;
+        left: 576px;
+        top: 110px;
+        width: 1280px;
+        height: 900px;
+        object-fit: contain;
+        object-position: top;
+        border: 1px solid #dce4df;
+        border-radius: 16px;
+        background: #fff;
+        overflow: hidden;
+      }
+      .score {
+        font-size: 100px;
+        font-weight: 600;
+        line-height: 1;
+        margin: 44px 0 10px;
+        letter-spacing: -4px;
+        color: #256647;
+      }
+      .foot {
+        position: absolute;
+        left: 64px;
+        bottom: 28px;
+        right: 64px;
+        display: flex;
+        justify-content: space-between;
+        gap: 24px;
+        font-size: 28px;
+        color: #53645b;
+      }
+      .track {
+        position: absolute;
+        left: 64px;
+        right: 64px;
+        bottom: 12px;
+        height: 3px;
+        background: #dce4df;
+      }
+      .progress {
+        height: 3px;
+        background: #256647;
+        width: 0;
+      }
+      .closing {
+        position: absolute;
+        left: 110px;
+        top: 190px;
+        width: 1560px;
+      }
+      .closing h2 {
+        font-size: 112px;
+        max-width: 1300px;
+        line-height: 1.02;
+      }
+      .closing p {
+        font-size: 38px;
+        max-width: 1450px;
+      }
+      .repo {
+        font-size: 42px;
+        color: #256647;
+        margin: 48px 0;
+      }
+      .caveat {
+        font-size: 30px;
+        max-width: 1400px;
+        color: #53645b;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      data-hf-id="hf-fpax"
+      id="root"
+      data-composition-id="veritas-demo"
+      data-start="0"
+      data-duration="44.52"
+      data-width="1920"
+      data-height="1080"
+      data-fps="24"
+    >
+      <div data-hf-id="hf-jb9x" class="brand">Veritas</div>
+      <div data-hf-id="hf-uqhx" class="edition">
+        Image + video analysis · Actual browser footage
+      </div>
+      <section
+        data-hf-id="hf-8j7u"
+        class="clip rail"
+        id="intro"
+        data-start="0"
+        data-duration="4"
+      >
+        <div data-hf-id="hf-4bvl" class="eyebrow">A quick walkthrough</div>
+        <h1 data-hf-id="hf-vm0y">Check what you’re seeing.</h1>
+        <p data-hf-id="hf-3mzx">
+          Upload an image or video. Take a closer look.
+        </p>
+        <p data-hf-id="hf-ktg7" class="small">
+          Three public examples. Real model responses.
+        </p>
+      </section>
+      <img
+        data-hf-id="hf-2zh6"
+        id="overview"
+        class="clip media"
+        src="assets/overview.jpg"
+        data-start="0"
+        data-duration="4"
+        alt="Veritas upload page"
+      />
+      <section
+        data-hf-id="hf-xxnp"
+        class="clip rail"
+        id="photo-copy"
+        data-start="4"
+        data-duration="10.8"
+      >
+        <div data-hf-id="hf-5acw" class="eyebrow">01 / A real photograph</div>
+        <h2 data-hf-id="hf-9tzi">Start with a known source.</h2>
+        <p data-hf-id="hf-ho1l">NASA’s Earthrise photograph, taken in 1968.</p>
+        <div data-hf-id="hf-edn9" class="score">9.7%</div>
+        <p data-hf-id="hf-mqhj" class="small">
+          AI class score in this example.
+        </p>
+        <p data-hf-id="hf-9y0f" class="small">
+          Open the details to see the model behind the result.
+        </p>
+      </section>
+      <video
+        data-hf-id="hf-321z"
+        id="photo"
+        class="clip media"
+        src="assets/photo.webm"
+        muted
+        playsinline
+        data-start="4"
+        data-duration="10.8"
+        data-track-index="1"
+      ></video>
+      <section
+        data-hf-id="hf-60xn"
+        class="clip rail"
+        id="image-copy"
+        data-start="14.8"
+        data-duration="10.8"
+      >
+        <div data-hf-id="hf-zd69" class="eyebrow">02 / A generated image</div>
+        <h2 data-hf-id="hf-4i1k">Upload. Preview. Analyze.</h2>
+        <p data-hf-id="hf-gzet">This landscape was generated for the demo.</p>
+        <div data-hf-id="hf-wldv" class="score">99.2%</div>
+        <p data-hf-id="hf-r89j" class="small">
+          AI class score in this example.
+        </p>
+        <p data-hf-id="hf-19sq" class="small">
+          A score does not prove how a file was made.
+        </p>
+      </section>
+      <video
+        data-hf-id="hf-zyva"
+        id="image"
+        class="clip media"
+        src="assets/image.webm"
+        muted
+        playsinline
+        data-start="14.8"
+        data-duration="10.8"
+        data-track-index="1"
+      ></video>
+      <section
+        data-hf-id="hf-yuog"
+        class="clip rail"
+        id="video-copy"
+        data-start="25.6"
+        data-duration="10.92"
+      >
+        <div data-hf-id="hf-x9gr" class="eyebrow">03 / A short video</div>
+        <h2 data-hf-id="hf-ulcv">See the sampled frames.</h2>
+        <p data-hf-id="hf-qgle">Four frames. Each has its own score.</p>
+        <div data-hf-id="hf-g31p" class="score">99.0%</div>
+        <p data-hf-id="hf-ciq5" class="small">Average AI class score.</p>
+        <p data-hf-id="hf-20t6" class="small">
+          This MP4 uses the generated still image. Motion and audio are not
+          analyzed.
+        </p>
+      </section>
+      <video
+        data-hf-id="hf-blfj"
+        id="video"
+        class="clip media"
+        src="assets/video.webm"
+        muted
+        playsinline
+        data-start="25.6"
+        data-duration="10.92"
+        data-track-index="1"
+      ></video>
+      <section
+        data-hf-id="hf-vhgn"
+        class="clip closing"
+        id="close"
+        data-start="36.52"
+        data-duration="8"
+      >
+        <h2 data-hf-id="hf-y3x9">Inspect the result. Check the source.</h2>
+        <p data-hf-id="hf-8kqz">
+          Run Veritas locally or host your own instance.
+        </p>
+        <div data-hf-id="hf-t3md" class="repo">
+          github.com/Blasted-ctrl/Veritas
+        </div>
+        <div data-hf-id="hf-bkmw" class="caveat">
+          Demo: research artwork CNN, 87.7% decision cutoff. The quickstart
+          downloads a separate ViT model. This CNN misses many AI images; class
+          scores are not probabilities of authenticity.
+        </div>
+      </section>
+      <div data-hf-id="hf-mlgk" class="foot">
+        <span data-hf-id="hf-6iqy"
+          >CPU inference · Research artwork CNN · 87.7% cutoff</span
+        ><span data-hf-id="hf-odfs"
+          >Open source code · Scores are not proof</span
+        >
+      </div>
+      <div data-hf-id="hf-64lp" class="track">
+        <div data-hf-id="hf-31j5" class="progress"></div>
+      </div>
+    </div>
+    <script>
+      const timeline = gsap.timeline({ paused: true });
+      timeline.to(
+        ".progress",
+        { width: "100%", duration: 44.52, ease: "none" },
+        0,
+      );
+      window.__timelines["veritas-demo"] = timeline;
+    </script>
+  </body>
+</html>

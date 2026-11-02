@@ -9,11 +9,11 @@ Veritas runs as a Next.js website and a Python inference API. Inference works on
 
 ## Choose the model
 
-| Model | Availability | Limits and permissions |
-| --- | --- | --- |
-| Default CIFAKE-trained ViT | Downloaded by the Render build or the Docker CLI | Apache-2.0 weights. Can misclassify real photos and human-made art. This is not the demo CNN. |
-| Artwork CNN | Separate `veritas-artwork-v3.zip` from the training machine; weights are outside Git | The model in the demo. Inherits research/noncommercial training-data restrictions. Its conservative cutoff misses many AI images. |
-| Your own model | [Train and export with PyTorch](cnn-training.md) | Check data rights and evaluate on separate test data before use. |
+| Model                      | Availability                                                                         | Limits and permissions                                                                                                            |
+| -------------------------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------- |
+| Default CIFAKE-trained ViT | Downloaded by the Render build or the Docker CLI                                     | Apache-2.0 weights. Can misclassify real photos and human-made art. This is not the demo CNN.                                     |
+| Artwork CNN                | Separate `veritas-artwork-v3.zip` from the training machine; weights are outside Git | The model in the demo. Inherits research/noncommercial training-data restrictions. Its conservative cutoff misses many AI images. |
+| Your own model             | [Train and export with PyTorch](cnn-training.md)                                     | Check data rights and evaluate on separate test data before use.                                                                  |
 
 The CNN's conservative cutoff is **0.8770313858985902**. At this cutoff, overall test accuracy was 69.7%, with 46.1% AI recall. Its 80.1% accuracy result used a different cutoff of 0.5. [Full evaluation](evaluation/artwork-v3/README.md).
 
@@ -27,15 +27,15 @@ You need a Render account connected to the repository and resources sufficient t
 
 Create a **Web Service**, connect `Blasted-ctrl/Veritas`, select `main`, and choose Docker. Leave the repository root directory unset and configure:
 
-| Setting | Value |
-| --- | --- |
-| Dockerfile path | `./backend/Dockerfile` |
-| Docker build context | `./backend` |
-| Health check path | `/health` |
-| `DOWNLOAD_PRETRAINED_MODEL` | `1` |
-| `PORT` | `8000` |
-| `VERITAS_REDIS_URL` | Empty string |
-| `VERITAS_ALLOWED_ORIGINS` | `["https://YOUR-WEBSITE.onrender.com"]` |
+| Setting                     | Value                                   |
+| --------------------------- | --------------------------------------- |
+| Dockerfile path             | `./backend/Dockerfile`                  |
+| Docker build context        | `./backend`                             |
+| Health check path           | `/health`                               |
+| `DOWNLOAD_PRETRAINED_MODEL` | `1`                                     |
+| `PORT`                      | `8000`                                  |
+| `VERITAS_REDIS_URL`         | Empty string                            |
+| `VERITAS_ALLOWED_ORIGINS`   | `["https://YOUR-WEBSITE.onrender.com"]` |
 
 Use the intended website URL for the origin placeholder and update it after creating the website if needed. Origin entries have **no trailing slash**. The build downloads and verifies the pinned default ViT. A disk is unnecessary for these baked-in weights; an empty disk mounted over `/app/data` would hide them.
 
@@ -45,11 +45,11 @@ Deploy, then open `https://YOUR-API.onrender.com/health`. Confirm **`image_model
 
 Create a second Docker Web Service from the same repository and branch:
 
-| Setting | Value |
-| --- | --- |
-| Dockerfile path | `./frontend/Dockerfile` |
-| Docker build context | `./frontend` |
-| `PORT` | `3000` |
+| Setting               | Value                           |
+| --------------------- | ------------------------------- |
+| Dockerfile path       | `./frontend/Dockerfile`         |
+| Docker build context  | `./frontend`                    |
+| `PORT`                | `3000`                          |
 | `NEXT_PUBLIC_API_URL` | `https://YOUR-API.onrender.com` |
 
 Set the API URL **before building**, without a trailing slash. Render [passes environment variables to Docker build arguments](https://render.com/docs/docker#environment-variable-translation); the Dockerfile consumes that argument. Changing this URL requires **rebuild and deploy**, not just a restart. A visitor's browser cannot reach your Docker service name `api` or your server's `localhost`.
@@ -72,10 +72,10 @@ Install Docker Engine and the Compose plugin on a Linux server. As an initial, u
 
 Point two DNS A records to the server's public IPv4 address:
 
-| Host | Example |
-| --- | --- |
-| Website | `veritas.example.com` |
-| API | `api.veritas.example.com` |
+| Host    | Example                   |
+| ------- | ------------------------- |
+| Website | `veritas.example.com`     |
+| API     | `api.veritas.example.com` |
 
 Allow inbound TCP 80 and 443 at the provider firewall. UDP 443 is optional for HTTP/3. Leave 3000 and 8000 closed externally. Add IPv6 records only if the server is configured to serve them.
 
@@ -134,10 +134,10 @@ sha256sum model-bundle/model/model.onnx model-bundle/model/model.onnx.json
 
 Expected SHA-256 values:
 
-| File | SHA-256 |
-| --- | --- |
-| ZIP | `1f8be01817d901be6cd289c33b5d12e2207c69c86443acf7a5cfe820986cc18a` |
-| `model.onnx` | `9bbf46eed19ff157779bd56fee3d98eaf488f9ccfcb039b260ded569c9701a4f` |
+| File              | SHA-256                                                            |
+| ----------------- | ------------------------------------------------------------------ |
+| ZIP               | `1f8be01817d901be6cd289c33b5d12e2207c69c86443acf7a5cfe820986cc18a` |
+| `model.onnx`      | `9bbf46eed19ff157779bd56fee3d98eaf488f9ccfcb039b260ded569c9701a4f` |
 | `model.onnx.json` | `68222d23989e1f154b68a341987c1d5b484e3bf10309f7b1e42305a3898c5021` |
 
 Stop if a checksum differs. Read `USE.txt` and the report in the archive. Copy **both** the graph and its metadata/preprocessing sidecar into the persistent volume:
@@ -190,17 +190,17 @@ curl -F "file=@image.jpg" http://localhost:8000/verify
 
 Empty uploads return 400, oversized uploads 413, unsupported media 415, unreadable media 422, and unavailable models 503. Failed video analysis is not cached as a real verdict.
 
-| Variable | Meaning |
-| --- | --- |
-| `VERITAS_IMAGE_MODEL` | ONNX path; keep its `.json` sidecar alongside it |
-| `VERITAS_FAKE_THRESHOLD` | Decision cutoff; default 0.5 |
-| `VERITAS_ALLOWED_ORIGINS` | JSON array of browser origins, without trailing slashes |
-| `VERITAS_MAX_UPLOAD_BYTES` | Per-file limit; default 26214400 bytes |
-| `VERITAS_VIDEO_FPS` | Target sampled frames per second; default 1 |
-| `VERITAS_MAX_VIDEO_FRAMES` | Maximum frames analyzed; default 32 |
-| `VERITAS_REDIS_URL` | Optional Redis connection; empty selects memory caching |
-| `VERITAS_AUDIO_MODEL` | Optional custom audio model; not used in the website's video analysis |
-| `NEXT_PUBLIC_API_URL` | Browser-reachable API URL, applied at frontend build time |
+| Variable                   | Meaning                                                               |
+| -------------------------- | --------------------------------------------------------------------- |
+| `VERITAS_IMAGE_MODEL`      | ONNX path; keep its `.json` sidecar alongside it                      |
+| `VERITAS_FAKE_THRESHOLD`   | Decision cutoff; default 0.5                                          |
+| `VERITAS_ALLOWED_ORIGINS`  | JSON array of browser origins, without trailing slashes               |
+| `VERITAS_MAX_UPLOAD_BYTES` | Per-file limit; default 26214400 bytes                                |
+| `VERITAS_VIDEO_FPS`        | Target sampled frames per second; default 1                           |
+| `VERITAS_MAX_VIDEO_FRAMES` | Maximum frames analyzed; default 32                                   |
+| `VERITAS_REDIS_URL`        | Optional Redis connection; empty selects memory caching               |
+| `VERITAS_AUDIO_MODEL`      | Optional custom audio model; not used in the website's video analysis |
+| `NEXT_PUBLIC_API_URL`      | Browser-reachable API URL, applied at frontend build time             |
 
 ## Data and hosting
 

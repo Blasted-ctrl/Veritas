@@ -1,0 +1,96 @@
+{
+  "recorded_at": "2026-11-02T16:29:09.419Z",
+  "url": "http://127.0.0.1:3000",
+  "browser": "156.0.8078.4",
+  "note": "Real-time browser recordings, real API responses. Public sample files only.",
+  "clips": [
+    {
+      "id": "photo",
+      "fixture": "earthrise.jpg",
+      "seconds_after_ready": 8.708,
+      "file": "photo.webm",
+      "response": {
+        "verdict": "real",
+        "confidence": 0.903362862765789,
+        "fake_probability": 0.09663713723421097,
+        "modality": "image",
+        "model": "model.onnx",
+        "latency_ms": 315.16,
+        "cached": true,
+        "model_info": {
+          "id": "Veritas EfficientNet-B0",
+          "source_type": "custom",
+          "source_url": "https://github.com/Blasted-ctrl/Veritas/blob/main/docs/cnn-training.md",
+          "artifact_sha256": "9bbf46eed19ff157779bd56fee3d98eaf488f9ccfcb039b260ded569c9701a4f"
+        },
+        "decision_threshold": 0.8770313858985902,
+        "content_sha256": "c2224cae808691ef7aedeab69e0626f23a784e377377de2f4ed71094df9e3c34"
+      }
+    },
+    {
+      "id": "image",
+      "fixture": "generated-lakehouse.png",
+      "seconds_after_ready": 8.813,
+      "file": "image.webm",
+      "response": {
+        "verdict": "fake",
+        "confidence": 0.9915378093719482,
+        "fake_probability": 0.9915378093719482,
+        "modality": "image",
+        "model": "model.onnx",
+        "latency_ms": 127.53,
+        "cached": true,
+        "model_info": {
+          "id": "Veritas EfficientNet-B0",
+          "source_type": "custom",
+          "source_url": "https://github.com/Blasted-ctrl/Veritas/blob/main/docs/cnn-training.md",
+          "artifact_sha256": "9bbf46eed19ff157779bd56fee3d98eaf488f9ccfcb039b260ded569c9701a4f"
+        },
+        "decision_threshold": 0.8770313858985902,
+        "content_sha256": "5feda89ff9866165e66e3eb9e86a2567c1c70295ff02c2a5b81712e31baa3951"
+      }
+    },
+    {
+      "id": "video",
+      "fixture": "generated-demo.mp4",
+      "seconds_after_ready": 8.874,
+      "file": "video.webm",
+      "response": {
+        "verdict": "fake",
+        "confidence": 0.9903400093317032,
+        "fake_probability": 0.9903400093317032,
+        "modality": "video",
+        "model": "model.onnx",
+        "latency_ms": 1898.1,
+        "cached": true,
+        "model_info": {
+          "id": "Veritas EfficientNet-B0",
+          "source_type": "custom",
+          "source_url": "https://github.com/Blasted-ctrl/Veritas/blob/main/docs/cnn-training.md",
+          "artifact_sha256": "9bbf46eed19ff157779bd56fee3d98eaf488f9ccfcb039b260ded569c9701a4f"
+        },
+        "decision_threshold": 0.8770313858985902,
+        "content_sha256": "35307e69247803baacb54d7cd8739044e4507ced83d710a369df0440b3725070",
+        "frames_analyzed": 4,
+        "frames": [
+          {
+            "index": 0,
+            "fake_probability": 0.9902443885803223
+          },
+          {
+            "index": 1,
+            "fake_probability": 0.9903154969215393
+          },
+          {
+            "index": 2,
+            "fake_probability": 0.9903734922409058
+          },
+          {
+            "index": 3,
+            "fake_probability": 0.9904266595840454
+          }
+        ]
+      }
+    }
+  ]
+}
