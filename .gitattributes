@@ -8,3 +8,5 @@
 # Preserve the bytes of hash-bound experiment evidence on every platform.
 docs/evaluation/diverse-v2/*.json -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 docs/evaluation/diverse-v2/*.csv -text
+docs/evaluation/artwork-v3/*.json -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+docs/evaluation/artwork-v3/*.csv -text

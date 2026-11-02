@@ -1,0 +1,97 @@
+{
+  "name": "artwork-v3",
+  "registered_at": "2026-11-02T10:10:56.429Z",
+  "dataset": {
+    "revision": "artwork-v3",
+    "sources": {
+      "human_anime": {
+        "dataset": "stevenevan99/pixiv-top-daily-illustration-2018",
+        "version": 1,
+        "collection": "January 2021; curator describes 2018 illustrations",
+        "label_basis": "curator provenance, not detector output"
+      },
+      "human_historical": {
+        "dataset": "alfredplpl/artbench-pd-256x256",
+        "revision": "4056b70025f0e3f916fb271c7a792633ba637484",
+        "label_basis": "publisher historical artwork/artist metadata; captions are AI-generated and are not origin labels"
+      },
+      "generated_art": {
+        "dataset": "moonworks/lunara-art-eval",
+        "revision": "5a38a59769a6146e8d1b223c58533d12c60fd7d6",
+        "models": 8,
+        "label_basis": "publisher generator labels"
+      },
+      "photo_replay": "Only v2train/val/calibration used in corresponding fitting roles; v2ID subset is a disclosed photo regression test"
+    },
+    "quotas": {
+      "artwork_each_class_each_style": {
+        "train": 256,
+        "val": 32,
+        "calibration": 32,
+        "test": 64
+      },
+      "photo_each_class": {
+        "train": 256,
+        "val": 64,
+        "calibration": 64,
+        "test": 128
+      }
+    },
+    "grouping": "ArtBench artist; Pixiv artwork ID including all pages; generated-art normalized prompt; photo replay original group. Artist separation not established for Pixiv.",
+    "preparation": "All sources decodedRGB then256x256bilinear JPEG95,no chroma subsampling. Preserve originals privately and record both hashes.",
+    "deduplication": "Encoded/prepared RGB hashes globally; cross-role dHash Hamming<=4 rejected",
+    "style_assignment": "AI prompt regex: anime,manga,cartoon,comic,illustration,sketch,drawing,line art,pixel art,digital art,hand-drawn => illustration; painting/watercolour/oil/acrylic/impressionism/art nouveau/woodblock/folk art => painting. Illustration wins if both. Coarse source descriptions, not visually authenticated genres.",
+    "preflight_revision": "Expanded explicit illustration descriptions to digital art and hand-drawn before any fitting or scoring: initial metadata provided fewer than registered illustration quotas."
+  },
+  "training": {
+    "seed": 20261102,
+    "threads": 2,
+    "batch_size": 16,
+    "weight_decay": 0.01,
+    "freeze_epochs": 0,
+    "initial_checkpoint_sha256": "b25a27e7d6c19ed5d13d4b8c40c0e672268cf9c8a9a26ffb86bbd893b91325b8",
+    "candidates": [
+      {
+        "epochs": 8,
+        "backbone_lr": 0.00002,
+        "head_lr": 0.0002,
+        "real_loss_weight": 1.25
+      }
+    ],
+    "selection": "Tuning standardized partial ROC-AUC maxFPR0.05, fullAUC, earlier epoch. Never use test for selection."
+  },
+  "evaluation": {
+    "models": [
+      "downloadable CIFAKE ViT",
+      "previous diverse CNN",
+      "artwork-adapted CNN"
+    ],
+    "thresholds": "Report0.5 and calibrate each model independently on calibration originals at5%empiricalFPR; lock before test.",
+    "cohorts": [
+      "Human illustration",
+      "Human historical painting",
+      "AI illustration",
+      "AI painting",
+      "Photo regression"
+    ],
+    "variants": [
+      "original",
+      "jpeg75",
+      "downscale50"
+    ],
+    "primary": "Per-domain false-positive rate and AI recall, balancedaccuracy, confusion counts and95%Wilsonintervals. Report misses and regressions.",
+    "diagnostic": {
+      "file_sha256": "400d0d9e1d5f01d2d3a33a8aadc1858d3748787c079247625cfdd16b53703241",
+      "origin": "User-reported non-AI Broly illustration; exact original found in Downloads, matches public filename",
+      "selection_use": "Never use for fitting, checkpoint selection or threshold calibration; score only as a separate post-test diagnostic"
+    }
+  },
+  "limits": [
+    "This is a bounded adaptation pilot, not evidence for every anime or all human-made art.",
+    "Source human/AI labels are curator assertions; no inference from appearance or detector scores.",
+    "Photo regression cases were published previously; only artwork test groups are newly withheld.",
+    "Dataset image rights remain with original artists; no raw artwork is redistributed.",
+    "No automatic exception that labels every illustration as non-AI.",
+    "The Broly diagnostic is excluded from every fitting/calibration/test aggregate."
+  ]
+}

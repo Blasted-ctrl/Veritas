@@ -1,4 +1,4 @@
-"""Fit two pre-registered CNN candidates using training and tuning data only."""
+"""Fit pre-registered CNN candidates using training and tuning data only."""
 
 from __future__ import annotations
 
@@ -24,8 +24,14 @@ def main():
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--cache-dir", type=Path, required=True)
     parser.add_argument("--protocol", type=Path, required=True)
+    parser.add_argument("--initialize-from", type=Path)
     args = parser.parse_args()
     protocol = json.loads(args.protocol.read_text(encoding="utf-8"))
+    initial_checkpoint = args.initialize_from / "model.pt" if args.initialize_from else None
+    initial_checkpoint_sha = file_sha256(initial_checkpoint) if initial_checkpoint else None
+    expected_initial = protocol["training"].get("initial_checkpoint_sha256")
+    if expected_initial and initial_checkpoint_sha != expected_initial:
+        raise ValueError("Initial checkpoint differs from the registered protocol")
     source = json.loads((args.data_dir / "source.json").read_text(encoding="utf-8"))
     if source["revision"] != protocol["dataset"]["revision"]:
         raise ValueError("Data revision differs from the pre-registered protocol")
@@ -50,7 +56,16 @@ def main():
             seed=protocol["training"]["seed"],
         )
         seed_everything(config.seed)
-        model = EfficientNetDetector(pretrained=True, image_size=224)
+        if args.initialize_from:
+            from veritas.models.image_model import load_image_classifier
+
+            if file_sha256(initial_checkpoint) != initial_checkpoint_sha:
+                raise ValueError("Initial checkpoint changed during the run")
+            model = load_image_classifier(args.initialize_from)
+            if not isinstance(model, EfficientNetDetector):
+                raise ValueError("Cached fine-tuning requires an EfficientNet-B0 checkpoint")
+        else:
+            model = EfficientNetDetector(pretrained=True, image_size=224)
         print(f"CANDIDATE {index + 1}: {candidate}", flush=True)
         directory = args.output_dir / f"candidate-{index + 1}"
         result = fit_cached(
@@ -77,6 +92,8 @@ def main():
     for filename in ("model.pt", "config.json", "metrics.json", "data-audit.json"):
         shutil.copyfile(winner / filename, final / filename)
     export_image_from_dir(final, final / "model.onnx")
+    if initial_checkpoint and file_sha256(initial_checkpoint) != initial_checkpoint_sha:
+        raise ValueError("Initial checkpoint changed during the run")
     record = {
         "selection": selected,
         "test_evaluated": False,
@@ -88,6 +105,7 @@ def main():
         "torch_version": torch.__version__,
         "torchvision_version": torchvision.__version__,
         "rule": "Select: tuning pAUC@5% FPR, full AUC, earlier epoch; no test predictions",
+        "initial_checkpoint_sha256": initial_checkpoint_sha,
     }
     (args.output_dir / "selected.json").write_text(json.dumps(record, indent=2), encoding="utf-8")
     print(json.dumps(record, indent=2), flush=True)
