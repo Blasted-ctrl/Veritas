@@ -1,12 +1,14 @@
 # Veritas
 
-A place to take a second look at images and videos that might be AI-generated.
+Check images and video frames for signs of AI generation.
 
-Veritas makes a trained detector easy to try: upload a file, keep the original in view, and inspect the prediction and model details. It was built to make detection understandable and reproducible, including the times a model gets it wrong.
+Veritas was built to make AI detection easy to use and its results easier to question. Choose an image or video, preview it, then run the analysis. You get a prediction and an AI score, with the model details available when you need them.
 
 ## See it working
 
-These are real screenshots from the local website using the downloadable detector, not mock results.
+The website has image and video modes, drag-and-drop uploads, and examples you can try. These screenshots show the running site and real responses from the downloadable detector.
+
+![Veritas image upload page](docs/screenshots/site-overview.jpg)
 
 ![Generated image analyzed in Veritas](docs/screenshots/image-analysis.jpg)
 
@@ -46,6 +48,6 @@ See [the detector, its source, and its limits](docs/model.md) for the pinned rev
 
 [Train the PyTorch CNN](docs/cnn-training.md) · [Measured pilot results](docs/evaluation/README.md)
 
-[Development and verification](docs/development.md) · [API and deployment](docs/deployment.md) · [Design language](design/veritas-design/SKILL.md)
+[Development and verification](docs/development.md) · [API and deployment](docs/deployment.md) · [Product page design](docs/design/product-redesign.md)
 
 MIT for the project code. The default pretrained model uses Apache-2.0; sample and font credits are included alongside their files.

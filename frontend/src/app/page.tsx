@@ -1,189 +1,72 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
 import {
   IconArrowUpRight,
   IconArrowRight,
   IconUpload,
   IconPhoto,
   IconVideo,
-  IconX,
   IconSunMoon,
-  IconCircleCheck,
+  IconLock,
   IconAlertTriangle,
-  IconPlayerPause,
+  IconX,
   IconRefresh,
 } from "@tabler/icons-react";
-import { getHealth, verify } from "@/lib/api";
-import type { Health, Verdict } from "@/lib/types";
+import { useMediaAnalysis, formatSize } from "@/hooks/useMediaAnalysis";
 import { VerdictCard } from "@/components/VerdictCard";
-
-const ACCEPT =
-  ".png,.jpg,.jpeg,.webp,.bmp,.mp4,.mov,.webm,.avi,.mkv,.gif,.wav,.flac,.mp3,.ogg,.m4a";
-const VIDEO = /\.(mp4|mov|webm|avi|mkv|gif)$/i;
-const AUDIO = /\.(wav|flac|mp3|ogg|m4a)$/i;
-const size = (bytes: number) => (bytes / 1024 / 1024).toFixed(1) + " MB";
+import { MediaPreview } from "@/components/MediaPreview";
+import { UploadExamples } from "@/components/UploadExamples";
+import { DetectorGuide } from "@/components/DetectorGuide";
 
 export default function Home() {
-  const [file, setFile] = useState<File | null>(null);
-  const [preview, setPreview] = useState<string>();
-  const [previewFailed, setPreviewFailed] = useState(false);
-  const [result, setResult] = useState<Verdict | null>(null);
-  const [health, setHealth] = useState<Health | null>(null);
-  const [checking, setChecking] = useState(true);
-  const [busy, setBusy] = useState(false);
-  const [sampleBusy, setSampleBusy] = useState(false);
-  const [progress, setProgress] = useState(0);
-  const [error, setError] = useState("");
-  const [dragging, setDragging] = useState(false);
-  const [theme, setTheme] = useState<"light" | "dark" | null>(null);
-  const [sample, setSample] = useState("");
-  const input = useRef<HTMLInputElement>(null);
-  const request = useRef<AbortController | null>(null);
-  const serial = useRef(0);
-  const objectUrl = useRef<string | undefined>(undefined);
-
-  async function checkHealth() {
-    setChecking(true);
-    setHealth(await getHealth());
-    setChecking(false);
-  }
-  useEffect(() => {
-    let active = true;
-    getHealth().then((value) => {
-      if (active) {
-        setHealth(value);
-        setChecking(false);
-      }
-    });
-    return () => {
-      active = false;
-      request.current?.abort();
-      if (objectUrl.current) URL.revokeObjectURL(objectUrl.current);
-    };
-  }, []);
-
-  function selectFile(next: File | null, source = "") {
-    serial.current += 1;
-    if (input.current) input.current.value = "";
-    request.current?.abort();
-    setBusy(false);
-    setError("");
-    setResult(null);
-    setProgress(0);
-    setSample(source);
-    setPreviewFailed(false);
-    if (objectUrl.current) URL.revokeObjectURL(objectUrl.current);
-    objectUrl.current = undefined;
-    if (next && next.size > (health?.max_upload_bytes ?? 26_214_400)) {
-      setFile(null);
-      setPreview(undefined);
-      setError(
-        "This file is too large. Choose one under " +
-          size(health?.max_upload_bytes ?? 26_214_400) +
-          ".",
-      );
-      return;
-    }
-    setFile(next);
-    if (next) objectUrl.current = URL.createObjectURL(next);
-    setPreview(objectUrl.current);
-    if (input.current) input.current.value = "";
-  }
-  async function loadSample(name: string, label: string) {
-    const current = ++serial.current;
-    setSampleBusy(true);
-    setError("");
-    try {
-      const response = await fetch("/samples/" + name);
-      if (!response.ok)
-        throw new Error(
-          "The sample could not be loaded. Choose a file to continue.",
-        );
-      const blob = await response.blob();
-      if (current === serial.current)
-        selectFile(new File([blob], name, { type: blob.type }), label);
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Could not load sample.");
-    } finally {
-      setSampleBusy(false);
-    }
-  }
-  async function analyze() {
-    if (!file || busy) return;
-    const current = ++serial.current;
-    const controller = new AbortController();
-    request.current = controller;
-    setBusy(true);
-    setError("");
-    setResult(null);
-    setProgress(0);
-    try {
-      const value = await verify(file, {
-        signal: controller.signal,
-        onProgress: setProgress,
-      });
-      if (current === serial.current) setResult(value);
-    } catch (e) {
-      if (
-        current === serial.current &&
-        !(e instanceof DOMException && e.name === "AbortError")
-      )
-        setError(
-          e instanceof Error ? e.message : "Analysis failed. Please try again.",
-        );
-    } finally {
-      if (current === serial.current) setBusy(false);
-    }
-  }
-  function cancel() {
-    serial.current += 1;
-    request.current?.abort();
-    setBusy(false);
-    setError("Analysis cancelled. Your file is ready to try again.");
-  }
-  function toggleTheme() {
-    const dark = theme
-      ? theme === "dark"
-      : window.matchMedia("(prefers-color-scheme: dark)").matches;
-    const next = dark ? "light" : "dark";
-    document.documentElement.dataset.theme = next;
-    setTheme(next);
-  }
-  const modality =
-    file && AUDIO.test(file.name)
-      ? "audio"
-      : file && VIDEO.test(file.name)
-        ? "video"
-        : "image";
-  const unavailable =
-    !!health &&
-    !(modality === "audio" ? health.audio_model : health.image_model);
-  const ready = health?.image_model;
-
+  const {
+    file,
+    mode,
+    result,
+    health,
+    busy,
+    checking,
+    unavailable,
+    progress,
+    toggleTheme,
+    changeMode,
+    ready,
+    input,
+    selectFile,
+    dragging,
+    setDragging,
+    sampleBusy,
+    loadSample,
+    preview,
+    previewFailed,
+    setPreviewFailed,
+    modality,
+    sample,
+    cancel,
+    analyze,
+    error,
+    checkHealth,
+  } = useMediaAnalysis();
+  const maxSize = formatSize(health?.max_upload_bytes ?? 26_214_400);
   return (
     <div className="site-shell">
       <a className="skip-link" href="#analyze">
         Skip to analysis
       </a>
       <header className="site-header">
-        <Link className="wordmark" href="/">
-          <span className="brand-mark" aria-hidden="true">v</span>veritas
-          <span className="brand-period" aria-hidden="true">.</span>
+        <Link className="wordmark" href="/" aria-label="Veritas home">
+          <span className="brand-mark" aria-hidden="true">
+            v
+          </span>
+          veritas
+          <span className="brand-period" aria-hidden="true">
+            .
+          </span>
         </Link>
         <nav aria-label="Main navigation">
           <a href="#how-it-works">How it works</a>
-          <a href="#about-model">About the model</a>
-          <a
-            href="https://github.com/Blasted-ctrl/Veritas"
-            target="_blank"
-            rel="noreferrer"
-          >
-            GitHub
-            <IconArrowUpRight size={16} />
-          </a>
+          <a href="#about-model">FAQs</a>
         </nav>
         <button
           className="icon-button theme-button"
@@ -194,29 +77,32 @@ export default function Home() {
         </button>
       </header>
       <main>
-        <section
-          className={"hero " + (file ? "has-file" : "")}
-          aria-labelledby="main-title"
-        >
+        <section className="hero" aria-labelledby="main-title">
           <div className="introduction">
-            <h1 id="main-title">
-              Check what
-              <br className="title-break" /> you’re seeing.
-            </h1>
-            <p className="intro-copy">
-              Upload an image or video. Take a closer look with an open source
-              AI detector.
+            <h1 id="main-title">AI {mode} detector</h1>
+            <p>
+              Was it made with AI? Check{" "}
+              {mode === "image" ? "an image" : "a video’s frames"} for signs of
+              AI generation.
+              <br className="desktop-break" /> Upload your file and see what the
+              detector finds.
             </p>
-            {!file && (
-              <p className="intro-note">
-                <IconAlertTriangle size={19} />
-                <span>
-                  A prediction, not proof.
-                  <br />
-                  Always check the source, too.
-                </span>
-              </p>
-            )}
+          </div>
+          <div className="media-selector" role="group" aria-label="Media type">
+            <button
+              aria-pressed={mode === "image"}
+              onClick={() => changeMode("image")}
+            >
+              <IconPhoto size={19} />
+              Image
+            </button>
+            <button
+              aria-pressed={mode === "video"}
+              onClick={() => changeMode("video")}
+            >
+              <IconVideo size={19} />
+              Video
+            </button>
           </div>
           <section
             id="analyze"
@@ -224,7 +110,13 @@ export default function Home() {
             aria-label="Media analysis"
           >
             <div className="panel-heading">
-              <h2>{file ? "Your media" : "Analyze your media"}</h2>
+              <h2>
+                {result
+                  ? "Your analysis"
+                  : file
+                    ? "Your file is ready"
+                    : "Check your " + mode}
+              </h2>
               <span className="service-state">
                 <span className={"status-dot " + (ready ? "online" : "")} />
                 {checking
@@ -240,33 +132,37 @@ export default function Home() {
               tabIndex={-1}
               className="sr-only"
               type="file"
-              accept={ACCEPT}
+              accept={
+                mode === "image"
+                  ? ".png,.jpg,.jpeg,.webp,.bmp"
+                  : ".mp4,.mov,.webm,.avi,.mkv,.gif"
+              }
               aria-label="Choose an image or video"
-              onChange={(e) => {
-                if (e.target.files?.[0]) selectFile(e.target.files[0]);
+              onChange={(event) => {
+                if (event.target.files?.[0]) selectFile(event.target.files[0]);
               }}
             />
             {!file ? (
-              <>
+              <div className="upload-layout">
                 <div
                   className={"drop-area " + (dragging ? "dragging" : "")}
-                  onDragOver={(e) => {
-                    e.preventDefault();
+                  onDragOver={(event) => {
+                    event.preventDefault();
                     setDragging(true);
                   }}
                   onDragLeave={() => setDragging(false)}
-                  onDrop={(e) => {
-                    e.preventDefault();
+                  onDrop={(event) => {
+                    event.preventDefault();
                     setDragging(false);
-                    if (e.dataTransfer.files[0])
-                      selectFile(e.dataTransfer.files[0]);
+                    if (event.dataTransfer.files[0])
+                      selectFile(event.dataTransfer.files[0]);
                   }}
                 >
-                  <span className="upload-symbol">
-                    <IconUpload size={30} stroke={1.5} />
+                  <span className="upload-symbol" aria-hidden="true">
+                    <IconUpload size={30} />
                   </span>
-                  <h3>A little context starts here.</h3>
-                  <p>Drop your file here, or choose one below.</p>
+                  <h3>Drag &amp; drop your {mode} here</h3>
+                  <p>or select a file from your device</p>
                   <button
                     className="button primary"
                     onClick={() => input.current?.click()}
@@ -275,165 +171,60 @@ export default function Home() {
                     <IconArrowRight size={18} />
                   </button>
                   <span className="file-hint">
-                    JPG, PNG, WebP, MP4, MOV, WebM + more
-                    <br />
-                    Up to {size(health?.max_upload_bytes ?? 26_214_400)} per
-                    file
+                    {mode === "image"
+                      ? "JPG, PNG, WebP or BMP"
+                      : "MP4, MOV, WebM, AVI, MKV or GIF"}{" "}
+                    · Up to {maxSize}
                   </span>
                 </div>
-                <div className="sample-list">
-                  <p>Or take a look at an example</p>
-                  <div>
-                    <button
-                      className="sample-button"
-                      disabled={sampleBusy}
-                      onClick={() =>
-                        loadSample(
-                          "generated-lakehouse.png",
-                          "AI-generated example. Made with OpenAI image generation.",
-                        )
-                      }
-                    >
-                      <Image
-                        src="/samples/generated-lakehouse.png"
-                        alt=""
-                        width={48}
-                        height={40}
-                      />
-                      <span>
-                        Generated image<small>AI-made landscape</small>
-                      </span>
-                      <IconArrowUpRight size={17} />
-                    </button>
-                    <button
-                      className="sample-button"
-                      disabled={sampleBusy}
-                      onClick={() =>
-                        loadSample(
-                          "earthrise.jpg",
-                          "NASA photograph. Earthrise, Apollo 8, 1968. Credit: NASA.",
-                        )
-                      }
-                    >
-                      <Image
-                        src="/samples/earthrise.jpg"
-                        alt=""
-                        width={48}
-                        height={40}
-                      />
-                      <span>
-                        NASA photograph<small>Earthrise, Apollo 8</small>
-                      </span>
-                      <IconArrowUpRight size={17} />
-                    </button>
-                  </div>
-                </div>
-              </>
+                <UploadExamples
+                  mode={mode}
+                  busy={sampleBusy}
+                  onSelect={loadSample}
+                />
+              </div>
             ) : (
               <div className="workbench">
-                <div className="source-pane">
-                  <div className="media-preview">
-                    {previewFailed ? (
-                      <p className="preview-unavailable">
-                        Preview unavailable. You can try analyzing the file, or
-                        choose another one.
-                      </p>
-                    ) : (
-                      preview &&
-                      (modality === "video" && !/\.gif$/i.test(file.name) ? (
-                        <video
-                          src={preview}
-                          controls
-                          preload="metadata"
-                          onError={() => setPreviewFailed(true)}
-                        />
-                      ) : modality === "audio" ? (
-                        <audio
-                          src={preview}
-                          controls
-                          onError={() => setPreviewFailed(true)}
-                        />
-                      ) : (
-                        <Image
-                          src={preview}
-                          alt={"Preview of " + file.name}
-                          fill
-                          unoptimized
-                          onError={() => setPreviewFailed(true)}
-                          sizes="(max-width: 720px) 100vw, 50vw"
-                          style={{ objectFit: "contain" }}
-                        />
-                      ))
-                    )}
-                  </div>
-                  <div className="file-details">
-                    <span className="file-icon">
-                      {modality === "video" ? <IconVideo /> : <IconPhoto />}
-                    </span>
-                    <div>
-                      <strong title={file.name}>{file.name}</strong>
-                      <span>
-                        {size(file.size)} ·{" "}
-                        {modality === "video"
-                          ? "Video frames"
-                          : modality === "audio"
-                            ? "Audio"
-                            : "Image"}
-                      </span>
-                    </div>
-                    <button
-                      className="icon-button"
-                      aria-label="Remove file"
-                      onClick={() => selectFile(null)}
-                    >
-                      <IconX size={19} />
-                    </button>
-                  </div>
-                  {sample && (
-                    <p className="sample-caption">
-                      {sample}{" "}
-                      <a href="/samples/credits.json">
-                        Source details
-                        <IconArrowUpRight size={12} />
-                      </a>
-                    </p>
-                  )}
-                  <button
-                    className="text-button"
-                    onClick={() => input.current?.click()}
-                  >
-                    Choose a different file
-                  </button>
-                </div>
+                <MediaPreview
+                  file={file}
+                  preview={preview}
+                  failed={previewFailed}
+                  onError={() => setPreviewFailed(true)}
+                  modality={modality}
+                  sample={sample}
+                  onRemove={() => selectFile(null)}
+                  onReplace={() => input.current?.click()}
+                />
                 <div
                   className="assessment-pane"
                   aria-live="polite"
                   aria-atomic="false"
+                  aria-busy={busy}
                 >
                   {result ? (
                     <VerdictCard result={result} />
                   ) : (
                     <div className="assessment-empty">
-                      <span className="assessment-icon">
+                      <span className="assessment-icon" aria-hidden="true">
                         {busy ? (
-                          <IconRefresh size={28} />
+                          <IconRefresh size={26} />
                         ) : (
-                          <IconPhoto size={28} />
+                          <IconPhoto size={26} />
                         )}
                       </span>
                       <h3>
                         {busy
                           ? progress < 100
-                            ? "Uploading your file"
-                            : "Taking a closer look"
-                          : "Ready for a closer look?"}
+                            ? "Uploading your file…"
+                            : "Analyzing your file…"
+                          : "Ready to check?"}
                       </h3>
                       <p>
                         {busy
-                          ? "The detector is checking visual patterns. Larger videos take longer."
+                          ? "Looking for AI-generated patterns. Longer videos can take a little more time."
                           : modality === "video"
-                            ? "We’ll sample frames and show each image score alongside the average."
-                            : "Run the detector to see its prediction, score, and model details."}
+                            ? "We’ll check sampled frames and show their average AI score."
+                            : "Get a prediction and an AI score for your file."}
                       </p>
                       {busy && (
                         <>
@@ -454,7 +245,7 @@ export default function Home() {
                   <div className="analysis-actions">
                     {busy ? (
                       <button className="button secondary" onClick={cancel}>
-                        <IconPlayerPause size={17} />
+                        <IconX size={18} />
                         Cancel analysis
                       </button>
                     ) : (
@@ -470,7 +261,7 @@ export default function Home() {
                   </div>
                   {!busy && !result && (
                     <p className="analysis-disclaimer">
-                      Scores can be wrong, even when they are high.
+                      A model prediction, not proof of authenticity.
                     </p>
                   )}
                 </div>
@@ -498,92 +289,30 @@ export default function Home() {
               </div>
             )}
             <div className="privacy-note">
-              <IconCircleCheck size={16} />
+              <IconLock size={16} />
               <span>
-                Files are processed by this server. Uploads are not saved;
-                scores may be cached.
+                Uploads are processed by this server and aren’t saved. Scores
+                may be cached.
               </span>
             </div>
           </section>
+          <p className="tool-note">
+            AI detection can make mistakes. Always check the source and context,
+            too.
+          </p>
         </section>
-        <section id="how-it-works" className="explainer-section">
-          <h2>
-            A second look,
-            <br />
-            with the context intact.
-          </h2>
-          <div className="explanation">
-            <p>
-              Veritas was built to make AI media detection easier to try and
-              understand. You bring the file. The detector looks for patterns
-              learned from real and generated images.
-            </p>
-            <p>
-              For video, it checks a sample of frames and averages their scores.
-              It does not verify audio, edits, or the story a video tells.
-            </p>
-            <a
-              className="inline-link"
-              href="https://github.com/Blasted-ctrl/Veritas#run-it-locally"
-            >
-              Run it on your own machine
-              <IconArrowUpRight size={17} />
-            </a>
-          </div>
-        </section>
-        <section id="about-model" className="model-section">
-          <div>
-            <h2>
-              Know the model.
-              <br />
-              Know its limits.
-            </h2>
-            <a
-              className="inline-link"
-              href="https://huggingface.co/onnx-community/ai-image-detection-ONNX"
-              target="_blank"
-              rel="noreferrer"
-            >
-              Read the model card
-              <IconArrowUpRight size={17} />
-            </a>
-          </div>
-          <div className="model-details">
-            <details open>
-              <summary>What powers the default detector?</summary>
-              <p>
-                A pretrained Vision Transformer trained on CIFAKE images, served
-                locally with ONNX Runtime. Each result identifies the actual
-                model used. Operators can also bring their own trained model.
-              </p>
-            </details>
-            <details>
-              <summary>Can it tell me whether a file is authentic?</summary>
-              <p>
-                No detector can establish authenticity on its own. This model
-                learned from a limited set of older generated images. New
-                generators, compression, screenshots, and unfamiliar subjects
-                can confuse it. A high score is not proof.
-              </p>
-            </details>
-            <details>
-              <summary>What happens to my upload?</summary>
-              <p>
-                Image bytes are processed in memory. Videos use a temporary file
-                that is deleted after analysis. The service caches scores by
-                file hash, and may cache an optional explanation if requested. A
-                hosted operator controls its own infrastructure.
-              </p>
-            </details>
-          </div>
-        </section>
+        <DetectorGuide />
       </main>
       <footer className="site-footer">
         <Link className="wordmark small" href="/">
           veritas.
         </Link>
-        <span>Stay curious. Check the source.</span>
-        <a href="https://github.com/Blasted-ctrl/Veritas">
+        <span>Check the media. Keep the context.</span>
+        <a
+          href="https://github.com/Blasted-ctrl/Veritas"
+          target="_blank"
+          rel="noreferrer"
+        >
           Open source on GitHub
           <IconArrowUpRight size={15} />
         </a>

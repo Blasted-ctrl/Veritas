@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Veritas | AI media detector",
+  title: "Veritas | AI Image & Video Detector",
   description:
-    "Check images and video frames with an open source AI detector. Inspect the model score, source, and limitations.",
+    "Check images and video frames for signs of AI generation. Upload a file, run the analysis, and see the result and AI score with Veritas.",
 };
 
 export default function RootLayout({

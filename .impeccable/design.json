@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "generatedAt": "2026-11-01T23:33:44.650783+00:00",
-  "title": "Design System: Veritas",
+  "title": "Design System: Veritas (November 1 snapshot)",
   "extensions": {
     "colorMeta": {
       "bg": {
@@ -549,7 +549,7 @@
   ],
   "narrative": {
     "northStar": "Conservation study",
-    "overview": "Conservation study gives Veritas a calm, precise visual identity: cool green grounds, deep ink, open grotesk lettering, and flat panels. Hierarchy comes from type, spacing, fine rules, and restrained changes in tone. Real media and readable evidence carry the visual interest.\n\nThis document records the production website in `frontend/src/app/globals.css`, `page.tsx`, `layout.tsx`, and `components/VerdictCard.tsx`. The separate illustrative Hue kit at `design/veritas-design` is a reference artifact; its examples do not override the website tokens recorded here.",
+    "overview": "Historical design snapshot from November 1, 2026. The product page was redesigned on November 2. Current design decisions are recorded in docs/design/product-redesign.md, and current tokens live in frontend/src/app/globals.css. The components and values below document the earlier conservation-study direction.\n\nConservation study gives Veritas a calm, precise visual identity: cool green grounds, deep ink, open grotesk lettering, and flat panels. Hierarchy comes from type, spacing, fine rules, and restrained changes in tone. Real media and readable evidence carry the visual interest.\n\nThis document records the production website in `frontend/src/app/globals.css`, `page.tsx`, `layout.tsx`, and `components/VerdictCard.tsx`. The separate illustrative Hue kit at `design/veritas-design` is a reference artifact; its examples do not override the website tokens recorded here.",
     "keyCharacteristics": [
       "Cool green tonal surfaces in light and dark themes.",
       "Hanken Grotesk with compact headings and plain sentence-case controls.",
