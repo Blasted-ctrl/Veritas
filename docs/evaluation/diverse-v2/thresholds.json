@@ -1,0 +1,56 @@
+{
+  "previous_convnext": {
+    "threshold": 0.7739539146423341,
+    "target_fpr": 0.05,
+    "calibration_real": 256,
+    "calibration_fake": 256,
+    "method": "Max balanced accuracy within empirical FPR budget; ties: lower FPR, then threshold",
+    "metrics": {
+      "accuracy": 0.5117,
+      "precision": 0.6667,
+      "recall": 0.0469,
+      "f1": 0.0876,
+      "auc": 0.5649,
+      "n_samples": 512,
+      "n_positive": 256,
+      "n_negative": 256,
+      "confusion_matrix": {
+        "tp": 12,
+        "fp": 6,
+        "tn": 250,
+        "fn": 244
+      },
+      "threshold": 0.7739539146423341,
+      "balanced_accuracy": 0.5117,
+      "average_precision": 0.5669,
+      "false_positive_rate": 0.0234
+    }
+  },
+  "diverse_efficientnet": {
+    "threshold": 0.8961252570152284,
+    "target_fpr": 0.05,
+    "calibration_real": 256,
+    "calibration_fake": 256,
+    "method": "Max balanced accuracy within empirical FPR budget; ties: lower FPR, then threshold",
+    "metrics": {
+      "accuracy": 0.6406,
+      "precision": 0.875,
+      "recall": 0.3281,
+      "f1": 0.4773,
+      "auc": 0.8338,
+      "n_samples": 512,
+      "n_positive": 256,
+      "n_negative": 256,
+      "confusion_matrix": {
+        "tp": 84,
+        "fp": 12,
+        "tn": 244,
+        "fn": 172
+      },
+      "threshold": 0.8961252570152284,
+      "balanced_accuracy": 0.6406,
+      "average_precision": 0.8285,
+      "false_positive_rate": 0.0469
+    }
+  }
+}

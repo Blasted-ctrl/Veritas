@@ -1,0 +1,242 @@
+{
+  "selected": {
+    "selection": {
+      "output_dir": "D:\\CodexWork\\veritas-runtime\\diverse-v2\\models\\candidate-2",
+      "best_partial_auc": 0.6727263621794872,
+      "best_auc": 0.8403778076171875,
+      "best_epoch": 6,
+      "history": [
+        {
+          "epoch": 0,
+          "loss": 0.6566248413873836,
+          "val_partial_auc_005": 0.615791516426282,
+          "val_metrics": {
+            "accuracy": 0.6855,
+            "precision": 0.6779,
+            "recall": 0.707,
+            "f1": 0.6922,
+            "auc": 0.7722,
+            "n_samples": 512,
+            "n_positive": 256,
+            "n_negative": 256,
+            "confusion_matrix": {
+              "tp": 181,
+              "fp": 86,
+              "tn": 170,
+              "fn": 75
+            },
+            "threshold": 0.5,
+            "balanced_accuracy": 0.6855,
+            "average_precision": 0.7916,
+            "false_positive_rate": 0.3359
+          },
+          "seconds": 25.682167099992512
+        },
+        {
+          "epoch": 1,
+          "loss": 0.5771256107836962,
+          "val_partial_auc_005": 0.6411445813301282,
+          "val_metrics": {
+            "accuracy": 0.7207,
+            "precision": 0.7384,
+            "recall": 0.6836,
+            "f1": 0.7099,
+            "auc": 0.8153,
+            "n_samples": 512,
+            "n_positive": 256,
+            "n_negative": 256,
+            "confusion_matrix": {
+              "tp": 175,
+              "fp": 62,
+              "tn": 194,
+              "fn": 81
+            },
+            "threshold": 0.5,
+            "balanced_accuracy": 0.7207,
+            "average_precision": 0.8285,
+            "false_positive_rate": 0.2422
+          },
+          "seconds": 83.25484529999085
+        },
+        {
+          "epoch": 2,
+          "loss": 0.503946399083361,
+          "val_partial_auc_005": 0.6587039262820513,
+          "val_metrics": {
+            "accuracy": 0.7441,
+            "precision": 0.7753,
+            "recall": 0.6875,
+            "f1": 0.7288,
+            "auc": 0.825,
+            "n_samples": 512,
+            "n_positive": 256,
+            "n_negative": 256,
+            "confusion_matrix": {
+              "tp": 176,
+              "fp": 51,
+              "tn": 205,
+              "fn": 80
+            },
+            "threshold": 0.5,
+            "balanced_accuracy": 0.7441,
+            "average_precision": 0.8408,
+            "false_positive_rate": 0.1992
+          },
+          "seconds": 141.33375170000363
+        },
+        {
+          "epoch": 3,
+          "loss": 0.44534972531255335,
+          "val_partial_auc_005": 0.6500025040064102,
+          "val_metrics": {
+            "accuracy": 0.7344,
+            "precision": 0.7632,
+            "recall": 0.6797,
+            "f1": 0.719,
+            "auc": 0.8234,
+            "n_samples": 512,
+            "n_positive": 256,
+            "n_negative": 256,
+            "confusion_matrix": {
+              "tp": 174,
+              "fp": 54,
+              "tn": 202,
+              "fn": 82
+            },
+            "threshold": 0.5,
+            "balanced_accuracy": 0.7344,
+            "average_precision": 0.8376,
+            "false_positive_rate": 0.2109
+          },
+          "seconds": 204.85970239999006
+        },
+        {
+          "epoch": 4,
+          "loss": 0.4043793817400001,
+          "val_partial_auc_005": 0.6616461338141026,
+          "val_metrics": {
+            "accuracy": 0.748,
+            "precision": 0.755,
+            "recall": 0.7344,
+            "f1": 0.7446,
+            "auc": 0.833,
+            "n_samples": 512,
+            "n_positive": 256,
+            "n_negative": 256,
+            "confusion_matrix": {
+              "tp": 188,
+              "fp": 61,
+              "tn": 195,
+              "fn": 68
+            },
+            "threshold": 0.5,
+            "balanced_accuracy": 0.748,
+            "average_precision": 0.8468,
+            "false_positive_rate": 0.2383
+          },
+          "seconds": 275.46488829999
+        },
+        {
+          "epoch": 5,
+          "loss": 0.3669048736919649,
+          "val_partial_auc_005": 0.6632111378205128,
+          "val_metrics": {
+            "accuracy": 0.7559,
+            "precision": 0.7811,
+            "recall": 0.7109,
+            "f1": 0.7444,
+            "auc": 0.8355,
+            "n_samples": 512,
+            "n_positive": 256,
+            "n_negative": 256,
+            "confusion_matrix": {
+              "tp": 182,
+              "fp": 51,
+              "tn": 205,
+              "fn": 74
+            },
+            "threshold": 0.5,
+            "balanced_accuracy": 0.7559,
+            "average_precision": 0.8487,
+            "false_positive_rate": 0.1992
+          },
+          "seconds": 339.98633249998966
+        },
+        {
+          "epoch": 6,
+          "loss": 0.34822655585594475,
+          "val_partial_auc_005": 0.6727263621794872,
+          "val_metrics": {
+            "accuracy": 0.748,
+            "precision": 0.7613,
+            "recall": 0.7227,
+            "f1": 0.7415,
+            "auc": 0.8404,
+            "n_samples": 512,
+            "n_positive": 256,
+            "n_negative": 256,
+            "confusion_matrix": {
+              "tp": 185,
+              "fp": 58,
+              "tn": 198,
+              "fn": 71
+            },
+            "threshold": 0.5,
+            "balanced_accuracy": 0.748,
+            "average_precision": 0.8542,
+            "false_positive_rate": 0.2266
+          },
+          "seconds": 395.39455859999
+        },
+        {
+          "epoch": 7,
+          "loss": 0.32773339247796685,
+          "val_partial_auc_005": 0.664150140224359,
+          "val_metrics": {
+            "accuracy": 0.7539,
+            "precision": 0.7664,
+            "recall": 0.7305,
+            "f1": 0.748,
+            "auc": 0.8378,
+            "n_samples": 512,
+            "n_positive": 256,
+            "n_negative": 256,
+            "confusion_matrix": {
+              "tp": 187,
+              "fp": 57,
+              "tn": 199,
+              "fn": 69
+            },
+            "threshold": 0.5,
+            "balanced_accuracy": 0.7539,
+            "average_precision": 0.8516,
+            "false_positive_rate": 0.2227
+          },
+          "seconds": 464.0287183000037
+        }
+      ],
+      "candidate": 2
+    },
+    "test_evaluated": false,
+    "protocol_sha256": "0cc51c1a29b5644a9141360012d52389d3cd340de3847164cd6cb3929ecd13cd",
+    "dataset_fingerprint": "9d0a1c93b2907086d3819d8fed415748dc4fcfc8262898e4d9d2aeb7cb476d3c",
+    "checkpoint_sha256": "b25a27e7d6c19ed5d13d4b8c40c0e672268cf9c8a9a26ffb86bbd893b91325b8",
+    "graph_sha256": "7753d5935b09ec64bd26170cb4f1489c7cd3fe084cbb3c0fed657fa1f3012760",
+    "processor_sha256": "b7141b36d01611918f475295ebc0a60f6376e3072216e76571e0a1bfce2e7b45",
+    "torch_version": "2.12.1+cpu",
+    "torchvision_version": "0.27.1+cpu",
+    "rule": "Select: tuning pAUC@5% FPR, full AUC, earlier epoch; no test predictions"
+  },
+  "source_sha256": "6a797359e70a44cb2026b2ccab59f8d9d39203e78d61f142425f181789ff9a5a",
+  "models": {
+    "previous_convnext": {
+      "graph_sha256": "5a524af30ba3ebd74dc62648371ece3c1df09d0b54be0f0ea198eac06a0cdb2e",
+      "processor_sha256": "dd8e8010e1a46e07d1bf331a8a85f78ea836b1c35c10a194b1a6c0f5dba9664d"
+    },
+    "diverse_efficientnet": {
+      "graph_sha256": "7753d5935b09ec64bd26170cb4f1489c7cd3fe084cbb3c0fed657fa1f3012760",
+      "processor_sha256": "b7141b36d01611918f475295ebc0a60f6376e3072216e76571e0a1bfce2e7b45"
+    }
+  },
+  "test_predictions_started": false
+}
