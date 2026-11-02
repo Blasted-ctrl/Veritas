@@ -1,13 +1,11 @@
 "use client";
 
-import Link from "next/link";
 import {
   IconArrowUpRight,
   IconArrowRight,
   IconUpload,
   IconPhoto,
   IconVideo,
-  IconSunMoon,
   IconLock,
   IconAlertTriangle,
   IconX,
@@ -18,6 +16,7 @@ import { VerdictCard } from "@/components/VerdictCard";
 import { MediaPreview } from "@/components/MediaPreview";
 import { UploadExamples } from "@/components/UploadExamples";
 import { DetectorGuide } from "@/components/DetectorGuide";
+import { Brand } from "@/components/Brand";
 
 export default function Home() {
   const {
@@ -29,7 +28,6 @@ export default function Home() {
     checking,
     unavailable,
     progress,
-    toggleTheme,
     changeMode,
     ready,
     input,
@@ -55,26 +53,11 @@ export default function Home() {
         Skip to analysis
       </a>
       <header className="site-header">
-        <Link className="wordmark" href="/" aria-label="Veritas home">
-          <span className="brand-mark" aria-hidden="true">
-            v
-          </span>
-          veritas
-          <span className="brand-period" aria-hidden="true">
-            .
-          </span>
-        </Link>
+        <Brand />
         <nav aria-label="Main navigation">
           <a href="#how-it-works">How it works</a>
           <a href="#about-model">FAQs</a>
         </nav>
-        <button
-          className="icon-button theme-button"
-          aria-label="Switch color theme"
-          onClick={toggleTheme}
-        >
-          <IconSunMoon size={21} />
-        </button>
       </header>
       <main>
         <section className="hero" aria-labelledby="main-title">
@@ -304,9 +287,7 @@ export default function Home() {
         <DetectorGuide />
       </main>
       <footer className="site-footer">
-        <Link className="wordmark small" href="/">
-          veritas.
-        </Link>
+        <Brand small />
         <span>Check the media. Keep the context.</span>
         <a
           href="https://github.com/Blasted-ctrl/Veritas"

@@ -267,7 +267,7 @@ test("an unreachable API can be retried after it recovers", async ({
   await expect(page.getByRole("status")).toHaveCount(0);
 });
 
-test("mobile themes and long filenames stay within the viewport with reduced motion", async ({
+test("mobile stays light with long filenames and either system preference", async ({
   page,
 }) => {
   await page.setViewportSize({ width: 390, height: 844 });
@@ -278,9 +278,17 @@ test("mobile themes and long filenames stay within the viewport with reduced mot
       () => matchMedia("(prefers-reduced-motion: reduce)").matches,
     ),
   ).toBe(true);
-  for (const theme of ["dark", "light"]) {
-    await page.getByRole("button", { name: "Switch color theme" }).click();
-    await expect(page.locator("html")).toHaveAttribute("data-theme", theme);
+  for (const preference of ["dark", "light"]) {
+    await page.emulateMedia({ colorScheme: preference });
+    await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
+    await expect(page.locator("html")).toHaveCSS("color-scheme", "light");
+    await expect(page.locator("body")).toHaveCSS(
+      "background-color",
+      "rgb(248, 250, 248)",
+    );
+    await expect(
+      page.getByRole("button", { name: "Switch color theme" }),
+    ).toHaveCount(0);
     expect(
       await page.evaluate(
         () => document.documentElement.scrollWidth <= innerWidth,
@@ -385,7 +393,7 @@ test("switching media while an example loads ignores its late response", async (
   }
 });
 
-test("empty and result screens fit supported breakpoints in both themes", async ({
+test("empty and result screens stay light at supported breakpoints", async ({
   page,
 }) => {
   await page.route("**/verify*", (route) => respond(route, verdict()));
@@ -400,14 +408,9 @@ test("empty and result screens fit supported breakpoints in both themes", async 
           .click();
         await expect(page.getByRole("meter")).toBeVisible();
       }
-      for (const theme of ["light", "dark"]) {
-        if (
-          ((await page.locator("html").getAttribute("data-theme")) ||
-            "light") !== theme
-        )
-          await page
-            .getByRole("button", { name: "Switch color theme" })
-            .click();
+      for (const preference of ["light", "dark"]) {
+        await page.emulateMedia({ colorScheme: preference });
+        await expect(page.locator("html")).toHaveCSS("color-scheme", "light");
         expect(
           await page.evaluate(
             () => document.documentElement.scrollWidth <= innerWidth,
@@ -458,7 +461,7 @@ test("a native request timeout shows an error without a success score", async ({
   }
 });
 
-test("upload and result screens pass automated accessibility checks in both themes", async ({
+test("upload and result screens pass accessibility checks with either system preference", async ({
   page,
 }) => {
   await page.route("**/verify*", (route) => respond(route, verdict()));
@@ -472,12 +475,8 @@ test("upload and result screens pass automated accessibility checks in both them
         .click();
       await expect(page.getByRole("meter")).toBeVisible();
     }
-    for (const theme of ["light", "dark"]) {
-      if (
-        ((await page.locator("html").getAttribute("data-theme")) || "light") !==
-        theme
-      )
-        await page.getByRole("button", { name: "Switch color theme" }).click();
+    for (const preference of ["light", "dark"]) {
+      await page.emulateMedia({ colorScheme: preference });
       const violations = await page.evaluate(async () => {
         const result = await window.axe.run(document, {
           runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21aa"] },

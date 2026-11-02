@@ -36,17 +36,23 @@ export function UploadExamples({ mode, busy, onSelect }: Props) {
             )
           }
         >
-          <Image
-            src="/samples/generated-lakehouse.png"
-            alt="Lake house surrounded by mountains"
-            fill
-            sizes="(max-width: 768px) 45vw, 240px"
-          />
-          {mode === "video" && (
-            <span className="example-play" aria-hidden="true">
-              <IconPlayerPlay size={25} />
-            </span>
-          )}
+          <span className="example-image">
+            <Image
+              src="/samples/generated-lakehouse.png"
+              alt="Lake house surrounded by mountains"
+              fill
+              sizes={
+                mode === "video"
+                  ? "(max-width: 768px) 90vw, 520px"
+                  : "(max-width: 768px) 45vw, 240px"
+              }
+            />
+            {mode === "video" && (
+              <span className="example-play" aria-hidden="true">
+                <IconPlayerPlay size={25} />
+              </span>
+            )}
+          </span>
           <span className="example-label">
             {mode === "video" ? "Try a sample video" : "AI-generated image"}
             <IconArrowUpRight size={16} />
@@ -64,12 +70,14 @@ export function UploadExamples({ mode, busy, onSelect }: Props) {
               )
             }
           >
-            <Image
-              src="/samples/earthrise.jpg"
-              alt="Earth rising above the Moon"
-              fill
-              sizes="(max-width: 768px) 45vw, 240px"
-            />
+            <span className="example-image">
+              <Image
+                src="/samples/earthrise.jpg"
+                alt="Earth rising above the Moon"
+                fill
+                sizes="(max-width: 768px) 45vw, 240px"
+              />
+            </span>
             <span className="example-label">
               NASA photograph
               <IconArrowUpRight size={16} />

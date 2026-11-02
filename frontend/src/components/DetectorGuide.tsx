@@ -9,7 +9,6 @@ export function DetectorGuide() {
         aria-labelledby="how-title"
       >
         <div className="section-heading">
-          <p className="eyebrow">A few simple steps</p>
           <h2 id="how-title">Check before you share.</h2>
           <p>
             From a saved photo to a video in your feed, start with the file.
@@ -47,7 +46,6 @@ export function DetectorGuide() {
         aria-labelledby="faq-title"
       >
         <div>
-          <p className="eyebrow">Good to know</p>
           <h2 id="faq-title">Frequently asked questions</h2>
           <p className="faq-intro">
             A clearer picture of what the detector can tell you.

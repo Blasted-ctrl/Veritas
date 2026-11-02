@@ -122,31 +122,19 @@ try {
       [390, "mobile"],
     ]) {
       await page.setViewportSize({ width, height: 900 });
-      for (const theme of ["light", "dark"]) {
-        if (
-          ((await page.locator("html").getAttribute("data-theme")) ||
-            "light") !== theme
-        ) {
-          await page
-            .getByRole("button", { name: "Switch color theme" })
-            .click();
-        }
-        await expect
-          .poll(
-            async () =>
-              (await page.locator("html").getAttribute("data-theme")) ||
-              "light",
-          )
-          .toBe(theme);
+      for (const preference of ["light", "dark"]) {
+        await page.emulateMedia({ colorScheme: preference });
+        await expect(page.locator("html")).toHaveCSS("color-scheme", "light");
         if (
           !(await page.evaluate(
             () => document.documentElement.scrollWidth <= innerWidth,
           ))
         )
           throw new Error(
-            "Horizontal overflow: " + kind + "/" + label + "/" + theme,
+            "Horizontal overflow: " + kind + "/" + label + "/" + preference,
           );
-        const filename = kind + "-" + label + "-" + theme + ".jpg";
+        const filename =
+          kind + "-" + label + "-" + preference + "-preference.jpg";
         await page.keyboard.press("Control+Home");
         await expect.poll(() => page.evaluate(() => scrollY)).toBe(0);
         const capture =
@@ -162,8 +150,7 @@ try {
       }
     }
     await page.setViewportSize({ width: 1280, height: 900 });
-    if ((await page.locator("html").getAttribute("data-theme")) !== "light")
-      await page.getByRole("button", { name: "Switch color theme" }).click();
+    await page.emulateMedia({ colorScheme: "light" });
   }
   if (errors.length) throw new Error("Browser errors: " + errors.join("\n"));
   evidence.gif_fixture =
@@ -179,7 +166,7 @@ try {
     JSON.stringify(evidence, null, 2) + "\n",
   );
   console.log(
-    "Captured real image/video inference in desktop/mobile, light/dark: " +
+    "Captured real image/video inference in desktop/mobile, light-only with both system preferences: " +
       output,
   );
 } finally {

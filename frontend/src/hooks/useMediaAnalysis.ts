@@ -23,7 +23,6 @@ export function useMediaAnalysis() {
   const [progress, setProgress] = useState(0);
   const [error, setError] = useState("");
   const [dragging, setDragging] = useState(false);
-  const [theme, setTheme] = useState<"light" | "dark" | null>(null);
   const [sample, setSample] = useState("");
   const input = useRef<HTMLInputElement>(null);
   const request = useRef<AbortController | null>(null);
@@ -132,14 +131,6 @@ export function useMediaAnalysis() {
     setBusy(false);
     setError("Analysis cancelled. Your file is ready to try again.");
   }
-  function toggleTheme() {
-    const dark = theme
-      ? theme === "dark"
-      : window.matchMedia("(prefers-color-scheme: dark)").matches;
-    const next = dark ? "light" : "dark";
-    document.documentElement.dataset.theme = next;
-    setTheme(next);
-  }
   const modality =
     file && AUDIO.test(file.name)
       ? "audio"
@@ -180,7 +171,6 @@ export function useMediaAnalysis() {
     loadSample,
     analyze,
     cancel,
-    toggleTheme,
     modality,
     unavailable,
     ready,
