@@ -8,6 +8,7 @@ measured, never hand-written.
 from __future__ import annotations
 
 import json
+import math
 from collections.abc import Sequence
 from dataclasses import asdict, dataclass
 from pathlib import Path
@@ -28,6 +29,9 @@ class ClassificationMetrics:
     n_negative: int
     confusion_matrix: dict[str, int]  # tp, fp, tn, fn
     threshold: float = 0.5
+    balanced_accuracy: float | None = None
+    average_precision: float | None = None
+    false_positive_rate: float | None = None
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -49,13 +53,22 @@ def compute_metrics(
     import numpy as np
     from sklearn.metrics import (
         accuracy_score,
+        average_precision_score,
         confusion_matrix,
         precision_recall_fscore_support,
         roc_auc_score,
     )
 
+    if len(labels) != len(probs) or not len(labels):
+        raise ValueError("Labels and scores must be nonempty and have the same length")
+    if any(label not in (0, 1) for label in labels):
+        raise ValueError("Labels must be binary (real=0, fake=1)")
+    if not math.isfinite(threshold) or not 0 <= threshold <= 1:
+        raise ValueError("Threshold must be finite and in [0, 1]")
     y = np.asarray(labels, dtype=int)
     p = np.asarray(probs, dtype=float)
+    if not np.all(np.isfinite(p)) or np.any((p < 0) | (p > 1)):
+        raise ValueError("Scores must be finite and in [0, 1]")
     preds = (p >= threshold).astype(int)
 
     accuracy = float(accuracy_score(y, preds))
@@ -63,7 +76,7 @@ def compute_metrics(
         y, preds, average="binary", zero_division=0, pos_label=1
     )
 
-    # AUC is undefined with a single class present; fall back to NaN-safe 0.5.
+    # Ranking metrics require positive and negative examples.
     if len(np.unique(y)) < 2:
         auc = float("nan")
     else:
@@ -82,6 +95,11 @@ def compute_metrics(
         n_negative=int((y == 0).sum()),
         confusion_matrix={"tp": int(tp), "fp": int(fp), "tn": int(tn), "fn": int(fn)},
         threshold=threshold,
+        balanced_accuracy=round(float((tp / (tp + fn) + tn / (tn + fp)) / 2), 4)
+        if (tp + fn) and (tn + fp)
+        else None,
+        average_precision=round(float(average_precision_score(y, p)), 4) if len(np.unique(y)) == 2 else None,
+        false_positive_rate=round(float(fp / (tn + fp)), 4) if tn + fp else None,
     )
 
 
@@ -97,7 +115,7 @@ def write_metrics(
     doc: dict[str, Any] = metrics.to_dict()
     if extra:
         doc["meta"] = extra
-    out.write_text(json.dumps(doc, indent=2), encoding="utf-8")
+    out.write_text(json.dumps(doc, indent=2, allow_nan=False), encoding="utf-8")
     return out
 
 

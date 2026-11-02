@@ -1,9 +1,9 @@
-"""Fine-tune a ViT image manipulation detector.
+"""Fine-tune a PyTorch CNN or ViT image manipulation detector.
 
 Strategy:
   * deterministic seeding (data, weights init, dataloader shuffling);
   * stage 1 — freeze the pretrained backbone, train only the head;
-  * stage 2 — unfreeze the top encoder layers and fine-tune end-to-end;
+  * stage 2 — unfreeze selected upper backbone layers or stages;
   * discriminative learning rates (higher for the head, lower for the backbone)
     with linear warmup + decay;
   * model selection on the validation split; final, honest evaluation on the
@@ -12,10 +12,12 @@ Strategy:
 
 from __future__ import annotations
 
+import json
 import time
 from dataclasses import asdict, dataclass
 from pathlib import Path
 
+from veritas.data.image_corpus import audit_image_corpus
 from veritas.models.image_model import (
     DEFAULT_MODEL,
     ImageModelConfig,
@@ -24,6 +26,7 @@ from veritas.models.image_model import (
     trainable_parameter_count,
     unfreeze_top_encoder_layers,
 )
+from veritas.models.metadata import torch_state_sha256
 from veritas.training.image_data import ImageManifestDataset, collate
 from veritas.training.metrics import ClassificationMetrics, compute_metrics, write_metrics
 from veritas.training.seed import seed_everything, seed_worker
@@ -33,6 +36,7 @@ from veritas.training.seed import seed_everything, seed_worker
 class TrainImageConfig:
     data_dir: Path
     output_dir: Path
+    architecture: str = "convnext_tiny"
     model_name: str = DEFAULT_MODEL
     pretrained: bool = True
     image_size: int = 224
@@ -44,10 +48,24 @@ class TrainImageConfig:
     warmup_ratio: float = 0.1
     freeze_epochs: int = 1
     unfreeze_layers: int = 4
+    unfreeze_stages: int = 1
     seed: int = 1337
     num_workers: int = 0
     limit: int | None = None
     device: str | None = None
+    heldout_generators: tuple[str, ...] = ()
+
+    def __post_init__(self):
+        if self.architecture not in ("convnext_tiny", "vit"):
+            raise ValueError("Choose convnext_tiny or vit")
+        if self.epochs < 1 or self.batch_size < 1 or self.num_workers < 0:
+            raise ValueError("Epochs and batch size must be positive; workers cannot be negative")
+        if self.freeze_epochs < 0 or self.unfreeze_layers < 0 or not 0 <= self.unfreeze_stages <= 4:
+            raise ValueError("Invalid freezing schedule")
+        if min(self.backbone_lr, self.head_lr) <= 0 or self.weight_decay < 0:
+            raise ValueError("Learning rates must be positive and weight decay nonnegative")
+        if not 0 <= self.warmup_ratio < 1:
+            raise ValueError("warmup_ratio must be in [0, 1)")
 
 
 def _resolve_device(requested: str | None):
@@ -133,9 +151,17 @@ def train_image(cfg: TrainImageConfig) -> ClassificationMetrics:
     out_dir = Path(cfg.output_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    train_ds = ImageManifestDataset(data_dir / "train.csv", image_size=cfg.image_size, limit=cfg.limit)
+    audit = audit_image_corpus(data_dir, heldout_generators=cfg.heldout_generators)
+    (out_dir / "data-audit.json").write_text(json.dumps(audit, indent=2), encoding="utf-8")
+    train_ds = ImageManifestDataset(
+        data_dir / "train.csv", image_size=cfg.image_size, limit=cfg.limit, training=True, seed=cfg.seed
+    )
     val_ds = ImageManifestDataset(data_dir / "val.csv", image_size=cfg.image_size, limit=cfg.limit)
     test_ds = ImageManifestDataset(data_dir / "test.csv", image_size=cfg.image_size, limit=cfg.limit)
+    selected_generators = {sample.generator_id for sample in test_ds.samples if sample.label == 1}
+    missing = set(cfg.heldout_generators) - selected_generators
+    if missing:
+        raise ValueError(f"Selected test subset omits held-out generators {sorted(missing)}; raise --limit")
 
     train_loader = _make_loader(
         train_ds, batch_size=cfg.batch_size, shuffle=True, seed=cfg.seed, num_workers=cfg.num_workers
@@ -147,13 +173,18 @@ def train_image(cfg: TrainImageConfig) -> ClassificationMetrics:
         test_ds, batch_size=cfg.batch_size, shuffle=False, seed=cfg.seed, num_workers=cfg.num_workers
     )
 
-    model = build_vit(
-        ImageModelConfig(
-            pretrained_name=cfg.model_name,
-            pretrained=cfg.pretrained,
-            image_size=cfg.image_size,
-        )
-    ).to(device)
+    if cfg.architecture == "convnext_tiny":
+        from veritas.models.cnn_model import ConvNeXtDetector
+
+        model = ConvNeXtDetector(pretrained=cfg.pretrained, image_size=cfg.image_size).to(device)
+    else:
+        model = build_vit(
+            ImageModelConfig(
+                pretrained_name=cfg.model_name,
+                pretrained=cfg.pretrained,
+                image_size=cfg.image_size,
+            )
+        ).to(device)
 
     # Stage 1: head only.
     freeze_backbone(model)
@@ -172,9 +203,14 @@ def train_image(cfg: TrainImageConfig) -> ClassificationMetrics:
     start = time.time()
 
     for epoch in range(cfg.epochs):
-        # Stage 2: unfreeze the top encoder layers once the head has adapted.
-        if epoch == cfg.freeze_epochs and cfg.unfreeze_layers > 0:
-            unfreeze_top_encoder_layers(model, cfg.unfreeze_layers)
+        # Unfreeze the selected upper backbone after the head-only phase.
+        if epoch == cfg.freeze_epochs:
+            if cfg.architecture == "convnext_tiny":
+                from veritas.models.cnn_model import unfreeze_top_stages
+
+                unfreeze_top_stages(model, cfg.unfreeze_stages)
+            elif cfg.unfreeze_layers > 0:
+                unfreeze_top_encoder_layers(model, cfg.unfreeze_layers)
 
         train_loss = _train_one_epoch(model, train_loader, optimizer, scheduler, device)
         val_labels, val_probs = evaluate(model, val_loader, device)
@@ -208,14 +244,27 @@ def train_image(cfg: TrainImageConfig) -> ClassificationMetrics:
     test_labels, test_probs = evaluate(model, test_loader, device)
     test_metrics = compute_metrics(test_labels, test_probs)
 
-    # Write metrics.json first (the source of truth); a large model save must
-    # never be able to lose the measured results.
+    model.save_pretrained(out_dir)
     write_metrics(
         test_metrics,
         out_dir / "metrics.json",
         extra={
             "modality": "image",
-            "model_name": cfg.model_name if cfg.pretrained else "vit-tiny-random",
+            "model_name": (
+                "torchvision/convnext_tiny"
+                if cfg.architecture == "convnext_tiny"
+                else cfg.model_name
+                if cfg.pretrained
+                else "vit-tiny-random"
+            ),
+            "architecture": cfg.architecture,
+            "optimizer": "AdamW",
+            "loss": "cross_entropy",
+            "data_kind": audit["data_kind"],
+            "dataset_fingerprint": audit["fingerprint"],
+            "torch_state_sha256": torch_state_sha256(model),
+            "heldout_generators": list(cfg.heldout_generators),
+            "torch_version": torch.__version__,
             "pretrained": cfg.pretrained,
             "epochs": cfg.epochs,
             "seed": cfg.seed,
@@ -233,11 +282,7 @@ def train_image(cfg: TrainImageConfig) -> ClassificationMetrics:
         f"\nTEST  acc={test_metrics.accuracy} precision={test_metrics.precision} "
         f"recall={test_metrics.recall} f1={test_metrics.f1} auc={test_metrics.auc}"
     )
-    try:
-        model.save_pretrained(out_dir)
-        print(f"Saved model + metrics.json -> {out_dir}")
-    except OSError as exc:  # e.g. out of disk space — metrics are already safe
-        print(f"WARNING: model weights not saved ({exc}); metrics.json written to {out_dir}")
+    print(f"Saved model + metrics.json -> {out_dir}")
     return test_metrics
 
 

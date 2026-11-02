@@ -68,6 +68,8 @@ def _make_image(rng: random.Random, fake: bool, size: int = 32) -> list[list[tup
             v = (base + x * 3 + y * 2) % 256
             if fake:
                 v = (v + rng.randint(-60, 60)) % 256
+            else:
+                v = (v + rng.randint(-2, 2)) % 256
             row.append((v, (v * 2) % 256, (v * 3) % 256))
         pixels.append(row)
     return pixels

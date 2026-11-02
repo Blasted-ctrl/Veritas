@@ -1,7 +1,7 @@
 """FastAPI inference service: POST /verify returns an authenticity verdict.
 
 Routing by modality:
-  * image -> ONNX ViT detector
+  * image -> ONNX CNN/ViT detector
   * audio -> ONNX Wav2Vec2 detector
   * video -> sampled image frames, averaged in the API process
 
@@ -117,7 +117,12 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         }
         cache_key = content_hash(json.dumps(identity, sort_keys=True).encode())
         cached = cache.get(cache_key)
-        if cached is not None and not (explain and modality == "image" and not cached.get("overlay")):
+        if cached is not None and not (
+            explain
+            and modality == "image"
+            and not cached.get("overlay")
+            and explainer.matches(image_detector.metadata)
+        ):
             cached["cached"] = True
             return Verdict(**cached)
 

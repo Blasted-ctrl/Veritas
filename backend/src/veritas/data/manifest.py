@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import csv
 from collections.abc import Iterable, Sequence
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, replace
 from pathlib import Path
 
 # Label convention used everywhere in the project:
@@ -23,7 +23,17 @@ _LABEL_NAMES = {REAL: "real", FAKE: "fake"}
 # Splits a manifest may be partitioned into.
 SPLITS = ("train", "val", "test")
 
-_FIELDS = ("path", "label", "subject_id", "modality", "source", "split")
+_FIELDS = (
+    "path",
+    "label",
+    "subject_id",
+    "modality",
+    "source",
+    "split",
+    "generator_id",
+    "source_url",
+    "license",
+)
 
 
 def label_name(label: int) -> str:
@@ -41,9 +51,9 @@ class Sample:
     Attributes:
         path: Location of the media file on disk.
         label: :data:`REAL` (0) or :data:`FAKE` (1).
-        subject_id: Identity grouping key.  Every clip/frame/utterance of the
-            *same* underlying person shares one ``subject_id`` so that the
-            splitter can guarantee an identity never straddles two splits.
+        subject_id: Grouping key used to keep related samples in one split.
+            Use person identity when known; content-group IDs alone do not
+            establish human identity separation.
         modality: ``"image"`` or ``"audio"``.
         source: Originating dataset (e.g. ``"faceforensics"``, ``"synthetic"``).
         split: Assigned split (``"train"``/``"val"``/``"test"``) or ``""`` when
@@ -56,6 +66,9 @@ class Sample:
     modality: str
     source: str
     split: str = ""
+    generator_id: str = ""
+    source_url: str = ""
+    license: str = ""
 
     def __post_init__(self) -> None:
         if self.label not in (REAL, FAKE):
@@ -68,14 +81,7 @@ class Sample:
     def with_split(self, split: str) -> Sample:
         if split not in SPLITS:
             raise ValueError(f"split must be one of {SPLITS}, got {split!r}")
-        return Sample(
-            path=self.path,
-            label=self.label,
-            subject_id=self.subject_id,
-            modality=self.modality,
-            source=self.source,
-            split=split,
-        )
+        return replace(self, split=split)
 
 
 def write_manifest(samples: Sequence[Sample], path: str | Path) -> Path:
@@ -103,6 +109,9 @@ def read_manifest(path: str | Path) -> list[Sample]:
                     modality=row["modality"],
                     source=row["source"],
                     split=row.get("split", "") or "",
+                    generator_id=row.get("generator_id", "") or "",
+                    source_url=row.get("source_url", "") or "",
+                    license=row.get("license", "") or "",
                 )
             )
     return rows

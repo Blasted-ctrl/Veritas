@@ -10,8 +10,10 @@ Requires the optional ``ml`` extra (torch/torchvision/transformers).
 
 from __future__ import annotations
 
+import json
 import re
 from dataclasses import dataclass
+from pathlib import Path
 
 # Matches a ViT encoder block index across transformers naming schemes:
 #   transformers >=5.x : "vit.layers.<i>.*"
@@ -146,3 +148,19 @@ __all__ = [
     "IMAGENET_MEAN",
     "IMAGENET_STD",
 ]
+
+
+def load_image_classifier(directory: str | Path):
+    """Load a supported local CNN/ViT checkpoint without remote custom code."""
+    directory = Path(directory)
+    config = json.loads((directory / "config.json").read_text(encoding="utf-8"))
+    kind = config.get("model_type")
+    if kind == "veritas_convnext_tiny":
+        from veritas.models.cnn_model import ConvNeXtDetector
+
+        return ConvNeXtDetector.from_pretrained(directory)
+    if kind == "vit":
+        from transformers import ViTForImageClassification
+
+        return ViTForImageClassification.from_pretrained(str(directory), local_files_only=True)
+    raise ValueError(f"Unsupported image checkpoint architecture: {kind!r}")

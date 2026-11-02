@@ -1,4 +1,4 @@
-"""Export fine-tuned ViT / Wav2Vec2 models to ONNX for fast serving.
+"""Export fine-tuned CNN / ViT / Wav2Vec2 models to ONNX for fast serving.
 
 ONNX Runtime gives lower-latency, dependency-light inference (no torch needed at
 serve time). Exports use a thin wrapper that returns only the logits so the
@@ -11,6 +11,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+from veritas.models.image_model import load_image_classifier
 from veritas.models.metadata import (
     default_image_metadata,
     file_sha256,
@@ -50,11 +51,15 @@ def _audio_wrapper(model):
 
 
 def export_image_onnx(
-    model, output_path: str | Path, *, image_size: int = 224, opset: int = DEFAULT_OPSET
+    model, output_path: str | Path, *, image_size: int | None = None, opset: int = DEFAULT_OPSET
 ) -> Path:
-    """Export a ViT image classifier to ONNX with a dynamic batch axis."""
+    """Export a supported image classifier with its recorded pixel contract."""
     import torch
 
+    declared = getattr(getattr(model, "config", None), "image_size", 224)
+    if image_size is not None and image_size != declared:
+        raise ValueError(f"Export input size must match checkpoint image_size={declared}")
+    image_size = declared
     out = Path(output_path)
     out.parent.mkdir(parents=True, exist_ok=True)
     wrapper = _image_wrapper(model)
@@ -71,6 +76,13 @@ def export_image_onnx(
         dynamo=False,  # legacy TorchScript exporter: stable dynamic_axes support
     )
     metadata = default_image_metadata(image_size)
+    if getattr(model.config, "model_type", None) == "veritas_convnext_tiny":
+        metadata.update(
+            id="Veritas ConvNeXt-Tiny",
+            architecture="convnext_tiny",
+            source_url="https://github.com/Blasted-ctrl/Veritas/blob/main/docs/cnn-training.md",
+            initialization=model.config.backbone_weights or "random",
+        )
     metadata["artifact_sha256"] = file_sha256(out)
     metadata["torch_state_sha256"] = torch_state_sha256(model)
     metadata_path(out).write_text(json.dumps(metadata, indent=2) + "\n", encoding="utf-8")
@@ -102,11 +114,32 @@ def export_audio_onnx(
 
 
 def export_image_from_dir(model_dir: str | Path, output_path: str | Path, **kwargs) -> Path:
-    """Load a saved ViT (``save_pretrained`` dir) and export it to ONNX."""
-    from transformers import ViTForImageClassification
-
-    model = ViTForImageClassification.from_pretrained(str(model_dir))
-    return export_image_onnx(model, output_path, **kwargs)
+    """Load a supported local image classifier and export its ONNX graph."""
+    model = load_image_classifier(model_dir)
+    audit = Path(model_dir) / "data-audit.json"
+    data = None
+    if audit.exists():
+        try:
+            data = json.loads(audit.read_text(encoding="utf-8"))
+            completion = json.loads((Path(model_dir) / "metrics.json").read_text(encoding="utf-8"))["meta"]
+            if not isinstance(data["data_kind"], str):
+                raise ValueError("Invalid training data classification")
+            if not data["fingerprint"] or completion["dataset_fingerprint"] != data["fingerprint"]:
+                raise ValueError("Training audit does not match completed training")
+            if completion["image_size"] != model.config.image_size:
+                raise ValueError("Checkpoint processor size does not match completed training")
+            if completion["torch_state_sha256"] != torch_state_sha256(model):
+                raise ValueError("Checkpoint weights do not match completed training")
+        except (OSError, KeyError, TypeError, json.JSONDecodeError) as exc:
+            raise ValueError("Training provenance requires matching completed metrics and weights") from exc
+    path = export_image_onnx(model, output_path, **kwargs)
+    if data is not None:
+        sidecar = metadata_path(path)
+        metadata = json.loads(sidecar.read_text(encoding="utf-8"))
+        metadata["training_data_fingerprint"] = data["fingerprint"]
+        metadata["training_data_kind"] = data["data_kind"]
+        sidecar.write_text(json.dumps(metadata, indent=2) + chr(10), encoding="utf-8")
+    return path
 
 
 def export_audio_from_dir(model_dir: str | Path, output_path: str | Path, **kwargs) -> Path:

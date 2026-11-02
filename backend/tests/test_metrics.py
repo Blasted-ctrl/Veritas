@@ -46,3 +46,25 @@ def test_write_metrics_roundtrip(tmp_path):
     assert doc["accuracy"] == 1.0
     assert doc["meta"]["modality"] == "image"
     assert doc["meta"]["seed"] == 1337
+
+
+def test_imbalanced_metrics_expose_false_positives_and_ranking():
+    m = compute_metrics([0, 0, 0, 1], [0.1, 0.2, 0.8, 0.9])
+    assert m.balanced_accuracy == pytest.approx(0.8333)
+    assert m.false_positive_rate == pytest.approx(0.3333)
+    assert m.average_precision == 1.0
+
+
+@pytest.mark.parametrize(
+    "labels,probs",
+    [
+        ([], []),
+        ([0, 1], [0.3]),
+        ([0, 2], [0.2, 0.8]),
+        ([0, 1], [float("nan"), 0.8]),
+        ([0, 1], [0.2, 1.2]),
+    ],
+)
+def test_invalid_metric_inputs_are_not_silently_scored(labels, probs):
+    with pytest.raises(ValueError):
+        compute_metrics(labels, probs)

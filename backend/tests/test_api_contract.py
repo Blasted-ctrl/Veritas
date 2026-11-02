@@ -373,3 +373,16 @@ def test_real_mp4_sampling_and_cache_fps_isolation(settings, tmp_path, shared_re
     assert second["cached"] is False
     mean = sum(frame["fake_probability"] for frame in second["frames"]) / 2
     assert second["fake_probability"] == pytest.approx(mean)
+
+
+def test_unavailable_explainer_does_not_disable_image_result_cache(settings):
+    client = _client(settings)
+    assert client.get("/health").json()["image_model"] is True
+    assert client.get("/health").json()["explainer"] is False
+    first = client.post("/verify?explain=true", files={"file": ("image.png", _png_bytes(), "image/png")})
+    second = client.post("/verify?explain=true", files={"file": ("image.png", _png_bytes(), "image/png")})
+    assert first.status_code == second.status_code == 200
+    assert first.json()["cached"] is False
+    assert second.json()["cached"] is True
+    assert second.json()["fake_probability"] == first.json()["fake_probability"]
+    assert "overlay" not in second.json()

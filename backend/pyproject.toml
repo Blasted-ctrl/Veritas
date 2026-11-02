@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "veritas"
 version = "0.1.0"
-description = "Deepfake & AI-content detector: identity-safe data prep, ViT/Wav2Vec2 detectors, ONNX inference API."
+description = "Deepfake & AI-content detector: identity-safe data prep, CNN/ViT/Wav2Vec2 detectors, ONNX inference API."
 requires-python = ">=3.10"
 license = { text = "MIT" }
 authors = [{ name = "Veritas" }]
@@ -16,7 +16,7 @@ authors = [{ name = "Veritas" }]
 dependencies = []
 
 [project.optional-dependencies]
-# Phase 2/3: model fine-tuning (ViT image + Wav2Vec2 audio).
+# Phase 2/3: model fine-tuning (CNN/ViT image + Wav2Vec2 audio).
 ml = [
     "torch>=2.2",
     "torchvision>=0.17",

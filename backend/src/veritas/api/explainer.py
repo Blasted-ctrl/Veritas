@@ -8,6 +8,7 @@ verdict path is unaffected.
 
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
 from veritas.models.metadata import torch_state_sha256
@@ -25,6 +26,9 @@ class GradCamExplainer:
         if not (self.model_dir / "config.json").exists():
             return False
         try:
+            config = json.loads((self.model_dir / "config.json").read_text(encoding="utf-8"))
+            if config.get("model_type") != "vit":
+                return False
             import torch  # noqa: F401
             import transformers  # noqa: F401
         except Exception:

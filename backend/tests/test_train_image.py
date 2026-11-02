@@ -1,6 +1,6 @@
-"""Smoke tests for ViT fine-tuning.
+"""Smoke tests for PyTorch image fine-tuning.
 
-Uses a tiny, randomly-initialised ViT (``pretrained=False``) on synthetic data
+Uses randomly-initialised ViT and CNN models on synthetic fixture data
 so the full train -> select -> evaluate -> metrics.json pipeline runs fast on
 CPU with no network access. Skipped automatically when the ml extra is absent.
 """
@@ -86,6 +86,7 @@ def test_train_image_smoke_produces_metrics(tmp_path):
 
     out_dir = tmp_path / "model"
     cfg = TrainImageConfig(
+        architecture="vit",
         data_dir=data_dir,
         output_dir=out_dir,
         pretrained=False,
