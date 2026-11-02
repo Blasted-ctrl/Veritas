@@ -1,6 +1,9 @@
 # Veritas demo
 
-[Watch the captioned MP4](veritas-demo.mp4) · [Contact sheet](contact-sheet.jpg)
+[Download the captioned MP4](https://github.com/Blasted-ctrl/Veritas/raw/refs/heads/main/docs/demo/veritas-demo.mp4) · [Contact sheet](contact-sheet.jpg)
+
+GitHub shows the looping GIF in the main README. Download the MP4 to play
+the complete demo; GitHub's file viewer does not play this video inline.
 
 44.5 seconds · 1920 × 1080 · 24 fps · Silent, with instructions on screen.
 

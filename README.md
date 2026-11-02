@@ -9,13 +9,13 @@ An open source website for checking images and video frames for signs of AI gene
 [![CI](https://github.com/Blasted-ctrl/Veritas/actions/workflows/ci.yml/badge.svg)](https://github.com/Blasted-ctrl/Veritas/actions/workflows/ci.yml)
 [![Code license: MIT](https://img.shields.io/badge/code-MIT-256647)](LICENSE)
 
-[Watch the demo](docs/demo/veritas-demo.mp4) · [Run locally](#run-it-locally) · [Deploy online](docs/deployment.md) · [Model results](docs/evaluation/artwork-v3/README.md)
+[Demo video](docs/demo/veritas-demo.mp4) · [Run locally](#run-it-locally) · [Deploy online](docs/deployment.md) · [Model results](docs/evaluation/artwork-v3/README.md)
 
 </div>
 
 [![Watch a real Veritas image and video analysis demo](docs/demo/preview.gif)](https://github.com/Blasted-ctrl/Veritas/raw/refs/heads/main/docs/demo/veritas-demo.mp4)
 
-<p align="center">A preview from the real site. Click to watch the full 45-second demo.</p>
+<p align="center">A preview from the real site. Click to download the full 45-second demo.</p>
 
 **Upload a file. See the prediction. Check the evidence.** Veritas gives you a media preview, an AI class score, the decision cutoff, and the identity of the model behind the result. Videos include scores for each sampled frame.
 
@@ -29,7 +29,7 @@ Human-drawn anime, paintings, and digital illustrations are non-AI. Their style 
 
 The captioned demo follows three real uploads: NASA's Earthrise photograph, a labeled AI-generated image, and a four-second clip made from that image. It uses the locally trained artwork CNN. Nothing in the recording intercepts or fabricates model responses.
 
-[Watch the MP4](docs/demo/veritas-demo.mp4) · [Recording details and sample credits](docs/demo/README.md)
+[Download the MP4](https://github.com/Blasted-ctrl/Veritas/raw/refs/heads/main/docs/demo/veritas-demo.mp4) · [Recording details and sample credits](docs/demo/README.md)
 
 ![Veritas analyzing an AI-generated image](docs/screenshots/image-analysis.jpg)
 
@@ -60,7 +60,7 @@ Open **[localhost:3000](http://localhost:3000)**, choose an image or video, and 
 
 ## What you get
 
-|                          |                                                                                                    |
+| Feature                  | What it does                                                                                       |
 | :----------------------- | :------------------------------------------------------------------------------------------------- |
 | Image analysis           | File preview, AI score, decision cutoff, model details                                             |
 | Video analysis           | Sampled-frame scores and their average; up to 32 frames by default                                 |
