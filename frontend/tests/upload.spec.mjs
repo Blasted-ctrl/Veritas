@@ -183,7 +183,7 @@ test("cancelled work cannot replace a newer file or its result", async ({
       .getByRole("button", { name: "Analyze file", exact: true })
       .click();
     await expect(
-      page.getByRole("heading", { name: "Likely camera-made" }),
+      page.getByRole("heading", { name: "Likely non-AI" }),
     ).toBeVisible();
     release();
     await expect(page.getByRole("meter")).toHaveAttribute(
@@ -491,4 +491,37 @@ test("upload and result screens pass automated accessibility checks in both them
       expect(violations).toEqual([]);
     }
   }
+});
+
+test("artwork receives honest origin wording without a style-based exemption", async ({
+  page,
+}) => {
+  let score = 0.926;
+  await page.route("**/verify*", (route) => {
+    const result = verdict(score);
+    result.model_info.id = "onnx-community/ai-image-detection-ONNX";
+    return respond(route, result);
+  });
+  await start(page);
+  await choose(page, "hand-drawn-anime.png");
+  await page.getByRole("button", { name: "Analyze file", exact: true }).click();
+  await expect(
+    page.getByRole("heading", { name: "Likely AI-generated" }),
+  ).toBeVisible();
+  await expect(
+    page.getByText(/photo-focused detector can falsely flag/),
+  ).toBeVisible();
+  await expect(
+    page.getByText("Lower AI signal", { exact: true }),
+  ).toBeVisible();
+  score = 0.1;
+  await page
+    .getByRole("button", { name: "Analyze again", exact: true })
+    .click();
+  await expect(
+    page.getByRole("heading", { name: "Likely non-AI" }),
+  ).toBeVisible();
+  await expect(
+    page.getByText("Camera-made patterns", { exact: true }),
+  ).toHaveCount(0);
 });

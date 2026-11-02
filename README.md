@@ -34,7 +34,7 @@ Prefer Python and Node directly? See [native setup and development](docs/develop
 
 ## Read the result carefully
 
-The percentage is a model class score, not proof or a calibrated probability of authenticity. The default CIFAKE-trained model can miss new generators and misclassify genuine photographs. In our demo, NASA’s real Earthrise photo incorrectly scored about **89.5% AI-generated**. Check the source even when a score is high.
+The percentage is a model class score, not proof or a calibrated probability of authenticity. The default CIFAKE-trained model can miss new generators and misclassify genuine photographs. In our demo, NASA’s real Earthrise photo incorrectly scored about **89.5% AI-generated**. Human-made anime, drawings and digital paintings are non-AI too; this photo-focused detector can falsely flag them. Check the source even when a score is high.
 
 Videos are assessed through sampled image frames, up to 32 at one frame per second by default. Audio and motion are not analyzed. Optional audio training and inference require your own audio model.
 

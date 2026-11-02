@@ -504,6 +504,11 @@ h3 {
   color: var(--error);
   background: var(--error-bg);
 }
+.notice.artwork-limit {
+  display: block;
+  margin: 16px 0 0;
+  font-size: 12px;
+}
 .workbench {
   display: grid;
   grid-template-columns: 1fr 1fr;

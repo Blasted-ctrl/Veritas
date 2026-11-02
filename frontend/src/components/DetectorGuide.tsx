@@ -55,6 +55,16 @@ export function DetectorGuide() {
         </div>
         <div className="model-details">
           <details>
+            <summary>Does illustrated or anime mean AI-generated?</summary>
+            <p>
+              No. Human-made drawings, animation, paintings and digital artwork
+              belong in the non-AI class too. Style alone cannot establish AI
+              use. The default photo-focused detector can misclassify artwork;
+              check the original artist or publication rather than treating its
+              score as proof.
+            </p>
+          </details>
+          <details>
             <summary>How accurate is AI detection?</summary>
             <p>
               Results can be wrong. Real photographs can be flagged as AI, and

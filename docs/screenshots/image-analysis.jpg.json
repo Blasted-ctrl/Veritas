@@ -1,6 +1,6 @@
 {
   "origin": "Browser screenshot of http://127.0.0.1:3000",
-  "captured_at": "2026-11-02T08:33:56.299Z",
+  "captured_at": "2026-11-02T10:29:01.758Z",
   "description": "Real image inference in the redesigned Veritas interface; no mocked API or fabricated scores.",
   "model_revision": "e3cfe99f2841930a040a6281682c10c989965603",
   "model_sha256": "44cb205f596f2530686bf4895e3678f08f9483c926b6bdc0e02998d5b54978a2",

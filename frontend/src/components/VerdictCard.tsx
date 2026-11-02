@@ -14,11 +14,7 @@ export function VerdictCard({ result }: { result: Verdict }) {
       <div className={"prediction " + (fake ? "generated" : "natural")}>
         {fake ? <IconAlertTriangle size={25} /> : <IconCircleCheck size={25} />}
         <h3 ref={heading} tabIndex={-1}>
-          {fake
-            ? "Likely AI-generated"
-            : result.modality === "audio"
-              ? "Likely human-made"
-              : "Likely camera-made"}
+          {fake ? "Likely AI-generated" : "Likely non-AI"}
         </h3>
       </div>
       <p className="result-context">
@@ -46,16 +42,19 @@ export function VerdictCard({ result }: { result: Verdict }) {
         <i style={{ left: result.decision_threshold * 100 + "%" }} />
       </div>
       <div className="score-scale">
-        <span>
-          {result.modality === "audio"
-            ? "Human-made patterns"
-            : "Camera-made patterns"}
-        </span>
-        <span>AI-made patterns</span>
+        <span>Lower AI signal</span>
+        <span>Higher AI signal</span>
       </div>
       <p className="score-note">
         Model score, not a measured chance that this file is fake.
       </p>
+      {result.model_info.id === "onnx-community/ai-image-detection-ONNX" && (
+        <p className="notice artwork-limit">
+          This photo-focused detector can falsely flag human-made drawings,
+          animation and digital artwork. An illustrated style does not establish
+          AI generation.
+        </p>
+      )}
       {result.frames && (
         <div className="frames">
           <div className="frames-heading">
