@@ -1,0 +1,16 @@
+{
+	email {$ACME_EMAIL}
+}
+
+{$VERITAS_DOMAIN} {
+	encode zstd gzip
+	reverse_proxy frontend:3000
+}
+
+api.{$VERITAS_DOMAIN} {
+	# Allow multipart overhead above the API's 25 MiB file limit.
+	request_body {
+		max_size 27MB
+	}
+	reverse_proxy api:8000
+}

@@ -8,6 +8,8 @@ dist/
 .venv/
 venv/
 .env
+deploy/.env
+model-bundle/
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/

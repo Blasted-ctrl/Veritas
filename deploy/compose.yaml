@@ -1,0 +1,58 @@
+# Run from the repository root using --env-file deploy/.env.
+name: veritas-online
+services:
+  api:
+    build:
+      context: ../backend
+    restart: unless-stopped
+    environment:
+      VERITAS_DATA_ROOT: /app/data
+      VERITAS_IMAGE_MODEL: ${VERITAS_IMAGE_MODEL:-/app/data/models/image/model.onnx}
+      VERITAS_FAKE_THRESHOLD: ${VERITAS_FAKE_THRESHOLD:-0.5}
+      VERITAS_REDIS_URL: ""
+      VERITAS_ALLOWED_ORIGINS: '["https://${VERITAS_DOMAIN:?Set VERITAS_DOMAIN}"]'
+      VERITAS_MAX_UPLOAD_BYTES: "26214400"
+      VERITAS_VIDEO_FPS: "1"
+      VERITAS_MAX_VIDEO_FRAMES: "32"
+      OMP_NUM_THREADS: "2"
+    volumes:
+      - models:/app/data
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import json,urllib.request; assert json.load(urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=5))['image_model']"
+      interval: 30s
+      timeout: 10s
+      start_period: 60s
+      retries: 3
+  frontend:
+    build:
+      context: ../frontend
+      args:
+        NEXT_PUBLIC_API_URL: https://api.${VERITAS_DOMAIN:?Set VERITAS_DOMAIN}
+    restart: unless-stopped
+    depends_on:
+      api:
+        condition: service_healthy
+  proxy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    environment:
+      VERITAS_DOMAIN: ${VERITAS_DOMAIN:?Set VERITAS_DOMAIN}
+      ACME_EMAIL: ${ACME_EMAIL:?Set ACME_EMAIL}
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - certificates:/data
+      - caddy-config:/config
+    depends_on:
+      - frontend
+volumes:
+  models:
+  certificates:
+  caddy-config:

@@ -8,6 +8,8 @@ services:
     dockerContext: ./backend
     healthCheckPath: /health
     envVars:
+      - key: PORT
+        value: "8000"
       - key: DOWNLOAD_PRETRAINED_MODEL
         value: "1"
       - key: VERITAS_REDIS_URL
@@ -20,5 +22,7 @@ services:
     dockerfilePath: ./frontend/Dockerfile
     dockerContext: ./frontend
     envVars:
+      - key: PORT
+        value: "3000"
       - key: NEXT_PUBLIC_API_URL
         sync: false

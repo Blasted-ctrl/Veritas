@@ -6,6 +6,7 @@ on:
       - backend/**
       - frontend/**
       - docker-compose.yml
+      - deploy/**
       - scripts/container_smoke.py
       - .github/workflows/containers.yml
   pull_request:
@@ -13,6 +14,7 @@ on:
       - backend/**
       - frontend/**
       - docker-compose.yml
+      - deploy/**
       - scripts/container_smoke.py
       - .github/workflows/containers.yml
   workflow_dispatch:
@@ -27,6 +29,8 @@ jobs:
       - name: Validate configuration and build production images
         run: |
           docker compose config --quiet
+          docker compose --env-file deploy/.env.example -f deploy/compose.yaml config --quiet
+          docker run --rm -e VERITAS_DOMAIN=veritas.example.com -e ACME_EMAIL=you@example.com -v "$PWD/deploy/Caddyfile:/etc/caddy/Caddyfile:ro" caddy:2-alpine caddy validate --config /etc/caddy/Caddyfile --adapter caddyfile
           docker compose build
       - name: Install checksum-verified model as the runtime user
         run: docker compose run --rm --no-deps api veritas download-model
