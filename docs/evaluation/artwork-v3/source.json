@@ -1,0 +1,42 @@
+{
+  "revision": "artwork-v3",
+  "seed": 20261102,
+  "sources": {
+    "artbench": [
+      "alfredplpl/artbench-pd-256x256",
+      "4056b70025f0e3f916fb271c7a792633ba637484"
+    ],
+    "lunara": [
+      "moonworks/lunara-art-eval",
+      "5a38a59769a6146e8d1b223c58533d12c60fd7d6"
+    ]
+  },
+  "pixiv_version": 1,
+  "dataset_fingerprint": "1d0ec1ac4f605b5059705f9d068dbf5ab7f0e6b1b467477f053f1380f22a5ac4",
+  "manifest_sha256": {
+    "train": "24c3eae0b75e3f0b23d622113557bbcbea957d1bfd400bd5d7e7fdf67557b2b8",
+    "val": "0df48d8f048d88f468662b9400877c6d58939fead4bc8e8652bbcd3453523975",
+    "calibration": "070c5366a2d4db612ecb8008e7b2581656f3a8e2c32a0c301ab50b0cd13ad4ac",
+    "test": "1e3c1969b60fa7f193db7b1ca9b2e1fa2b50d0a316edb3252e3f5e920ac41c0c"
+  },
+  "counts": {
+    "train": 1536,
+    "val": 256,
+    "calibration": 256,
+    "test": 512
+  },
+  "artwork_quotas_per_class_and_style": {
+    "train": 256,
+    "val": 32,
+    "calibration": 32,
+    "test": 64
+  },
+  "limits": [
+    "Curator origin labels are not independently authenticated.",
+    "Pixiv grouping is by artwork; artist-disjoint evaluation cannot be established.",
+    "ArtBench artist groups and AI prompt groups remain within one role.",
+    "Photo test is a previously published regression cohort, not a new sealed test.",
+    "All examples use 256px JPEG95 preparation, not arbitrary resolutions.",
+    "Original image rights remain with their respective owners; no raw images are committed."
+  ]
+}
