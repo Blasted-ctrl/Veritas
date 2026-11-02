@@ -16,7 +16,7 @@ The installer verifies size and checksum before replacing the artifact, then wri
 
 ## Scores and limitations
 
-The percentage is the softmax score for the AI-generated class, not a calibrated probability of authenticity. The default threshold is 0.5. High scores can still be wrong.
+The percentage is the softmax score for the AI-generated class, not a calibrated probability of authenticity. The default threshold is 0.5. High scores can still be wrong. Human-made animation, drawings, paintings and digital artwork are non-AI content; illustrated style alone does not establish generation. The photo-focused default can falsely flag these styles.
 
 The upstream author warns about concept drift: the training data represents older generators. New generators, unfamiliar subjects, screenshots, recompression, and mixed-origin images may confuse it. Veritas has no independent representative accuracy benchmark for this checkpoint.
 

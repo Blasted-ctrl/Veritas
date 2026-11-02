@@ -1,0 +1,70 @@
+{
+  "checkpoint_sha256": "9b02231eebcd45700814a5707f5921f22d5e64eb4092b59ac7d1e0071f3e3311",
+  "graph_sha256": "9bbf46eed19ff157779bd56fee3d98eaf488f9ccfcb039b260ded569c9701a4f",
+  "examples": [
+    {
+      "file": "openai-cat.png",
+      "input_sha256": "cb61b73d43b5c1d0712b5cb50a6008597d378812d884f1bf4faa86119b3aa878",
+      "torch_logits": [
+        [
+          -0.7488085627555847,
+          0.7426589131355286
+        ]
+      ],
+      "onnx_logits": [
+        [
+          -0.7488102912902832,
+          0.7426597476005554
+        ]
+      ],
+      "max_absolute_logit_error": 1.7285346984863281e-06,
+      "fake_score": 0.81629878282547
+    },
+    {
+      "file": "generated-lakehouse.png",
+      "input_sha256": "5feda89ff9866165e66e3eb9e86a2567c1c70295ff02c2a5b81712e31baa3951",
+      "torch_logits": [
+        [
+          -2.2311110496520996,
+          2.532527446746826
+        ]
+      ],
+      "onnx_logits": [
+        [
+          -2.231112241744995,
+          2.532529830932617
+        ]
+      ],
+      "max_absolute_logit_error": 2.384185791015625e-06,
+      "fake_score": 0.9915378093719482
+    },
+    {
+      "file": "earthrise.jpg",
+      "input_sha256": "c2224cae808691ef7aedeab69e0626f23a784e377377de2f4ed71094df9e3c34",
+      "torch_logits": [
+        [
+          0.9861459732055664,
+          -1.2490313053131104
+        ]
+      ],
+      "onnx_logits": [
+        [
+          0.9861348271369934,
+          -1.2490265369415283
+        ]
+      ],
+      "max_absolute_logit_error": 1.1146068572998047e-05,
+      "fake_score": 0.09663713723421097
+    }
+  ],
+  "dynamic_batch_size": 3,
+  "dynamic_batch_max_logit_error": 1.0728836059570312e-05,
+  "onnxruntime_version": "1.31.1",
+  "warm_start": {
+    "parent_checkpoint_sha256": "b25a27e7d6c19ed5d13d4b8c40c0e672268cf9c8a9a26ffb86bbd893b91325b8",
+    "loaded_initial_state_sha256": "95ea2c91aadbfca073311ea9126fe2fb6f708d05d68bbda8bc93855ffdd815b8",
+    "final_state_sha256": "86cbb0340df14f25b8e2e8e8ac487df2f64a7a9d29187785fefb6d5ec70f09f1",
+    "parent_consumed": true,
+    "parameters_changed": true
+  }
+}

@@ -2,6 +2,12 @@
 
 For the larger OpenFake experiment, use the research workflow below. The original ConvNeXt trainer and CIFAKE pilot remain available further down this page.
 
+## Artwork adaptation
+
+Human-made anime, drawings and paintings belong in the non-AI class. The [artwork experiment](evaluation/artwork-v3/README.md) fine-tunes the diverse CNN on 1,024 added artwork examples, with 512 general-image examples replayed to check forgetting. It has separate validation, calibration and test roles, and compares the website detector, previous CNN and adapted CNN on identical files. Its pinned sources, provenance index, commands and limits are recorded with the experiment.
+
+Use `--initialize-from` with `train_diverse_cnn.py` to load the completed parent checkpoint. The artwork protocol requires the exact parent checksum; a missing or different parent stops training. The saved initial-state hash and exported-model parity check verify that this override was consumed.
+
 ## Diverse-data research workflow
 
 The [completed experiment](evaluation/diverse-v2/README.md) reached 73.34% accuracy and 14.45% real-image false alarms on a separate generator/source holdout at threshold 0.5. It did not reach 95%. The calibration-selected threshold reduced false alarms to 1.37%, with 23.63% AI recall and 61.13% accuracy.
@@ -30,7 +36,7 @@ Veritas includes a ConvNeXt-Tiny CNN for learning spatial differences between ge
 
 This is a practical transfer-learning baseline, not a claim that one architecture wins on every generator. [ConvNeXt](https://arxiv.org/abs/2201.03545) is a convolutional network. The implementation uses [TorchVision's ConvNeXt-Tiny](https://docs.pytorch.org/vision/stable/models/generated/torchvision.models.convnext_tiny.html) and [PyTorch AdamW](https://docs.pytorch.org/docs/stable/generated/torch.optim.AdamW).
 
-The website's downloadable default remains the pinned CIFAKE-trained ViT. The study compares the new CNN with the earlier CNN, not with the downloadable ViT, and does not select a new website default. See [measured results](evaluation/README.md).
+The website's downloadable default remains the pinned CIFAKE-trained ViT. The diverse-v2 study compares the new CNN with the earlier CNN and does not select a new downloadable default. The separate artwork study also includes the downloadable ViT. See [measured results](evaluation/README.md).
 
 ## Prepare data
 
