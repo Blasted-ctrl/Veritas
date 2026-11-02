@@ -1,8 +1,6 @@
-"""Classification metrics and ``metrics.json`` serialization.
+"""Measured classification metrics and JSON serialization.
 
-``metrics.json`` is the single source of truth for reported performance. It is
-always produced by evaluating a model on a held-out test split — numbers are
-measured, never hand-written.
+Run metadata identifies whether results came from tuning or held-out evaluation.
 """
 
 from __future__ import annotations

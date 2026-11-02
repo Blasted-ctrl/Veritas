@@ -1,5 +1,29 @@
 # Train the PyTorch CNN
 
+For the larger OpenFake experiment, use the research workflow below. The original ConvNeXt trainer and CIFAKE pilot remain available further down this page.
+
+## Diverse-data research workflow
+
+The CPU workflow fine-tunes an EfficientNet-B0 CNN in PyTorch using AdamW and cross-entropy. It caches the frozen lower convolution blocks and trains the final MBConv block, final convolution and classification head. Two augmentation views let this machine train on more images without repeatedly recomputing the frozen blocks.
+
+It prepares 4,096 training images, 512 tuning images, 512 threshold-calibration images, a 512-image same-distribution test and a 1,024-image generator/source holdout. Real training images come from LAION and Pexels; the source holdout uses DOCCI and ImageNet. Prompt groups and exact content stay in one role, with an additional cross-role perceptual-hash check. These checks do not establish human-identity separation or eliminate all near duplicates.
+
+From `backend`, after installing the extras shown below:
+
+    python scripts/prepare_openfake.py --output ../data/openfake-research
+    python scripts/train_diverse_cnn.py --data-dir ../data/openfake-research --output-dir ../data/models/diverse-cnn --cache-dir ../data/feature-cache --protocol ../docs/evaluation/diverse-v2/protocol.json
+    python scripts/evaluate_diverse_cnn.py --data-dir ../data/openfake-research --models-dir ../data/models/diverse-cnn --baseline /path/to/previous-cnn/model.onnx --baseline-data /path/to/previous-cnn-data --protocol ../docs/evaluation/diverse-v2/protocol.json --output ../data/reports/diverse-cnn
+
+Keep the data and completed output directories unchanged during a run. Use a fresh model and evaluation output directory for a new experiment. The importer resumes cached downloads and respects upstream retry delays; downloading still depends on the public Dataset Viewer service.
+
+The [fixed protocol](evaluation/diverse-v2/protocol.json) specifies both candidates before training. Only tuning-validation partial ROC-AUC at 5% FPR selects the checkpoint. A separate calibration set chooses each model's operating threshold under an empirical 5% false-positive budget. That budget is not a guarantee on other sources. The evaluator locks both thresholds before scoring either final test and reports old and new CNNs on identical examples, including JPEG and resolution stress tests.
+
+OpenFake is [CC-BY-NC-4.0 research data](https://huggingface.co/datasets/ComplexDataLab/OpenFake). Dataset and resulting-weight restrictions are separate from this repository's MIT code license. Images are viewer JPEG derivatives, not the original publisher files; provenance records both hashes separately. Exact generator versions held out from binary fine-tuning may share families with training generators. ImageNet initialization also means the source holdout is not necessarily unseen during foundation pretraining.
+
+The saved research model is `selected/model.onnx`. To try it in the website, set `VERITAS_IMAGE_MODEL` to that graph and `VERITAS_FAKE_THRESHOLD` to its value in the evaluation's `thresholds.json`, then restart the API. A threshold changes decisions; it does not turn class scores into calibrated probabilities.
+
+## Original ConvNeXt workflow
+
 Veritas includes a ConvNeXt-Tiny CNN for learning spatial differences between genuine and generated images. It uses ImageNet initialization, a two-class head, cross-entropy loss and AdamW. AdamW updates the weights using gradients from backpropagation. The CNN is the architecture; AdamW is the optimizer.
 
 This is a practical transfer-learning baseline, not a claim that one architecture wins on every generator. [ConvNeXt](https://arxiv.org/abs/2201.03545) is a convolutional network. The implementation uses [TorchVision's ConvNeXt-Tiny](https://docs.pytorch.org/vision/stable/models/generated/torchvision.models.convnext_tiny.html) and [PyTorch AdamW](https://docs.pytorch.org/docs/stable/generated/torch.optim.AdamW).

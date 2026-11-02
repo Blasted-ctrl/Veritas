@@ -159,6 +159,10 @@ def load_image_classifier(directory: str | Path):
         from veritas.models.cnn_model import ConvNeXtDetector
 
         return ConvNeXtDetector.from_pretrained(directory)
+    if kind == "veritas_efficientnet_b0":
+        from veritas.models.cnn_model import EfficientNetDetector
+
+        return EfficientNetDetector.from_pretrained(directory)
     if kind == "vit":
         from transformers import ViTForImageClassification
 

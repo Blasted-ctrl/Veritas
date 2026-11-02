@@ -83,6 +83,13 @@ def export_image_onnx(
             source_url="https://github.com/Blasted-ctrl/Veritas/blob/main/docs/cnn-training.md",
             initialization=model.config.backbone_weights or "random",
         )
+    if getattr(model.config, "model_type", None) == "veritas_efficientnet_b0":
+        metadata.update(
+            id="Veritas EfficientNet-B0",
+            architecture="efficientnet_b0",
+            source_url="https://github.com/Blasted-ctrl/Veritas/blob/main/docs/cnn-training.md",
+            initialization=model.config.backbone_weights or "random",
+        )
     metadata["artifact_sha256"] = file_sha256(out)
     metadata["torch_state_sha256"] = torch_state_sha256(model)
     metadata_path(out).write_text(json.dumps(metadata, indent=2) + "\n", encoding="utf-8")
