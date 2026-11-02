@@ -1,0 +1,4 @@
+path,label,subject_id,modality,source,split,generator_id,source_url,license
+openai-cat.png,1,openai-cat-challenge-2026,image,openai-generated-challenge,test,openai-image-generation,,
+../../../frontend/public/samples/generated-lakehouse.png,1,openai-lakehouse-demo,image,openai-generated-demo,test,openai-image-generation,,
+../../../frontend/public/samples/earthrise.jpg,0,nasa-apollo8-earthrise,image,nasa-archive,test,,https://science.nasa.gov/resource/image-earthrise/,NASA media usage guidelines

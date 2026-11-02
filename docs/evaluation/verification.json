@@ -1,0 +1,45 @@
+{
+  "backend_commit": "dff9106416666429fcd711039ee602b437a902f9",
+  "checks": [
+    {
+      "command": "ruff check src tests scripts",
+      "exit_code": 0
+    },
+    {
+      "command": "ruff format --check src tests scripts",
+      "exit_code": 0,
+      "files": 62
+    },
+    {
+      "command": "mypy",
+      "exit_code": 0,
+      "source_files": 10
+    },
+    {
+      "command": "pytest -ra --durations=5 -p no:cacheprovider",
+      "exit_code": 0,
+      "passed": 126,
+      "warnings": 20,
+      "seconds": 216.1,
+      "environment": "Python 3.14, Torch 2.12.1+cpu, TorchVision 0.27.1+cpu; isolated external deadline and temporary directory"
+    }
+  ],
+  "http_smoke": {
+    "passed": 8,
+    "failed": 0,
+    "report": "cnn-pilot-http.json",
+    "configuration": "Isolated env-configured API, VIDEO_FPS=1000, MAX_VIDEO_FRAMES=8; real PNG, MP4 and GIF; memory cache",
+    "owned_processes_stopped": true,
+    "port_released": true
+  },
+  "numerical_parity": {
+    "report": "cnn-pilot-parity.json",
+    "role": "Numerical conversion check, not detection accuracy",
+    "subsequent_http_run": "Same graph hash and complete processor metadata; Torch parity not rerun after cache-only fix"
+  },
+  "limits": [
+    "Training used a bounded CIFAKE subset with one older generator; no broad modern-generator accuracy claim.",
+    "Video uses sampled spatial image inference, not temporal or audio consistency.",
+    "Optional legacy ONNX exporter warnings were recorded; all tests exited zero."
+  ]
+}

@@ -2,7 +2,7 @@
 
 A place to take a second look at images and videos that might be AI-generated.
 
-Veritas makes a trained detector easy to try: upload a file, keep the original in view, and inspect the prediction and model details. It was built to make detection understandable and reproducible, including the times a model gets it wrong. The original data preparation, image/audio training, and ONNX export tools are still here.
+Veritas makes a trained detector easy to try: upload a file, keep the original in view, and inspect the prediction and model details. It was built to make detection understandable and reproducible, including the times a model gets it wrong.
 
 ## See it working
 
@@ -42,7 +42,9 @@ See [the detector, its source, and its limits](docs/model.md) for the pinned rev
 
 - **Website:** responsive Next.js interface, previews, light/dark themes, upload progress, cancellation, frame scores, and model attribution.
 - **API:** FastAPI and CPU ONNX Runtime. Temporary video uploads are removed after analysis. Scores are cached with model and processing settings included in the key; Redis is optional.
-- **Training tools:** identity-separated dataset preparation, ViT image and Wav2Vec2 audio training, evaluation, ONNX export, and optional matching-checkpoint Grad-CAM.
+- **Training tools:** group-separated dataset preparation, PyTorch ConvNeXt CNN and ViT image training, Wav2Vec2 audio training, held-out evaluation, ONNX export, and optional matching-ViT Grad-CAM.
+
+[Train the PyTorch CNN](docs/cnn-training.md) · [Measured pilot results](docs/evaluation/README.md)
 
 [Development and verification](docs/development.md) · [API and deployment](docs/deployment.md) · [Design language](design/veritas-design/SKILL.md)
 

@@ -1,0 +1,43 @@
+{
+  "kind": "numerical parity (separate from interactive smoke)",
+  "input_shape": [
+    1,
+    3,
+    224,
+    224
+  ],
+  "model_eval": true,
+  "torch_logits": [
+    [
+      0.010471561923623085,
+      0.39065325260162354
+    ]
+  ],
+  "ort_logits": [
+    [
+      0.010471783578395844,
+      0.3906533122062683
+    ]
+  ],
+  "torch_scores": [
+    [
+      0.4060830771923065,
+      0.5939169526100159
+    ]
+  ],
+  "ort_scores": [
+    [
+      0.4060831367969513,
+      0.5939168930053711
+    ]
+  ],
+  "max_abs_logit_diff": 2.2165477275848389e-07,
+  "max_abs_score_diff": 5.960464477539063e-08,
+  "rtol": 0.0001,
+  "atol": 0.0001,
+  "graph_sha256": "5a524af30ba3ebd74dc62648371ece3c1df09d0b54be0f0ea198eac06a0cdb2e",
+  "checkpoint_sha256": "d7ca7b27a52cb7df284298b7f9f34fc0524b7de523572718d814611e7d55916b",
+  "state_sha256": "6754460bc0a92ccaba52d7bc42a07acd46a11cdf7a9f1d21696eab1c2b1740cd",
+  "metadata_state_sha256": "6754460bc0a92ccaba52d7bc42a07acd46a11cdf7a9f1d21696eab1c2b1740cd",
+  "pass": true
+}

@@ -1,0 +1,22 @@
+{
+  "role": "bounded public-data pilot; not a modern-generator accuracy benchmark",
+  "source_repository": "jordan-bird/CIFAKE-Real-and-AI-Generated-Synthetic-Images",
+  "source_revision": "e112a942abaecd02b6b1f6f646c807d56be8fb62",
+  "seed": 1337,
+  "listed_files_per_folder": {
+    "DATASET/train/REAL": 1000,
+    "DATASET/test/REAL": 1000,
+    "DATASET/train/FAKE": 1000,
+    "DATASET/test/FAKE": 1000
+  },
+  "samples": 224,
+  "selection": "Seeded selection from bounded GitHub directory listings; official test stays test",
+  "license": "MIT, as declared by the dataset author; source README retained",
+  "limits": [
+    "32x32 inputs",
+    "One old generator",
+    "Content-group IDs do not establish human identity",
+    "Not a uniform sample of the entire dataset",
+    "No broad real-world accuracy claim"
+  ]
+}

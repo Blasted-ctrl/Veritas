@@ -1,0 +1,81 @@
+{
+  "accuracy": 0.8281,
+  "precision": 0.7442,
+  "recall": 1.0,
+  "f1": 0.8533,
+  "auc": 0.9209,
+  "n_samples": 64,
+  "n_positive": 32,
+  "n_negative": 32,
+  "confusion_matrix": {
+    "tp": 32,
+    "fp": 11,
+    "tn": 21,
+    "fn": 0
+  },
+  "threshold": 0.5,
+  "balanced_accuracy": 0.8281,
+  "average_precision": 0.9001,
+  "false_positive_rate": 0.3438,
+  "meta": {
+    "modality": "image",
+    "model_name": "torchvision/convnext_tiny",
+    "architecture": "convnext_tiny",
+    "optimizer": "AdamW",
+    "loss": "cross_entropy",
+    "data_kind": "curated-images",
+    "dataset_fingerprint": "b1e6ac7ab5cede9030439732cc697e8b2403cca29ef4933647e66dd6695cb931",
+    "torch_state_sha256": "6754460bc0a92ccaba52d7bc42a07acd46a11cdf7a9f1d21696eab1c2b1740cd",
+    "heldout_generators": [],
+    "torch_version": "2.12.1+cpu",
+    "pretrained": true,
+    "epochs": 2,
+    "seed": 1337,
+    "device": "cpu",
+    "image_size": 224,
+    "train_size": 128,
+    "val_size": 32,
+    "test_size": 64,
+    "wall_time_sec": 270.71,
+    "history": [
+      {
+        "epoch": 0,
+        "train_loss": 0.6562,
+        "val_accuracy": 0.625,
+        "val_f1": 0.6,
+        "val_auc": 0.7148,
+        "trainable_params": 3074
+      },
+      {
+        "epoch": 1,
+        "train_loss": 0.5185,
+        "val_accuracy": 0.6562,
+        "val_f1": 0.7179,
+        "val_auc": 0.7188,
+        "trainable_params": 15473666
+      }
+    ],
+    "config": {
+      "data_dir": "D:\\CodexWork\\veritas-runtime\\cnn-pilot\\data",
+      "output_dir": "D:\\CodexWork\\veritas-runtime\\cnn-pilot\\model-completed",
+      "architecture": "convnext_tiny",
+      "model_name": "google/vit-base-patch16-224",
+      "pretrained": true,
+      "image_size": 224,
+      "epochs": 2,
+      "batch_size": 4,
+      "backbone_lr": 5e-05,
+      "head_lr": 0.001,
+      "weight_decay": 0.01,
+      "warmup_ratio": 0.1,
+      "freeze_epochs": 1,
+      "unfreeze_layers": 4,
+      "unfreeze_stages": 1,
+      "seed": 1337,
+      "num_workers": 0,
+      "limit": null,
+      "device": "cpu",
+      "heldout_generators": []
+    }
+  }
+}

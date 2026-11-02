@@ -1,0 +1,28 @@
+{
+  "role": "bounded public-data pilot; not a modern-generator accuracy estimate",
+  "torch_version": "2.12.1+cpu",
+  "torchvision_version": "0.27.1+cpu",
+  "initial_weights_sha256": "983f1562536e84ff750a1576fb08e54de751dbf2e17c0d8a4a13704341fdcd3d",
+  "metrics": {
+    "accuracy": 0.8281,
+    "precision": 0.7442,
+    "recall": 1,
+    "f1": 0.8533,
+    "auc": 0.9209,
+    "n_samples": 64,
+    "n_positive": 32,
+    "n_negative": 32,
+    "confusion_matrix": {
+      "tp": 32,
+      "fp": 11,
+      "tn": 21,
+      "fn": 0
+    },
+    "threshold": 0.5,
+    "balanced_accuracy": 0.8281,
+    "average_precision": 0.9001,
+    "false_positive_rate": 0.3438
+  },
+  "protocol": "Fixed configuration before examining test or challenge predictions",
+  "replication": "Identical fixed configuration repeated to record the completed checkpoint hash. Both runs produced the same test confusion matrix; no tuning used test or challenge scores."
+}

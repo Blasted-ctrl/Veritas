@@ -1,0 +1,10 @@
+{
+  "ground_truth": 1,
+  "generator_family": "openai-image-generation",
+  "generator_version": "not exposed by the tool",
+  "purpose": "Fixed held-out challenge; excluded from pilot training and checkpoint selection",
+  "prompt": "Use case: photorealistic-natural. Asset type: fixed, held-out AI-generated image for testing a media detector; ground truth is AI-generated. Create one ordinary candid photograph-like image of an orange tabby cat sitting on a rumpled gray fabric sofa beside a window in a modest lived-in apartment. Soft overcast daylight, realistic fur and whiskers, natural imperfections, casual slightly off-center framing, square composition. A single coherent scene, not a collage. No text, logos, labels, watermarks or detection annotations. Do not reference or reproduce any image from this conversation. This is a fresh independent sample, and should not contain deliberate visual clues designed to make an AI detector succeed.",
+  "source": "Built-in image_gen tool",
+  "generated_at": "2026-11-02T01:14:59.559Z",
+  "sha256": "cb61b73d43b5c1d0712b5cb50a6008597d378812d884f1bf4faa86119b3aa878"
+}

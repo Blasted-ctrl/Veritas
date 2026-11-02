@@ -1,0 +1,210 @@
+[
+  {
+    "name": "health",
+    "pass": true,
+    "response": {
+      "status": "ok",
+      "image_model": true,
+      "audio_model": false,
+      "explainer": false,
+      "cache": "memory",
+      "max_upload_bytes": 26214400,
+      "video_fps": 1000.0,
+      "max_video_frames": 8
+    }
+  },
+  {
+    "name": "image_explain_first",
+    "pass": true,
+    "status": 200,
+    "response": {
+      "verdict": "fake",
+      "confidence": 0.5939168930053711,
+      "fake_probability": 0.5939168930053711,
+      "modality": "image",
+      "model": "model.onnx",
+      "latency_ms": 1363.7,
+      "cached": false,
+      "model_info": {
+        "id": "Veritas ConvNeXt-Tiny",
+        "source_type": "custom",
+        "source_url": "https://github.com/Blasted-ctrl/Veritas/blob/main/docs/cnn-training.md",
+        "artifact_sha256": "5a524af30ba3ebd74dc62648371ece3c1df09d0b54be0f0ea198eac06a0cdb2e"
+      },
+      "decision_threshold": 0.5,
+      "content_sha256": "cb61b73d43b5c1d0712b5cb50a6008597d378812d884f1bf4faa86119b3aa878"
+    }
+  },
+  {
+    "name": "image_explain_repeat",
+    "pass": true,
+    "status": 200,
+    "response": {
+      "verdict": "fake",
+      "confidence": 0.5939168930053711,
+      "fake_probability": 0.5939168930053711,
+      "modality": "image",
+      "model": "model.onnx",
+      "latency_ms": 1363.7,
+      "cached": true,
+      "model_info": {
+        "id": "Veritas ConvNeXt-Tiny",
+        "source_type": "custom",
+        "source_url": "https://github.com/Blasted-ctrl/Veritas/blob/main/docs/cnn-training.md",
+        "artifact_sha256": "5a524af30ba3ebd74dc62648371ece3c1df09d0b54be0f0ea198eac06a0cdb2e"
+      },
+      "decision_threshold": 0.5,
+      "content_sha256": "cb61b73d43b5c1d0712b5cb50a6008597d378812d884f1bf4faa86119b3aa878"
+    }
+  },
+  {
+    "name": "image_plain_first",
+    "pass": true,
+    "status": 200,
+    "response": {
+      "verdict": "fake",
+      "confidence": 0.5939168930053711,
+      "fake_probability": 0.5939168930053711,
+      "modality": "image",
+      "model": "model.onnx",
+      "latency_ms": 747.84,
+      "cached": false,
+      "model_info": {
+        "id": "Veritas ConvNeXt-Tiny",
+        "source_type": "custom",
+        "source_url": "https://github.com/Blasted-ctrl/Veritas/blob/main/docs/cnn-training.md",
+        "artifact_sha256": "5a524af30ba3ebd74dc62648371ece3c1df09d0b54be0f0ea198eac06a0cdb2e"
+      },
+      "decision_threshold": 0.5,
+      "content_sha256": "cb61b73d43b5c1d0712b5cb50a6008597d378812d884f1bf4faa86119b3aa878"
+    }
+  },
+  {
+    "name": "image_plain_repeat",
+    "pass": true,
+    "status": 200,
+    "response": {
+      "verdict": "fake",
+      "confidence": 0.5939168930053711,
+      "fake_probability": 0.5939168930053711,
+      "modality": "image",
+      "model": "model.onnx",
+      "latency_ms": 747.84,
+      "cached": true,
+      "model_info": {
+        "id": "Veritas ConvNeXt-Tiny",
+        "source_type": "custom",
+        "source_url": "https://github.com/Blasted-ctrl/Veritas/blob/main/docs/cnn-training.md",
+        "artifact_sha256": "5a524af30ba3ebd74dc62648371ece3c1df09d0b54be0f0ea198eac06a0cdb2e"
+      },
+      "decision_threshold": 0.5,
+      "content_sha256": "cb61b73d43b5c1d0712b5cb50a6008597d378812d884f1bf4faa86119b3aa878"
+    }
+  },
+  {
+    "name": "corrupted_png_after_valid_image",
+    "pass": true,
+    "status": 422,
+    "response": {
+      "detail": "Could not decode this image. Choose a readable image file."
+    }
+  },
+  {
+    "name": "mp4",
+    "pass": true,
+    "status": 200,
+    "response": {
+      "verdict": "fake",
+      "confidence": 0.6562879011034966,
+      "fake_probability": 0.6562879011034966,
+      "modality": "video",
+      "model": "model.onnx",
+      "latency_ms": 6588.2,
+      "cached": false,
+      "model_info": {
+        "id": "Veritas ConvNeXt-Tiny",
+        "source_type": "custom",
+        "source_url": "https://github.com/Blasted-ctrl/Veritas/blob/main/docs/cnn-training.md",
+        "artifact_sha256": "5a524af30ba3ebd74dc62648371ece3c1df09d0b54be0f0ea198eac06a0cdb2e"
+      },
+      "decision_threshold": 0.5,
+      "content_sha256": "35307e69247803baacb54d7cd8739044e4507ced83d710a369df0440b3725070",
+      "frames_analyzed": 8,
+      "frames": [
+        {
+          "index": 0,
+          "fake_probability": 0.6571831703186035
+        },
+        {
+          "index": 1,
+          "fake_probability": 0.6566212773323059
+        },
+        {
+          "index": 2,
+          "fake_probability": 0.6563864350318909
+        },
+        {
+          "index": 3,
+          "fake_probability": 0.656252384185791
+        },
+        {
+          "index": 4,
+          "fake_probability": 0.6558979153633118
+        },
+        {
+          "index": 5,
+          "fake_probability": 0.6562032103538513
+        },
+        {
+          "index": 6,
+          "fake_probability": 0.6559751033782959
+        },
+        {
+          "index": 7,
+          "fake_probability": 0.6557837128639221
+        }
+      ]
+    },
+    "arithmetic_mean": 0.6562879011034966,
+    "expected_frames": 8,
+    "generated_gif_n_frames": null,
+    "inference_scope": "sampled spatial inference; no temporal CNN"
+  },
+  {
+    "name": "gif",
+    "pass": true,
+    "status": 200,
+    "response": {
+      "verdict": "real",
+      "confidence": 0.606562927365303,
+      "fake_probability": 0.39343707263469696,
+      "modality": "video",
+      "model": "model.onnx",
+      "latency_ms": 924.68,
+      "cached": false,
+      "model_info": {
+        "id": "Veritas ConvNeXt-Tiny",
+        "source_type": "custom",
+        "source_url": "https://github.com/Blasted-ctrl/Veritas/blob/main/docs/cnn-training.md",
+        "artifact_sha256": "5a524af30ba3ebd74dc62648371ece3c1df09d0b54be0f0ea198eac06a0cdb2e"
+      },
+      "decision_threshold": 0.5,
+      "content_sha256": "9c8abf3d7a6dd00849c57e1caad8f20b92f073c9f7f23f641c36165b573e72a4",
+      "frames_analyzed": 2,
+      "frames": [
+        {
+          "index": 0,
+          "fake_probability": 0.4011818468570709
+        },
+        {
+          "index": 1,
+          "fake_probability": 0.385692298412323
+        }
+      ]
+    },
+    "arithmetic_mean": 0.39343707263469696,
+    "expected_frames": 2,
+    "generated_gif_n_frames": 2,
+    "inference_scope": "sampled spatial inference; no temporal CNN"
+  }
+]

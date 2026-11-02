@@ -40,8 +40,10 @@ Install the additional ML dependencies in the same environment:
 Prepare local data, then train and export. Run these commands from backend:
 
     veritas prepare-data --modality image --source directory --input-dir /path/to/images
-    veritas train-image --help
-    veritas export --modality image --model-dir ../data/models/image --output ../data/models/image/model.onnx
+    veritas train-image --data-dir ../data/processed/image --output-dir ../data/models/cnn-image
+    veritas export --modality image --model-dir ../data/models/cnn-image
+
+The default image trainer is a PyTorch ConvNeXt-Tiny CNN; --architecture vit selects ViT. See [CNN training and evaluation](cnn-training.md) for data provenance, generator holdouts, GPU recipes and measured pilot limits.
 
 The directory adapter expects real/ and fake/ folders. FaceForensics++, DFDC, and ASVspoof adapters also accept local datasets; obtain them under their own access terms. Subject identities stay within a single train, validation, or test split. Verify the identity labels in your own source data.
 
@@ -52,7 +54,7 @@ The default prepare-data source is synthetic fixtures for smoke testing. Its met
     veritas prepare-data --modality audio
     veritas train-audio --no-pretrained --epochs 2 --max-seconds 1.0 --limit 64
 
-Back up your models before exporting over them. A custom image export writes model.onnx.json with the matching normalization, graph hash, and Torch state hash. The optional explainer requires that same saved Torch checkpoint. The default download is not attributed to a custom export.
+Back up your models before exporting over them. A custom image export writes model.onnx.json with the matching normalization, graph hash, and Torch state hash. The optional ViT explainer requires that same saved Torch checkpoint. CNN heatmaps are unavailable. The API identifies the configured graph using its sidecar metadata.
 
 ## Checks
 

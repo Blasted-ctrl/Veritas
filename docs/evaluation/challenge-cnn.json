@@ -1,0 +1,475 @@
+{
+  "schema_version": 1,
+  "model": {
+    "id": "Veritas ConvNeXt-Tiny",
+    "source_type": "custom",
+    "source_url": "https://github.com/Blasted-ctrl/Veritas/blob/main/docs/cnn-training.md",
+    "artifact_sha256": "5a524af30ba3ebd74dc62648371ece3c1df09d0b54be0f0ea198eac06a0cdb2e"
+  },
+  "processor": {
+    "format_version": 1,
+    "id": "Veritas ConvNeXt-Tiny",
+    "source_type": "custom",
+    "image_size": 224,
+    "mean": [
+      0.485,
+      0.456,
+      0.406
+    ],
+    "std": [
+      0.229,
+      0.224,
+      0.225
+    ],
+    "resample": 2,
+    "rescale_factor": 0.00392156862745098,
+    "fake_index": 1,
+    "architecture": "convnext_tiny",
+    "source_url": "https://github.com/Blasted-ctrl/Veritas/blob/main/docs/cnn-training.md",
+    "initialization": "IMAGENET1K_V1",
+    "artifact_sha256": "5a524af30ba3ebd74dc62648371ece3c1df09d0b54be0f0ea198eac06a0cdb2e",
+    "torch_state_sha256": "6754460bc0a92ccaba52d7bc42a07acd46a11cdf7a9f1d21696eab1c2b1740cd",
+    "training_data_fingerprint": "b1e6ac7ab5cede9030439732cc697e8b2403cca29ef4933647e66dd6695cb931",
+    "training_data_kind": "curated-images"
+  },
+  "manifest_sha256": "7c25423f7bcb47cfd096b2c41d842e03c295aa95cc809eb39825c71a027201a2",
+  "evaluation_fingerprint": "c92666bbf4e3d65ed0eca6d2d6459eae09992c3150565889065d49bea07fee26",
+  "threshold": 0.5,
+  "separation": {
+    "training_reference_checked": true,
+    "reference_fingerprint": "b1e6ac7ab5cede9030439732cc697e8b2403cca29ef4933647e66dd6695cb931",
+    "model_provenance_matched": true
+  },
+  "limits": [
+    "Curator labels, group IDs and generator identities are not independently verified.",
+    "Exact-content checks do not detect near duplicates or undisclosed upstream training overlap.",
+    "Diagnostic examples and small samples do not estimate general detection accuracy.",
+    "Generator groups contain fakes only; their accuracy is recall, not balanced accuracy.",
+    "Each variant is the same examples transformed; variants are not independent observations."
+  ],
+  "variants": {
+    "original": {
+      "metrics": {
+        "accuracy": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "auc": 1.0,
+        "n_samples": 3,
+        "n_positive": 2,
+        "n_negative": 1,
+        "confusion_matrix": {
+          "tp": 2,
+          "fp": 0,
+          "tn": 1,
+          "fn": 0
+        },
+        "threshold": 0.5,
+        "balanced_accuracy": 1.0,
+        "average_precision": 1.0,
+        "false_positive_rate": 0.0
+      },
+      "by_source": {
+        "nasa-archive": {
+          "accuracy": 1.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "auc": null,
+          "n_samples": 1,
+          "n_positive": 0,
+          "n_negative": 1,
+          "confusion_matrix": {
+            "tp": 0,
+            "fp": 0,
+            "tn": 1,
+            "fn": 0
+          },
+          "threshold": 0.5,
+          "balanced_accuracy": null,
+          "average_precision": null,
+          "false_positive_rate": 0.0
+        },
+        "openai-generated-challenge": {
+          "accuracy": 1.0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "auc": null,
+          "n_samples": 1,
+          "n_positive": 1,
+          "n_negative": 0,
+          "confusion_matrix": {
+            "tp": 1,
+            "fp": 0,
+            "tn": 0,
+            "fn": 0
+          },
+          "threshold": 0.5,
+          "balanced_accuracy": null,
+          "average_precision": null,
+          "false_positive_rate": null
+        },
+        "openai-generated-demo": {
+          "accuracy": 1.0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "auc": null,
+          "n_samples": 1,
+          "n_positive": 1,
+          "n_negative": 0,
+          "confusion_matrix": {
+            "tp": 1,
+            "fp": 0,
+            "tn": 0,
+            "fn": 0
+          },
+          "threshold": 0.5,
+          "balanced_accuracy": null,
+          "average_precision": null,
+          "false_positive_rate": null
+        }
+      },
+      "by_generator": {
+        "openai-image-generation": {
+          "accuracy": 1.0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "auc": null,
+          "n_samples": 2,
+          "n_positive": 2,
+          "n_negative": 0,
+          "confusion_matrix": {
+            "tp": 2,
+            "fp": 0,
+            "tn": 0,
+            "fn": 0
+          },
+          "threshold": 0.5,
+          "balanced_accuracy": null,
+          "average_precision": null,
+          "false_positive_rate": null
+        }
+      },
+      "predictions": [
+        {
+          "path": "openai-cat.png",
+          "label": 1,
+          "subject_id": "openai-cat-challenge-2026",
+          "source": "openai-generated-challenge",
+          "generator_id": "openai-image-generation",
+          "source_url": "",
+          "fake_score": 0.5939168930053711,
+          "prediction": 1,
+          "threshold": 0.5
+        },
+        {
+          "path": "../../../frontend/public/samples/generated-lakehouse.png",
+          "label": 1,
+          "subject_id": "openai-lakehouse-demo",
+          "source": "openai-generated-demo",
+          "generator_id": "openai-image-generation",
+          "source_url": "",
+          "fake_score": 0.665388286113739,
+          "prediction": 1,
+          "threshold": 0.5
+        },
+        {
+          "path": "../../../frontend/public/samples/earthrise.jpg",
+          "label": 0,
+          "subject_id": "nasa-apollo8-earthrise",
+          "source": "nasa-archive",
+          "generator_id": "",
+          "source_url": "https://science.nasa.gov/resource/image-earthrise/",
+          "fake_score": 0.3086790442466736,
+          "prediction": 0,
+          "threshold": 0.5
+        }
+      ]
+    },
+    "jpeg75": {
+      "metrics": {
+        "accuracy": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "auc": 1.0,
+        "n_samples": 3,
+        "n_positive": 2,
+        "n_negative": 1,
+        "confusion_matrix": {
+          "tp": 2,
+          "fp": 0,
+          "tn": 1,
+          "fn": 0
+        },
+        "threshold": 0.5,
+        "balanced_accuracy": 1.0,
+        "average_precision": 1.0,
+        "false_positive_rate": 0.0
+      },
+      "by_source": {
+        "nasa-archive": {
+          "accuracy": 1.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "auc": null,
+          "n_samples": 1,
+          "n_positive": 0,
+          "n_negative": 1,
+          "confusion_matrix": {
+            "tp": 0,
+            "fp": 0,
+            "tn": 1,
+            "fn": 0
+          },
+          "threshold": 0.5,
+          "balanced_accuracy": null,
+          "average_precision": null,
+          "false_positive_rate": 0.0
+        },
+        "openai-generated-challenge": {
+          "accuracy": 1.0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "auc": null,
+          "n_samples": 1,
+          "n_positive": 1,
+          "n_negative": 0,
+          "confusion_matrix": {
+            "tp": 1,
+            "fp": 0,
+            "tn": 0,
+            "fn": 0
+          },
+          "threshold": 0.5,
+          "balanced_accuracy": null,
+          "average_precision": null,
+          "false_positive_rate": null
+        },
+        "openai-generated-demo": {
+          "accuracy": 1.0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "auc": null,
+          "n_samples": 1,
+          "n_positive": 1,
+          "n_negative": 0,
+          "confusion_matrix": {
+            "tp": 1,
+            "fp": 0,
+            "tn": 0,
+            "fn": 0
+          },
+          "threshold": 0.5,
+          "balanced_accuracy": null,
+          "average_precision": null,
+          "false_positive_rate": null
+        }
+      },
+      "by_generator": {
+        "openai-image-generation": {
+          "accuracy": 1.0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "auc": null,
+          "n_samples": 2,
+          "n_positive": 2,
+          "n_negative": 0,
+          "confusion_matrix": {
+            "tp": 2,
+            "fp": 0,
+            "tn": 0,
+            "fn": 0
+          },
+          "threshold": 0.5,
+          "balanced_accuracy": null,
+          "average_precision": null,
+          "false_positive_rate": null
+        }
+      },
+      "predictions": [
+        {
+          "path": "openai-cat.png",
+          "label": 1,
+          "subject_id": "openai-cat-challenge-2026",
+          "source": "openai-generated-challenge",
+          "generator_id": "openai-image-generation",
+          "source_url": "",
+          "fake_score": 0.6174666285514832,
+          "prediction": 1,
+          "threshold": 0.5
+        },
+        {
+          "path": "../../../frontend/public/samples/generated-lakehouse.png",
+          "label": 1,
+          "subject_id": "openai-lakehouse-demo",
+          "source": "openai-generated-demo",
+          "generator_id": "openai-image-generation",
+          "source_url": "",
+          "fake_score": 0.6507209539413452,
+          "prediction": 1,
+          "threshold": 0.5
+        },
+        {
+          "path": "../../../frontend/public/samples/earthrise.jpg",
+          "label": 0,
+          "subject_id": "nasa-apollo8-earthrise",
+          "source": "nasa-archive",
+          "generator_id": "",
+          "source_url": "https://science.nasa.gov/resource/image-earthrise/",
+          "fake_score": 0.3109978139400482,
+          "prediction": 0,
+          "threshold": 0.5
+        }
+      ]
+    },
+    "downscale50": {
+      "metrics": {
+        "accuracy": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "auc": 1.0,
+        "n_samples": 3,
+        "n_positive": 2,
+        "n_negative": 1,
+        "confusion_matrix": {
+          "tp": 2,
+          "fp": 0,
+          "tn": 1,
+          "fn": 0
+        },
+        "threshold": 0.5,
+        "balanced_accuracy": 1.0,
+        "average_precision": 1.0,
+        "false_positive_rate": 0.0
+      },
+      "by_source": {
+        "nasa-archive": {
+          "accuracy": 1.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "auc": null,
+          "n_samples": 1,
+          "n_positive": 0,
+          "n_negative": 1,
+          "confusion_matrix": {
+            "tp": 0,
+            "fp": 0,
+            "tn": 1,
+            "fn": 0
+          },
+          "threshold": 0.5,
+          "balanced_accuracy": null,
+          "average_precision": null,
+          "false_positive_rate": 0.0
+        },
+        "openai-generated-challenge": {
+          "accuracy": 1.0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "auc": null,
+          "n_samples": 1,
+          "n_positive": 1,
+          "n_negative": 0,
+          "confusion_matrix": {
+            "tp": 1,
+            "fp": 0,
+            "tn": 0,
+            "fn": 0
+          },
+          "threshold": 0.5,
+          "balanced_accuracy": null,
+          "average_precision": null,
+          "false_positive_rate": null
+        },
+        "openai-generated-demo": {
+          "accuracy": 1.0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "auc": null,
+          "n_samples": 1,
+          "n_positive": 1,
+          "n_negative": 0,
+          "confusion_matrix": {
+            "tp": 1,
+            "fp": 0,
+            "tn": 0,
+            "fn": 0
+          },
+          "threshold": 0.5,
+          "balanced_accuracy": null,
+          "average_precision": null,
+          "false_positive_rate": null
+        }
+      },
+      "by_generator": {
+        "openai-image-generation": {
+          "accuracy": 1.0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "auc": null,
+          "n_samples": 2,
+          "n_positive": 2,
+          "n_negative": 0,
+          "confusion_matrix": {
+            "tp": 2,
+            "fp": 0,
+            "tn": 0,
+            "fn": 0
+          },
+          "threshold": 0.5,
+          "balanced_accuracy": null,
+          "average_precision": null,
+          "false_positive_rate": null
+        }
+      },
+      "predictions": [
+        {
+          "path": "openai-cat.png",
+          "label": 1,
+          "subject_id": "openai-cat-challenge-2026",
+          "source": "openai-generated-challenge",
+          "generator_id": "openai-image-generation",
+          "source_url": "",
+          "fake_score": 0.5968533754348755,
+          "prediction": 1,
+          "threshold": 0.5
+        },
+        {
+          "path": "../../../frontend/public/samples/generated-lakehouse.png",
+          "label": 1,
+          "subject_id": "openai-lakehouse-demo",
+          "source": "openai-generated-demo",
+          "generator_id": "openai-image-generation",
+          "source_url": "",
+          "fake_score": 0.6674313545227051,
+          "prediction": 1,
+          "threshold": 0.5
+        },
+        {
+          "path": "../../../frontend/public/samples/earthrise.jpg",
+          "label": 0,
+          "subject_id": "nasa-apollo8-earthrise",
+          "source": "nasa-archive",
+          "generator_id": "",
+          "source_url": "https://science.nasa.gov/resource/image-earthrise/",
+          "fake_score": 0.3136832118034363,
+          "prediction": 0,
+          "threshold": 0.5
+        }
+      ]
+    }
+  }
+}

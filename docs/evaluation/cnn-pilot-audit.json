@@ -1,0 +1,49 @@
+{
+  "splits": {
+    "train": {
+      "samples": 128,
+      "real": 64,
+      "fake": 64,
+      "groups": 128,
+      "generators": {
+        "stable-diffusion-v1.4": 64
+      },
+      "sources": [
+        "cifake-pilot"
+      ]
+    },
+    "val": {
+      "samples": 32,
+      "real": 16,
+      "fake": 16,
+      "groups": 32,
+      "generators": {
+        "stable-diffusion-v1.4": 16
+      },
+      "sources": [
+        "cifake-pilot"
+      ]
+    },
+    "test": {
+      "samples": 64,
+      "real": 32,
+      "fake": 32,
+      "groups": 64,
+      "generators": {
+        "stable-diffusion-v1.4": 32
+      },
+      "sources": [
+        "cifake-pilot"
+      ]
+    }
+  },
+  "heldout_generators": [],
+  "fingerprint": "b1e6ac7ab5cede9030439732cc697e8b2403cca29ef4933647e66dd6695cb931",
+  "data_kind": "curated-images",
+  "checks": [
+    "group separation",
+    "encoded content separation",
+    "decoded pixel separation"
+  ],
+  "limits": "Exact duplicates only; curator group and generator identities are not independently verified."
+}

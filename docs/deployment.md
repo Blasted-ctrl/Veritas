@@ -30,7 +30,7 @@ The Render file is a deployment template for separate API and frontend services.
 
 GET /health reports whether the actual ONNX sessions load, optional explainer compatibility, the cache backend, and upload/sampling limits. A running service may report image_model=false; checking status alone does not establish detector readiness.
 
-POST /verify accepts multipart form field file. It returns verdict, fake_probability, decision_threshold, modality, model_info, content_sha256, latency_ms, and cached. Videos also return frames_analyzed and frame scores. A request for explain=true only adds a heatmap when a matching Torch checkpoint is configured.
+POST /verify accepts multipart form field file. It returns verdict, fake_probability, decision_threshold, modality, model_info, content_sha256, latency_ms, and cached. Videos also return frames_analyzed and frame scores. A request for explain=true only adds a heatmap when a matching Torch ViT checkpoint is configured.
 
 Example:
 
