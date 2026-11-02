@@ -65,7 +65,7 @@ From backend:
     mypy
     pytest
 
-Install all extras to run the ML and API tests. Without them, optional test modules skip at collection; the standard-library data pipeline remains usable. CI separates core, ML, API, frontend, and production-container checks.
+Install all extras to run the ML and API tests. Without them, optional test modules skip at collection; the standard-library data pipeline remains usable.
 
 From frontend:
 
@@ -84,3 +84,25 @@ To reproduce it, download config.json, preprocessor_config.json, and model.safet
 Start the real API with the default model and the website. Select Generated image, then Analyze file. For the video view, upload frontend/public/samples/generated-demo.mp4, analyze it, and expand individual frame scores. Capture the actual browser after analysis completes. The demo MP4 is a four-second still-image clip at four frames per second; it is not independently generated footage.
 
 The checked-in screenshots are real browser captures. Each has an origin sidecar. Sample image prompts, NASA credits, and font licenses are saved alongside their assets.
+
+## API and model configuration
+
+`GET /health` reports whether the image model is ready. Check `image_model: true`, not just the HTTP status.
+
+`POST /verify` accepts a multipart file and returns the class score, verdict, decision threshold and model identity. Video responses also include sampled-frame scores.
+
+```sh
+curl -F "file=@image.jpg" http://localhost:8000/verify
+```
+
+To serve a custom CNN, keep the exported `model.onnx` and `model.onnx.json` sidecar together, then set these variables before starting the API:
+
+| Variable                  | Purpose                                                      |
+| ------------------------- | ------------------------------------------------------------ |
+| `VERITAS_IMAGE_MODEL`     | Absolute path to your ONNX model                             |
+| `VERITAS_FAKE_THRESHOLD`  | Decision cutoff; the artwork pilot uses `0.8770313858985902` |
+| `VERITAS_REDIS_URL`       | Empty string for memory caching, or a Redis URL              |
+| `VERITAS_ALLOWED_ORIGINS` | JSON array of allowed website origins                        |
+| `NEXT_PUBLIC_API_URL`     | Browser-reachable API URL; set before building the frontend  |
+
+The artwork CNN is a separate research checkpoint, not the default download. Check the [evaluation and data restrictions](evaluation/artwork-v3/README.md) before using it. Empty uploads return 400, oversized files 413, unsupported media 415, unreadable files 422 and unavailable models 503.

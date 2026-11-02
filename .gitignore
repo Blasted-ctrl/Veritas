@@ -8,7 +8,6 @@ dist/
 .venv/
 venv/
 .env
-deploy/.env
 model-bundle/
 .pytest_cache/
 .mypy_cache/
@@ -45,10 +44,26 @@ Thumbs.db
 /_veritas_probe/
 /_train/
 
-# Local design decisions and capture scratch; retain the design contract.
-.impeccable/*
-!.impeccable/design.json
-!.impeccable/surfaces/
+# Local planning, design, hosting templates, and video-editor files.
+/.impeccable/
+/design/
+/docs/design/
+/DESIGN.md
+/PRODUCT.md
+/deploy/
+/render.yaml
+/frontend/vercel.json
+/docs/deployment.md
+/.github/workflows/
+/docs/demo/source/
+/docs/demo/contact-sheet.jpg
+/docs/demo/poster.jpg
+/docs/demo/quality.json
+/docs/demo/video.json
+/frontend/AGENTS.md
+/docs/verification/README.md
+/docs/verification/browser-capture.json
+/docs/verification/lighthouse-summary.json
 
 # Isolated browser checks
 frontend/test-results/
