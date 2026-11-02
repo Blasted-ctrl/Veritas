@@ -1,0 +1,66 @@
+{
+  "implementation_commit": "31925bab03351e7d8e11c0d736cbdf16bd0cfbed",
+  "local": {
+    "backend_suite": {
+      "passed": 150,
+      "failed": 0,
+      "warnings": 22,
+      "pytest_seconds": 501.46,
+      "process_seconds": 547.373655796051,
+      "command": "pytest -ra --durations=5 -p no:cacheprovider",
+      "notes": "Installed optional ML/API dependencies; plugin autoload disabled. Separate retry regression below was added after collection."
+    },
+    "download_retry_regressions": {
+      "passed": 6,
+      "failed": 0,
+      "notes": "Retry-After seconds/date, sustained HTTP503 recovery, successful fetch, unrelated-page concurrency and cached-link expiry. Network/waits are controlled in these unit tests."
+    },
+    "ruff": "passed",
+    "format": "75 files formatted",
+    "mypy": "passed again after identity cache change, 11 source files",
+    "review": "Independent correctness reviews; cache identity/publication and model-bundle processor binding fixed with regressions.",
+    "identity_cache_regressions": {
+      "passed": 18,
+      "failed": 0,
+      "process_seconds": 71.50360250473022,
+      "scope": "Content identity, corpus separation, ONNX evaluation, calibration report and input/bundle binding"
+    }
+  },
+  "github": [
+    {
+      "workflow": "CI",
+      "run_id": 41392902177,
+      "conclusion": "success",
+      "url": "https://github.com/Blasted-ctrl/Veritas/actions/runs/41392902177"
+    },
+    {
+      "workflow": "Production containers",
+      "run_id": 41392902295,
+      "conclusion": "success",
+      "url": "https://github.com/Blasted-ctrl/Veritas/actions/runs/41392902295"
+    },
+    {
+      "workflow": "CI",
+      "commit": "eb57d96775fa5c53fddb8a3a7896123eb3737f44",
+      "run_id": 41396232059,
+      "conclusion": "success",
+      "url": "https://github.com/Blasted-ctrl/Veritas/actions/runs/41396232059"
+    },
+    {
+      "workflow": "Production containers",
+      "commit": "eb57d96775fa5c53fddb8a3a7896123eb3737f44",
+      "run_id": 41396232083,
+      "conclusion": "success",
+      "url": "https://github.com/Blasted-ctrl/Veritas/actions/runs/41396232083"
+    }
+  ],
+  "downloader_fix_commit": "eb57d96775fa5c53fddb8a3a7896123eb3737f44",
+  "acquisition_implementation_commit": "31925bab03351e7d8e11c0d736cbdf16bd0cfbed",
+  "identity_cache_commit": "56c65ae16b344b328e409c9e57d9253f393e9312",
+  "data": {
+    "fingerprint": "9d0a1c93b2907086d3819d8fed415748dc4fcfc8262898e4d9d2aeb7cb476d3c",
+    "assignment_rows": 6656,
+    "assignment_sha256": "a1ef311ddf4c4731a20307f9883dbe6085ed4e1229694bcd80ba9c05998a02ef",
+    "audit_completed_before_fitting": true
+  }
+}
