@@ -3,12 +3,19 @@
 from __future__ import annotations
 
 import hashlib
+import io
 import struct
+from collections import OrderedDict
 from dataclasses import replace
 from pathlib import Path
+from threading import Lock
 
 from veritas.data.manifest import SPLITS, Sample, label_counts, read_manifest
 from veritas.models.metadata import file_sha256
+
+_IDENTITIES: OrderedDict[tuple[str, str], str] = OrderedDict()
+_IDENTITY_LOCK = Lock()
+_IDENTITY_LIMIT = 8192
 
 
 def load_image_samples(manifest: str | Path) -> list[Sample]:
@@ -32,12 +39,26 @@ def load_image_samples(manifest: str | Path) -> list[Sample]:
 
 def image_identity(path: str | Path) -> tuple[str, str]:
     """Encoded and decoded RGB hashes; metadata-only re-encoding cannot hide duplicates."""
+    import PIL
     from PIL import Image
 
-    with Image.open(path) as image:
+    raw = Path(path).read_bytes()
+    encoded = hashlib.sha256(raw).hexdigest()
+    key = (PIL.__version__, encoded)
+    with _IDENTITY_LOCK:
+        cached = _IDENTITIES.get(key)
+        if cached is not None:
+            _IDENTITIES.move_to_end(key)
+            return encoded, cached
+    with Image.open(io.BytesIO(raw)) as image:
         rgb = image.convert("RGB")
         pixels = hashlib.sha256(struct.pack("!II", *rgb.size) + rgb.tobytes()).hexdigest()
-    return file_sha256(path), pixels
+    with _IDENTITY_LOCK:
+        _IDENTITIES[key] = pixels
+        _IDENTITIES.move_to_end(key)
+        if len(_IDENTITIES) > _IDENTITY_LIMIT:
+            _IDENTITIES.popitem(last=False)
+    return encoded, pixels
 
 
 def audit_image_corpus(directory: str | Path, *, heldout_generators=()) -> dict:
