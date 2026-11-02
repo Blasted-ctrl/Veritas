@@ -1,0 +1,61 @@
+{
+  "version": 1,
+  "objective": "Aim for >=95% balanced test accuracy while reducing genuine-image false positives; report measured outcomes even when target is missed.",
+  "dataset": {
+    "repository": "ComplexDataLab/OpenFake",
+    "revision": "3247b942f18d39d1fd476b1077852af033d35d8c",
+    "license": "CC-BY-NC-4.0; research training, weights external to git",
+    "access": "Bounded seeded Dataset Viewer rows; immutable revision checked in every asset path. Viewer JPEG derivatives are not claimed to match original source image_sha256.",
+    "planned_counts": {
+      "train": 4096,
+      "validation_tuning": 512,
+      "calibration": 512,
+      "id_test": 512,
+      "ood_test": 1024
+    },
+    "source_balance": "Train/tuning/calibration/ID real quotas equally LAION and Pexels; OOD real quotas equally DOCCI and ImageNet. Fake model caps force >=8 train generators and >=4 OOD models.",
+    "separation": "Official upstream train/validation/test boundaries retained; prompt groups, source hashes, encoded/decoded content and near-duplicate hashes checked across all local splits before training.",
+    "url": "https://huggingface.co/datasets/ComplexDataLab/OpenFake/tree/3247b942f18d39d1fd476b1077852af033d35d8c"
+  },
+  "training": {
+    "architecture": "PyTorch EfficientNet-B0 CNN, ImageNet initialization; frozen lower MBConv blocks, train final MBConv block, final convolution and classifier",
+    "cache": "Two deterministic training augmentation views, original deterministic validation; prefix state/processor/data identities recorded. No test feature extraction during fitting.",
+    "candidates": [
+      {
+        "initialization": "EfficientNet-B0 ImageNet IMAGENET1K_V1",
+        "epochs": 8,
+        "backbone_lr": 0.00002,
+        "head_lr": 0.0002,
+        "real_loss_weight": 1
+      },
+      {
+        "initialization": "EfficientNet-B0 ImageNet IMAGENET1K_V1",
+        "epochs": 8,
+        "backbone_lr": 0.00005,
+        "head_lr": 0.001,
+        "real_loss_weight": 1.25
+      }
+    ],
+    "batch_size": 16,
+    "weight_decay": 0.01,
+    "seed": 20261101,
+    "selection": "Highest tuning-validation partial ROC-AUC at max_fpr=0.05; ties: full ROC-AUC then earlier checkpoint. Test sets never used for model/epoch/hyperparameter selection.",
+    "resource_decision": "Before any quality evaluation, measured CPU cached-upper step: ConvNeXt-Tiny0.2101sec/image vs EfficientNet-B00.02451sec/image at2threads. Select EfficientNet-B0 to permit more actual training; previousConvNeXt is retained as comparison baseline.",
+    "freeze_epochs": 1,
+    "prefix_end": 7,
+    "threads": 2,
+    "training_views": 2,
+    "view_schedule": "One cached augmentation view per source image per epoch, alternating between two views"
+  },
+  "calibration": {
+    "target_false_positive_rate": 0.05,
+    "rule": "Use only independent calibration split; maximize balanced accuracy among thresholds with empirical FPR <=0.05. Include thresholds just above tied scores; record class counts and uncertainty."
+  },
+  "final_evaluation": {
+    "primary": "Balanced 1024-image official OOD test subset with held-out exact generator versions and real-image sources",
+    "secondary": "512-image same-distribution ID test; old CIFAKE test and fixed 3-image diagnostic are historical secondary checks only",
+    "comparison": "Previous CNN and selected new CNN evaluated on identical final test examples at threshold0.5 and separately calibration-selected thresholds under same FPR constraint",
+    "report": "Confusion matrices, accuracy/balanced accuracy, precision/recall/F1, AUC/AP, FPR with confidence interval, per-model/source results, fixed JPEG75/downscale50 stress; no selective omission of failures.",
+    "target_interpretation": "95% on this sample is not a universal accuracy guarantee; a measured miss is reported as a miss."
+  }
+}
