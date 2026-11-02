@@ -1,14 +1,14 @@
 # Verification record
 
-The implementation at commit 68440a1a01af8a6964e35e126c879ed0561b518d passed the [CI workflow](https://github.com/Blasted-ctrl/Veritas/actions/runs/41361447171) and [production-container smoke test](https://github.com/Blasted-ctrl/Veritas/actions/runs/41361447181).
+The implementation at commit 8a868c3620aa3c949bd0c7c8ce0a525000856764 passed the [CI workflow](https://github.com/Blasted-ctrl/Veritas/actions/runs/41368426454) and [production-container smoke test](https://github.com/Blasted-ctrl/Veritas/actions/runs/41368426456).
 
 | Gate | Recorded result |
 | --- | --- |
 | Core backend tests | 39 passed; optional modules skipped without their dependencies |
 | ML smoke tests | 11 passed; non-ML scopes deselected or unavailable modules skipped |
 | API / ONNX tests | 39 passed, 50 outside the API scope deselected |
-| Frontend | ESLint, TypeScript, and production build passed |
-| Production containers | Both images built; verified model installed as non-root; image and MP4 inference passed |
+| Frontend | ESLint, TypeScript, production build, and nine browser regressions passed |
+| Production containers | Both images built; verified model installed as non-root; real PNG, MP4, and GIF browser captures passed |
 | Configurable browser API URL | Nondefault URL found in the production client bundle |
 | Local API regressions | 22 passed, including actual MP4 sampling, invalid uploads, model-aware cache identity, and cleanup |
 | Local Python quality | Ruff checks/format and mypy passed |

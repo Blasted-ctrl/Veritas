@@ -1,5 +1,5 @@
 ---
-status: ready
+status: done
 ---
 
 # Plan: Verify Veritas and redesign its upload website
