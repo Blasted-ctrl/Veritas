@@ -235,5 +235,16 @@
       }
     ]
   },
-  "note": "Local lab measurements on a four-core CPU while CNN evaluation was running. Browsers tested sequentially for this audit. Scores vary with machine load and do not measure detection accuracy."
+  "note": "Local lab measurements on a four-core CPU while CNN evaluation was running. Browsers tested sequentially for this audit. Scores vary with machine load and do not measure detection accuracy.",
+  "remote_checks": {
+    "commit": "1b0e19455b2abb81578c41d9326edd196598c01c",
+    "ci": {
+      "conclusion": "success",
+      "url": "https://github.com/Blasted-ctrl/Veritas/actions/runs/41415308586"
+    },
+    "production_containers": {
+      "conclusion": "success",
+      "url": "https://github.com/Blasted-ctrl/Veritas/actions/runs/41415308661"
+    }
+  }
 }

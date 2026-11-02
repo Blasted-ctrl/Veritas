@@ -4,6 +4,8 @@ For the larger OpenFake experiment, use the research workflow below. The origina
 
 ## Diverse-data research workflow
 
+The [completed experiment](evaluation/diverse-v2/README.md) reached 73.34% accuracy and 14.45% real-image false alarms on a separate generator/source holdout at threshold 0.5. It did not reach 95%. The calibration-selected threshold reduced false alarms to 1.37%, with 23.63% AI recall and 61.13% accuracy.
+
 The CPU workflow fine-tunes an EfficientNet-B0 CNN in PyTorch using AdamW and cross-entropy. It caches the frozen lower convolution blocks and trains the final MBConv block, final convolution and classification head. Two augmentation views let this machine train on more images without repeatedly recomputing the frozen blocks.
 
 It prepares 4,096 training images, 512 tuning images, 512 threshold-calibration images, a 512-image same-distribution test and a 1,024-image generator/source holdout. Real training images come from LAION and Pexels; the source holdout uses DOCCI and ImageNet. Prompt groups and exact content stay in one role, with an additional cross-role perceptual-hash check. These checks do not establish human-identity separation or eliminate all near duplicates.
@@ -28,7 +30,7 @@ Veritas includes a ConvNeXt-Tiny CNN for learning spatial differences between ge
 
 This is a practical transfer-learning baseline, not a claim that one architecture wins on every generator. [ConvNeXt](https://arxiv.org/abs/2201.03545) is a convolutional network. The implementation uses [TorchVision's ConvNeXt-Tiny](https://docs.pytorch.org/vision/stable/models/generated/torchvision.models.convnext_tiny.html) and [PyTorch AdamW](https://docs.pytorch.org/docs/stable/generated/torch.optim.AdamW).
 
-The website's downloadable default remains the pinned CIFAKE-trained ViT. The small CNN pilot produced too many false positives to justify replacing it. See [measured results](evaluation/README.md).
+The website's downloadable default remains the pinned CIFAKE-trained ViT. The study compares the new CNN with the earlier CNN, not with the downloadable ViT, and does not select a new website default. See [measured results](evaluation/README.md).
 
 ## Prepare data
 

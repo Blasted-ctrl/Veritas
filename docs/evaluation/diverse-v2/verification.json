@@ -1,66 +1,89 @@
 {
-  "implementation_commit": "31925bab03351e7d8e11c0d736cbdf16bd0cfbed",
-  "local": {
-    "backend_suite": {
-      "passed": 150,
-      "failed": 0,
-      "warnings": 22,
-      "pytest_seconds": 501.46,
-      "process_seconds": 547.373655796051,
-      "command": "pytest -ra --durations=5 -p no:cacheprovider",
-      "notes": "Installed optional ML/API dependencies; plugin autoload disabled. Separate retry regression below was added after collection."
-    },
-    "download_retry_regressions": {
-      "passed": 6,
-      "failed": 0,
-      "notes": "Retry-After seconds/date, sustained HTTP503 recovery, successful fetch, unrelated-page concurrency and cached-link expiry. Network/waits are controlled in these unit tests."
-    },
-    "ruff": "passed",
-    "format": "75 files formatted",
-    "mypy": "passed again after identity cache change, 11 source files",
-    "review": "Independent correctness reviews; cache identity/publication and model-bundle processor binding fixed with regressions.",
-    "identity_cache_regressions": {
-      "passed": 18,
-      "failed": 0,
-      "process_seconds": 71.50360250473022,
-      "scope": "Content identity, corpus separation, ONNX evaluation, calibration report and input/bundle binding"
-    }
+  "verified_at": "2026-11-02T09:42:31.134219+00:00",
+  "training_job": {
+    "exit_code": 0,
+    "seconds": 5010.870062589645
   },
-  "github": [
-    {
-      "workflow": "CI",
-      "run_id": 41392902177,
-      "conclusion": "success",
-      "url": "https://github.com/Blasted-ctrl/Veritas/actions/runs/41392902177"
-    },
-    {
-      "workflow": "Production containers",
-      "run_id": 41392902295,
-      "conclusion": "success",
-      "url": "https://github.com/Blasted-ctrl/Veritas/actions/runs/41392902295"
-    },
-    {
-      "workflow": "CI",
-      "commit": "eb57d96775fa5c53fddb8a3a7896123eb3737f44",
-      "run_id": 41396232059,
-      "conclusion": "success",
-      "url": "https://github.com/Blasted-ctrl/Veritas/actions/runs/41396232059"
-    },
-    {
-      "workflow": "Production containers",
-      "commit": "eb57d96775fa5c53fddb8a3a7896123eb3737f44",
-      "run_id": 41396232083,
-      "conclusion": "success",
-      "url": "https://github.com/Blasted-ctrl/Veritas/actions/runs/41396232083"
-    }
-  ],
-  "downloader_fix_commit": "eb57d96775fa5c53fddb8a3a7896123eb3737f44",
-  "acquisition_implementation_commit": "31925bab03351e7d8e11c0d736cbdf16bd0cfbed",
-  "identity_cache_commit": "56c65ae16b344b328e409c9e57d9253f393e9312",
-  "data": {
-    "fingerprint": "9d0a1c93b2907086d3819d8fed415748dc4fcfc8262898e4d9d2aeb7cb476d3c",
-    "assignment_rows": 6656,
-    "assignment_sha256": "a1ef311ddf4c4731a20307f9883dbe6085ed4e1229694bcd80ba9c05998a02ef",
-    "audit_completed_before_fitting": true
-  }
+  "evaluation_job": {
+    "exit_code": 0,
+    "seconds": 5576.431694507599
+  },
+  "numerical_parity_job": {
+    "exit_code": 0,
+    "seconds": 53.71905589103699
+  },
+  "serving_job": {
+    "exit_code": 0,
+    "seconds": 12.864562273025513
+  },
+  "ci": {
+    "commit": "1b0e19455b2abb81578c41d9326edd196598c01c",
+    "url": "https://github.com/Blasted-ctrl/Veritas/actions/runs/41415308586",
+    "conclusion": "success",
+    "backend_core": "50 passed, 21 skipped",
+    "ml": "38 passed, 7 skipped, 63 deselected",
+    "api_and_export": "59 passed, 96 deselected",
+    "frontend_browser": "14 passed"
+  },
+  "production_containers": {
+    "url": "https://github.com/Blasted-ctrl/Veritas/actions/runs/41415308661",
+    "conclusion": "success"
+  },
+  "graph_sha256": "7753d5935b09ec64bd26170cb4f1489c7cd3fe084cbb3c0fed657fa1f3012760",
+  "onnxruntime_version": "1.31.1",
+  "dynamic_batch_max_absolute_logit_error": 4.291534423828125e-06,
+  "serving": {
+    "cases": [
+      {
+        "name": "health",
+        "pass": true,
+        "http_status": null
+      },
+      {
+        "name": "image_explain_first",
+        "pass": true,
+        "http_status": 200
+      },
+      {
+        "name": "image_explain_repeat",
+        "pass": true,
+        "http_status": 200
+      },
+      {
+        "name": "image_plain_first",
+        "pass": true,
+        "http_status": 200
+      },
+      {
+        "name": "image_plain_repeat",
+        "pass": true,
+        "http_status": 200
+      },
+      {
+        "name": "corrupted_png_after_valid_image",
+        "pass": true,
+        "http_status": 422
+      },
+      {
+        "name": "mp4",
+        "pass": true,
+        "http_status": 200
+      },
+      {
+        "name": "gif",
+        "pass": true,
+        "http_status": 200
+      }
+    ],
+    "all_passed": true,
+    "isolated_port": 8012,
+    "port_released": true,
+    "listener_owned": true,
+    "scope": "Actual selected CNN and calibration-locked threshold; sampled spatial video inference, no temporal network"
+  },
+  "limits": [
+    "Tiny/random model software tests verify mechanics, not detection quality.",
+    "Fixed diagnostic images are not an accuracy benchmark.",
+    "The default downloadable website model remains a separate pretrained ViT."
+  ]
 }

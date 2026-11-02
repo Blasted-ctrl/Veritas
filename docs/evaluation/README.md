@@ -1,8 +1,16 @@
-# CNN pilot and fixed challenge
+# CNN evaluations
+
+## Diverse-data update
+
+The [larger EfficientNet-B0 experiment](diverse-v2/README.md) trained on 4,096 public images with separate tuning, threshold calibration, same-distribution test and generator/source holdout sets. On the 1,024-image primary holdout at threshold 0.5, new/old CNN accuracy was **73.34% / 47.66%**, and real-image false alarms were **14.45% / 69.73%**.
+
+The **95% target was not reached**. The conservative new-CNN threshold gave **1.37%** false alarms but only **23.63%** AI recall and **61.13%** accuracy. See the report for both policies, confidence intervals, per-generator results, and every prediction. These are paired results on identical examples, not a direct comparison with the smaller pilot below.
+
+## CNN pilot and fixed challenge
 
 The PyTorch ConvNeXt-Tiny pilot correctly classified 53 of 64 held-out CIFAKE images at threshold 0.5. It flagged all 32 generated images, but also falsely flagged **11 of 32 genuine images**. That false-positive rate is too high to promote this pilot as the website's default detector.
 
-## What was measured
+### What was measured
 
 Training used 128 images, validation used 32, and test used 64. The two-epoch configuration and threshold were fixed before test evaluation. Checkpoint selection used validation ROC-AUC. The recorded metrics identify the completed checkpoint state. This was a fixed-configuration pilot, not a hyperparameter search.
 
@@ -20,7 +28,7 @@ The half-resolution variant reduces the original 32-pixel images to 16 pixels be
 
 Training used ImageNet-initialized ConvNeXt-Tiny, AdamW, cross-entropy, head warmup and one unfrozen top stage. It ran on CPU with seed 1337 and batch size 4. [Training metrics and configuration](cnn-pilot-training.json), [dataset audit](cnn-pilot-audit.json), [source selection](cnn-pilot-data.json), [runtime and initialization hash](cnn-pilot-runtime.json), and [ONNX predictions for every test image and variant](cnn-pilot-onnx.json) are recorded. The ONNX evaluation reproduced the Torch test confusion matrix.
 
-## Fresh generated image and fixed examples
+### Fresh generated image and fixed examples
 
 ![Fresh AI-generated cat reserved for evaluation](challenge/openai-cat.png)
 
@@ -38,13 +46,13 @@ Three diagnostic examples cannot estimate general accuracy or establish that the
 
 Both detectors used the [same manifest](challenge/test.csv) and the API's real processor. The [CNN report](challenge-cnn.json) and [default ViT report](challenge-default-vit.json) include the original, JPEG quality 75 and half-resolution scores. Both reports check separation from the pilot's train/validation groups and exact pixels; that check says nothing about undisclosed upstream training data. [Existing sample credits](../../frontend/public/samples/credits.json) identify the lakehouse and NASA photograph.
 
-## Serving verification
+### Serving verification
 
 The completed CNN was also tested through an isolated API configured with VERITAS_IMAGE_MODEL. All eight [HTTP smoke cases](cnn-pilot-http.json) passed: image inference, requests without CNN heatmaps, repeated cached requests, corrupt-image rejection, and actual MP4/GIF frame averages. The test used a high sampling rate and an eight-frame cap to exercise the frame path. These are spatial frame checks.
 
 [PyTorch/ONNX parity](cnn-pilot-parity.json) on the raw generated-cat pixels agreed within 2.3×10⁻⁷ in the logits. The [local verification record](verification.json) records 126 passing backend tests, lint, formatting and type checks. Numerical parity and passing software tests do not establish detection accuracy.
 
-## Reproduce
+### Reproduce
 
 Follow [CNN training and evaluation](../cnn-training.md) to prepare the pinned pilot and export the trained model. From backend, evaluate the fixed examples with:
 

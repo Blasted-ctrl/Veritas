@@ -1,0 +1,5 @@
+{
+  "prediction_rows_exported": 2048,
+  "summary_metrics_recomputed": true,
+  "score_precision": "Python float repr; no score rounding before threshold comparisons"
+}

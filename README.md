@@ -44,9 +44,11 @@ See [the detector, its source, and its limits](docs/model.md) for the pinned rev
 
 - **Website:** responsive Next.js interface, previews, light/dark themes, upload progress, cancellation, frame scores, and model attribution.
 - **API:** FastAPI and CPU ONNX Runtime. Temporary video uploads are removed after analysis. Scores are cached with model and processing settings included in the key; Redis is optional.
-- **Training tools:** group-separated dataset preparation, PyTorch ConvNeXt CNN and ViT image training, Wav2Vec2 audio training, held-out evaluation, ONNX export, and optional matching-ViT Grad-CAM.
+- **Training tools:** group-separated dataset preparation, PyTorch EfficientNet-B0/ConvNeXt CNN and ViT image training, Wav2Vec2 audio training, held-out evaluation, ONNX export, and optional matching-ViT Grad-CAM.
 
-[Train the PyTorch CNN](docs/cnn-training.md) · [Measured pilot results](docs/evaluation/README.md)
+The broader CNN experiment trained on 4,096 images. On a separate generator/source holdout, accuracy improved from 47.7% to 73.3% and real-image false alarms fell from 69.7% to 14.5% at threshold 0.5. **The 95% target was not reached.** A conservative threshold lowers false alarms further but misses most AI images.
+
+[Train the PyTorch CNN](docs/cnn-training.md) · [Full held-out results and limits](docs/evaluation/diverse-v2/README.md)
 
 [Development and verification](docs/development.md) · [API and deployment](docs/deployment.md) · [Product page design](docs/design/product-redesign.md)
 

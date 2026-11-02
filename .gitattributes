@@ -4,3 +4,7 @@
 *.wav binary
 *.onnx binary
 *.pt binary
+
+# Preserve the bytes of hash-bound experiment evidence on every platform.
+docs/evaluation/diverse-v2/*.json -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+docs/evaluation/diverse-v2/*.csv -text

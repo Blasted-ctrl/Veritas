@@ -1,0 +1,63 @@
+{
+  "checkpoint_sha256": "b25a27e7d6c19ed5d13d4b8c40c0e672268cf9c8a9a26ffb86bbd893b91325b8",
+  "graph_sha256": "7753d5935b09ec64bd26170cb4f1489c7cd3fe084cbb3c0fed657fa1f3012760",
+  "examples": [
+    {
+      "file": "openai-cat.png",
+      "input_sha256": "cb61b73d43b5c1d0712b5cb50a6008597d378812d884f1bf4faa86119b3aa878",
+      "torch_logits": [
+        [
+          -0.38450437784194946,
+          0.2849882245063782
+        ]
+      ],
+      "onnx_logits": [
+        [
+          -0.38450536131858826,
+          0.2849879562854767
+        ]
+      ],
+      "max_absolute_logit_error": 9.834766387939453e-07,
+      "fake_score": 0.6613897085189819
+    },
+    {
+      "file": "generated-lakehouse.png",
+      "input_sha256": "5feda89ff9866165e66e3eb9e86a2567c1c70295ff02c2a5b81712e31baa3951",
+      "torch_logits": [
+        [
+          -0.46511203050613403,
+          0.616905927658081
+        ]
+      ],
+      "onnx_logits": [
+        [
+          -0.4651121497154236,
+          0.6169074773788452
+        ]
+      ],
+      "max_absolute_logit_error": 1.5497207641601562e-06,
+      "fake_score": 0.7468760013580322
+    },
+    {
+      "file": "earthrise.jpg",
+      "input_sha256": "c2224cae808691ef7aedeab69e0626f23a784e377377de2f4ed71094df9e3c34",
+      "torch_logits": [
+        [
+          1.4931854009628296,
+          -1.7829066514968872
+        ]
+      ],
+      "onnx_logits": [
+        [
+          1.4931814670562744,
+          -1.7829084396362305
+        ]
+      ],
+      "max_absolute_logit_error": 3.933906555175781e-06,
+      "fake_score": 0.03640061616897583
+    }
+  ],
+  "dynamic_batch_size": 3,
+  "dynamic_batch_max_logit_error": 4.291534423828125e-06,
+  "onnxruntime_version": "1.31.1"
+}
