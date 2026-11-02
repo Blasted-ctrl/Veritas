@@ -1,9 +1,14 @@
 {
   "origin": "Browser screenshot of http://127.0.0.1:3000",
-  "captured_at": "2026-11-02T11:38:55.396Z",
+  "captured_at": "2026-11-02T17:37:33.546Z",
   "description": "Real video inference in the Veritas interface using the artwork CNN; no mocked API or fabricated scores.",
   "model_sha256": "9bbf46eed19ff157779bd56fee3d98eaf488f9ccfcb039b260ded569c9701a4f",
   "source_assets": "frontend/public/samples/credits.json",
   "model_id": "Veritas EfficientNet-B0",
-  "decision_threshold": 0.8770313858985902
+  "decision_threshold": 0.8770313858985902,
+  "ui_commit": "3590f10e3d8d12ebc91b0b7f20c036bd7c169d2a",
+  "color_scheme": "light",
+  "system_preference": "light",
+  "source_capture": "video-desktop-light-preference.jpg",
+  "image_sha256": "5ef20397b52f2f961e14cc824ba02d3cf2c3c9e69f33a43d0628e4af0c5a878d"
 }

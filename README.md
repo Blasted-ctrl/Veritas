@@ -1,5 +1,7 @@
 <div align="center">
 
+<img src="frontend/src/app/icon.svg" alt="" width="48" height="48" />
+
 # Veritas
 
 ### Check what you're seeing.
@@ -15,7 +17,7 @@ An open source website for checking images and video frames for signs of AI gene
 
 [![Watch a real Veritas image and video analysis demo](docs/demo/preview.gif)](https://github.com/Blasted-ctrl/Veritas/raw/refs/heads/main/docs/demo/veritas-demo.mp4)
 
-<p align="center">A preview from the real site. Click to download the full 45-second demo.</p>
+<p align="center">Recorded demo preview. Click to download the full 45-second video. Current light-only design shown below.</p>
 
 **Upload a file. See the prediction. Check the evidence.** Veritas gives you a media preview, an AI class score, the decision cutoff, and the identity of the model behind the result. Videos include scores for each sampled frame.
 
@@ -60,13 +62,13 @@ Open **[localhost:3000](http://localhost:3000)**, choose an image or video, and 
 
 ## What you get
 
-| Feature                  | What it does                                                                                       |
-| :----------------------- | :------------------------------------------------------------------------------------------------- |
-| Image analysis           | File preview, AI score, decision cutoff, model details                                             |
-| Video analysis           | Sampled-frame scores and their average; up to 32 frames by default                                 |
-| A usable website         | Drag and drop, example files, upload progress, cancellation, light and dark themes, mobile layouts |
-| Your own backend         | FastAPI and CPU ONNX Runtime; Redis is optional                                                    |
-| Training you can inspect | PyTorch CNN/ViT training, separated data splits, evaluation reports, ONNX export                   |
+| Feature                  | What it does                                                                                     |
+| :----------------------- | :----------------------------------------------------------------------------------------------- |
+| Image analysis           | File preview, AI score, decision cutoff, model details                                           |
+| Video analysis           | Sampled-frame scores and their average; up to 32 frames by default                               |
+| A usable website         | Drag and drop, example files, upload progress, cancellation, a light-only design, mobile layouts |
+| Your own backend         | FastAPI and CPU ONNX Runtime; Redis is optional                                                  |
+| Training you can inspect | PyTorch CNN/ViT training, separated data splits, evaluation reports, ONNX export                 |
 
 Uploaded media is not retained by the API after processing. Scores, hashes, and optional explanation images can be cached; videos use temporary files that are removed after analysis. [Hosting and data handling](docs/deployment.md#data-and-hosting).
 

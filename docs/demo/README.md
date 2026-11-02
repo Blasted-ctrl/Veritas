@@ -7,6 +7,9 @@ the complete demo; GitHub's file viewer does not play this video inline.
 
 44.5 seconds · 1920 × 1080 · 24 fps · Silent, with instructions on screen.
 
+Recorded before the latest logo and light-only design polish. The upload
+and analysis flow is the same; current screenshots are in the main README.
+
 The demo records the working website at its actual speed. It shows NASA's
 Earthrise photograph, a labeled generated landscape, and a four-second MP4
 made from that generated still image. The clip demonstrates frame sampling;
