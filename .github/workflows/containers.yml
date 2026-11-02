@@ -34,6 +34,21 @@ jobs:
         run: |
           python scripts/container_smoke.py
           docker compose exec -T frontend sh -c 'grep -R -l "http://127.0.0.1:8000" .next/static'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - name: Capture actual production inference in the browser
+        working-directory: frontend
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+          npm run capture:demo
+      - uses: actions/upload-artifact@v4
+        with:
+          name: real-inference-browser-captures
+          path: .turbo/demo-captures/
       - name: Container logs
         if: always()
         run: docker compose logs --no-color

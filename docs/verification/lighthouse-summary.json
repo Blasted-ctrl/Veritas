@@ -1,0 +1,249 @@
+{
+  "note": "One local production-build run per mode. Lab scores vary by machine and do not measure detector accuracy.",
+  "reports": [
+    {
+      "mode": "mobile",
+      "fetched_at": "2026-11-02T00:33:37.628Z",
+      "lighthouse_version": "13.6.0",
+      "url": "http://127.0.0.1:3000/",
+      "environment": {
+        "networkUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Mobile Safari/537.36",
+        "hostUserAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36",
+        "benchmarkIndex": 405.5,
+        "credits": {
+          "axe-core": "4.14.0"
+        }
+      },
+      "settings": {
+        "formFactor": "mobile",
+        "throttling": {
+          "rttMs": 150,
+          "throughputKbps": 1638.4,
+          "requestLatencyMs": 562.5,
+          "downloadThroughputKbps": 1474.5600000000002,
+          "uploadThroughputKbps": 675,
+          "cpuSlowdownMultiplier": 4
+        }
+      },
+      "scores": {
+        "performance": 69,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "metrics": {
+        "first-contentful-paint": 978.5679,
+        "largest-contentful-paint": 978.5679,
+        "total-blocking-time": 1812.71605,
+        "cumulative-layout-shift": 0.0012203347455432701
+      },
+      "warnings": [],
+      "failed_audits": [
+        {
+          "id": "speed-index",
+          "title": "Speed Index",
+          "score": 0.67,
+          "displayValue": "4.8 s"
+        },
+        {
+          "id": "total-blocking-time",
+          "title": "Total Blocking Time",
+          "score": 0.09,
+          "displayValue": "1,810 ms"
+        },
+        {
+          "id": "max-potential-fid",
+          "title": "Max Potential First Input Delay",
+          "score": 0,
+          "displayValue": "920 ms"
+        },
+        {
+          "id": "server-response-time",
+          "title": "Reduce initial server response time",
+          "score": 0,
+          "displayValue": "Root document took 1,850 ms"
+        },
+        {
+          "id": "interactive",
+          "title": "Time to Interactive",
+          "score": 0.86,
+          "displayValue": "4.2 s"
+        },
+        {
+          "id": "mainthread-work-breakdown",
+          "title": "Minimize main-thread work",
+          "score": 0,
+          "displayValue": "4.7 s"
+        },
+        {
+          "id": "bootup-time",
+          "title": "Reduce JavaScript execution time",
+          "score": 0,
+          "displayValue": "2.0 s"
+        },
+        {
+          "id": "unused-javascript",
+          "title": "Reduce unused JavaScript",
+          "score": 0.5,
+          "displayValue": "Est savings of 27 KiB"
+        },
+        {
+          "id": "bf-cache",
+          "title": "Page prevented back/forward cache restoration",
+          "score": 0,
+          "displayValue": "2 failure reasons"
+        },
+        {
+          "id": "document-latency-insight",
+          "title": "Document request latency",
+          "score": 0,
+          "displayValue": "Est savings of 1,750 ms"
+        },
+        {
+          "id": "forced-reflow-insight",
+          "title": "Forced reflow",
+          "score": 0
+        },
+        {
+          "id": "lcp-breakdown-insight",
+          "title": "LCP breakdown",
+          "score": 0
+        },
+        {
+          "id": "legacy-javascript-insight",
+          "title": "Legacy JavaScript",
+          "score": 0.5,
+          "displayValue": "Est savings of 14 KiB"
+        },
+        {
+          "id": "network-dependency-tree-insight",
+          "title": "Network dependency tree",
+          "score": 0
+        },
+        {
+          "id": "render-blocking-insight",
+          "title": "Render-blocking requests",
+          "score": 0,
+          "displayValue": "Est savings of 220 ms"
+        }
+      ]
+    },
+    {
+      "mode": "desktop",
+      "fetched_at": "2026-11-02T00:34:15.991Z",
+      "lighthouse_version": "13.6.0",
+      "url": "http://127.0.0.1:3000/",
+      "environment": {
+        "networkUserAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36",
+        "hostUserAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36",
+        "benchmarkIndex": 365,
+        "credits": {
+          "axe-core": "4.14.0"
+        }
+      },
+      "settings": {
+        "formFactor": "desktop",
+        "throttling": {
+          "rttMs": 40,
+          "throughputKbps": 10240,
+          "requestLatencyMs": 0,
+          "downloadThroughputKbps": 0,
+          "uploadThroughputKbps": 0,
+          "cpuSlowdownMultiplier": 1
+        }
+      },
+      "scores": {
+        "performance": 90,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "metrics": {
+        "first-contentful-paint": 379.748,
+        "largest-contentful-paint": 379.748,
+        "total-blocking-time": 255.62599999999998,
+        "cumulative-layout-shift": 0.003747176947436009
+      },
+      "warnings": [],
+      "failed_audits": [
+        {
+          "id": "total-blocking-time",
+          "title": "Total Blocking Time",
+          "score": 0.68,
+          "displayValue": "260 ms"
+        },
+        {
+          "id": "max-potential-fid",
+          "title": "Max Potential First Input Delay",
+          "score": 0.49,
+          "displayValue": "250 ms"
+        },
+        {
+          "id": "unused-javascript",
+          "title": "Reduce unused JavaScript",
+          "score": 0.5,
+          "displayValue": "Est savings of 27 KiB"
+        },
+        {
+          "id": "bf-cache",
+          "title": "Page prevented back/forward cache restoration",
+          "score": 0,
+          "displayValue": "2 failure reasons"
+        },
+        {
+          "id": "forced-reflow-insight",
+          "title": "Forced reflow",
+          "score": 0
+        },
+        {
+          "id": "legacy-javascript-insight",
+          "title": "Legacy JavaScript",
+          "score": 0.5,
+          "displayValue": "Est savings of 14 KiB"
+        },
+        {
+          "id": "network-dependency-tree-insight",
+          "title": "Network dependency tree",
+          "score": 0
+        },
+        {
+          "id": "render-blocking-insight",
+          "title": "Render-blocking requests",
+          "score": 0.5
+        }
+      ]
+    }
+  ],
+  "previous_diagnostics": [
+    {
+      "fetched_at": "2026-11-02T00:06:13.047Z",
+      "scores": {
+        "performance": 74,
+        "accessibility": 100,
+        "best-practices": 96,
+        "seo": 100
+      },
+      "note": "Initial standalone probe exposed favicon404 and an explicit wordmark-name mismatch. Not the final build."
+    },
+    {
+      "fetched_at": "2026-11-02T00:24:06.635Z",
+      "scores": {
+        "performance": 75,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "note": "Intermediate mobile report. CLI wrapper later exceeded deadline during shutdown; this attempt is not counted as a completed audit."
+    },
+    {
+      "fetched_at": "2026-11-02T00:25:53.457Z",
+      "scores": {
+        "performance": 94,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "note": "Intermediate desktop report from the same failed CLI-wrapper run."
+    }
+  ]
+}

@@ -1,0 +1,178 @@
+import { test, expect } from "@playwright/test";
+import { readFile } from "node:fs/promises";
+import { fileURLToPath } from "node:url";
+
+const imagePath = new URL("../public/samples/generated-lakehouse.png", import.meta.url);
+const health = {
+  status: "ok", image_model: true, audio_model: false, explainer: false,
+  cache: "memory", max_upload_bytes: 26214400, video_fps: 1, max_video_frames: 32,
+};
+function verdict(score = 0.8) {
+  return {
+    verdict: score >= 0.5 ? "fake" : "real", confidence: Math.max(score, 1 - score),
+    fake_probability: score, modality: "image", model: "browser-test.onnx",
+    model_info: { id: "Illustrative browser test model", source_type: "custom", artifact_sha256: "a".repeat(64) },
+    decision_threshold: 0.5, latency_ms: 12, cached: false, content_sha256: "b".repeat(64),
+  };
+}
+async function respond(route, body, status = 200) {
+  await route.fulfill({ status, json: body, headers: { "access-control-allow-origin": "*" } });
+}
+async function start(page, healthOverrides = {}) {
+  await page.route("**/health", route => respond(route, { ...health, ...healthOverrides }));
+  await page.goto("/");
+  await expect(page.getByText("Detector ready", { exact: true })).toBeVisible();
+}
+async function choose(page, name = "sample.png") {
+  await page.locator('input[type="file"]').setInputFiles({
+    name, mimeType: "image/png", buffer: await readFile(imagePath),
+  });
+}
+
+test("keyboard selection previews before explicit analysis and exposes the real response fields", async ({ page }) => {
+  let requests = 0;
+  await page.route("**/verify*", async route => { requests++; await respond(route, verdict()); });
+  await start(page);
+  const picker = page.waitForEvent("filechooser");
+  await page.getByRole("button", { name: "Choose a file", exact: true }).press("Enter");
+  await (await picker).setFiles(fileURLToPath(imagePath));
+  await expect(page.getByText("generated-lakehouse.png", { exact: true })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Analyze file", exact: true })).toBeEnabled();
+  expect(requests).toBe(0);
+  await page.getByRole("button", { name: "Analyze file", exact: true }).click();
+  await expect(page.getByRole("heading", { name: "Likely AI-generated" })).toBeVisible();
+  await expect(page.getByRole("meter")).toHaveAttribute("aria-valuenow", "80");
+  await page.locator("summary").filter({ hasText: "Model & analysis details" }).click();
+  await expect(page.getByText("Illustrative browser test model", { exact: true })).toBeVisible();
+  expect(requests).toBe(1);
+});
+
+test("a file dropped on the upload surface reaches the same preview flow", async ({ page }) => {
+  await start(page);
+  const payload = Array.from(Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aP1sAAAAASUVORK5CYII=", "base64"));
+  const transfer = await page.evaluateHandle(bytes => {
+    const transfer = new DataTransfer();
+    transfer.items.add(new File([new Uint8Array(bytes)], "dropped.png", { type: "image/png" }));
+    return transfer;
+  }, payload);
+  await page.locator(".drop-area").dispatchEvent("drop", { dataTransfer: transfer });
+  await expect(page.getByText("dropped.png", { exact: true })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Analyze file", exact: true })).toBeEnabled();
+  await transfer.dispose();
+});
+
+test("oversized files are rejected before inference while a valid file can proceed", async ({ page }) => {
+  let requests = 0;
+  await page.route("**/verify*", route => { requests++; return respond(route, verdict()); });
+  await start(page, { max_upload_bytes: 1024 });
+  await choose(page);
+  await expect(page.getByRole("region", { name: "Media analysis" }).getByRole("alert")).toContainText("too large");
+  expect(requests).toBe(0);
+  await page.route("**/health", route => respond(route, health));
+  await page.reload();
+  await expect(page.getByText("Detector ready", { exact: true })).toBeVisible();
+  await choose(page);
+  await page.getByRole("button", { name: "Analyze file", exact: true }).click();
+  await expect(page.getByRole("button", { name: "Analyze again" })).toBeVisible();
+  expect(requests).toBe(1);
+});
+
+test("cancelled work cannot replace a newer file or its result", async ({ page }) => {
+  let release;
+  const blocked = new Promise(resolve => { release = resolve; });
+  let calls = 0;
+  await page.route("**/verify*", async route => {
+    calls++;
+    if (calls === 1) { await blocked; await respond(route, verdict(0.95)).catch(() => {}); }
+    else await respond(route, verdict(0.15));
+  });
+  try {
+  await start(page);
+  await choose(page, "first.png");
+  await page.getByRole("button", { name: "Analyze file", exact: true }).click();
+  await expect.poll(() => calls).toBe(1);
+  await expect(page.getByRole("button", { name: "Cancel analysis" })).toBeVisible();
+  await page.getByRole("button", { name: "Cancel analysis" }).click();
+  await expect(page.getByRole("region", { name: "Media analysis" }).getByRole("alert")).toContainText("cancelled");
+  await choose(page, "replacement.png");
+  await page.getByRole("button", { name: "Analyze file", exact: true }).click();
+  await expect(page.getByRole("heading", { name: "Likely camera-made" })).toBeVisible();
+  release();
+  await expect(page.getByRole("meter")).toHaveAttribute("aria-valuenow", "15");
+  await expect(page.getByText("replacement.png", { exact: true })).toBeVisible();
+  await expect(page.getByRole("region", { name: "Media analysis" }).getByRole("alert")).toHaveCount(0);
+  } finally { release(); }
+});
+
+test("a decode error stays an error and retry can produce a result", async ({ page }) => {
+  let attempts = 0;
+  await page.route("**/verify*", route => ++attempts === 1
+    ? respond(route, { detail: "Could not decode this image. Choose a readable image file." }, 422)
+    : respond(route, verdict()));
+  await start(page);
+  await choose(page);
+  await page.getByRole("button", { name: "Analyze file", exact: true }).click();
+  await expect(page.getByRole("region", { name: "Media analysis" }).getByRole("alert")).toContainText("Could not decode");
+  await expect(page.getByRole("meter")).toHaveCount(0);
+  await page.getByRole("button", { name: "Analyze file", exact: true }).click();
+  await expect(page.getByRole("meter")).toBeVisible();
+  await expect(page.getByRole("region", { name: "Media analysis" }).getByRole("alert")).toHaveCount(0);
+});
+
+test("unavailable audio capability disables only audio analysis", async ({ page }) => {
+  await start(page);
+  await page.locator('input[type="file"]').setInputFiles({ name: "voice.wav", mimeType: "audio/wav", buffer: Buffer.from("test audio") });
+  await expect(page.getByRole("status")).toContainText("audio detector is not installed");
+  await expect(page.getByRole("button", { name: "Analyze file", exact: true })).toBeDisabled();
+  await choose(page);
+  await expect(page.getByRole("button", { name: "Analyze file", exact: true })).toBeEnabled();
+});
+
+test("an unreachable API can be retried after it recovers", async ({ page }) => {
+  let ready = false;
+  await page.route("**/health", route => ready ? respond(route, health) : route.abort("connectionrefused"));
+  await page.goto("/");
+  await expect(page.getByRole("status")).toContainText("unavailable");
+  ready = true;
+  await page.getByRole("button", { name: "Retry connection" }).click();
+  await expect(page.getByText("Detector ready", { exact: true })).toBeVisible();
+  await expect(page.getByRole("status")).toHaveCount(0);
+});
+
+test("mobile themes and long filenames stay within the viewport with reduced motion", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await start(page);
+  await choose(page, "a-very-long-field-record-name-".repeat(4) + ".png");
+  expect(await page.evaluate(() => matchMedia("(prefers-reduced-motion: reduce)").matches)).toBe(true);
+  for (const theme of ["dark", "light"]) {
+    await page.getByRole("button", { name: "Switch color theme" }).click();
+    await expect(page.locator("html")).toHaveAttribute("data-theme", theme);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    await expect(page.getByRole("button", { name: "Analyze file", exact: true })).toBeVisible();
+  }
+});
+
+test("a native request timeout shows an error without a success score", async ({ page }) => {
+  // Shorten only this isolated browser's native timer; production remains 180 seconds.
+  await page.addInitScript(() => {
+    const open = XMLHttpRequest.prototype.open;
+    XMLHttpRequest.prototype.open = function (...args) {
+      open.apply(this, args);
+      this.timeout = 200;
+    };
+  });
+  let release;
+  const blocked = new Promise(resolve => { release = resolve; });
+  await page.route("**/verify*", async route => {
+    await blocked;
+    await respond(route, verdict()).catch(() => {});
+  });
+  try {
+    await start(page);
+    await choose(page);
+    await page.getByRole("button", { name: "Analyze file", exact: true }).click();
+    await expect(page.getByRole("region", { name: "Media analysis" }).getByRole("alert")).toContainText("timed out");
+    await expect(page.getByRole("meter")).toHaveCount(0);
+    await expect(page.getByRole("button", { name: "Analyze file", exact: true })).toBeEnabled();
+  } finally { release(); }
+});

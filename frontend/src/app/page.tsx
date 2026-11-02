@@ -169,9 +169,9 @@ export default function Home() {
         Skip to analysis
       </a>
       <header className="site-header">
-        <Link className="wordmark" href="/" aria-label="Veritas home">
-          <span className="brand-mark">v</span>veritas
-          <span className="brand-period">.</span>
+        <Link className="wordmark" href="/">
+          <span className="brand-mark" aria-hidden="true">v</span>veritas
+          <span className="brand-period" aria-hidden="true">.</span>
         </Link>
         <nav aria-label="Main navigation">
           <a href="#how-it-works">How it works</a>

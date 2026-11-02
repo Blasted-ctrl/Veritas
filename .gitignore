@@ -47,3 +47,7 @@ Thumbs.db
 .impeccable/*
 !.impeccable/design.json
 !.impeccable/surfaces/
+
+# Isolated browser checks
+frontend/test-results/
+frontend/playwright-report/
